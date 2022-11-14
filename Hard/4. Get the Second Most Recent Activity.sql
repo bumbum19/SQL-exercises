@@ -50,3 +50,12 @@ The most recent activity of Alice is Travel from 2020-02-24 to 2020-02-28, befor
 Bob only has one record, we just take that one.
 
  */
+# Solution
+
+WITH t AS 
+(SELECT *, NTH_VALUE(enddate,2) OVER (PARTITION BY username ORDER BY enddate DESC ) second_last,
+COUNT(*) OVER (PARTITION BY username) count_user
+FROM UserActivity )
+
+SELECT username, activity, startDate, endDate FROM t WHERE count_user=1 OR 
+endDate = second_last
