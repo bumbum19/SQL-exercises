@@ -1,4 +1,6 @@
-/* Table: Tweets
+/* 
+Question: 1683
+Table: Tweets
 
 +----------------+---------+
 | Column Name    | Type    |
