@@ -75,15 +75,10 @@ The highest price is $1000, and the invoices with the highest prices are 2 and 4
  
  # Solution:
  WITH t AS 
-
 (SELECT invoice_id, product_id, quantity, quantity*price price, SUM(quantity*price) OVER w total
-
 FROM purchases NATURAL JOIN  products
-
 WINDOW w AS (PARTITION BY invoice_id)),
-
 t2 AS 
-
 (SELECT * FROM t WHERE total = (SELECT MAX(total) FROM t))
 
 SELECT product_id, quantity, price FROM t2 WHERE invoice_id = (SELECT MIN(invoice_id) FROM t2)
