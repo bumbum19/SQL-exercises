@@ -92,26 +92,16 @@ There are no sales of T-shirts.
  */
  
  
- # Solution 
- SELECT item_category CATEGORY, 
-
+# Solution 
+SELECT item_category CATEGORY, 
 SUM(IF(DAYOFWEEK(order_date)=2,quantity,0)) MONDAY,
-
 SUM(IF(DAYOFWEEK(order_date)=3,quantity,0)) TUESDAY,
-
 SUM(IF(DAYOFWEEK(order_date)=4,quantity,0)) WEDNESDAY,
-
 SUM(IF(DAYOFWEEK(order_date)=5,quantity,0)) THURSDAY,
-
 SUM(IF(DAYOFWEEK(order_date)=6,quantity,0)) FRIDAY,
-
 SUM(IF(DAYOFWEEK(order_date)=7,quantity,0)) SATURDAY,
-
 SUM(IF(DAYOFWEEK(order_date)=1,quantity,0)) SUNDAY
-
 FROM orders NATURAL RIGHT JOIN items
-
 GROUP BY 1
-
 ORDER BY 1
 
