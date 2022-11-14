@@ -93,6 +93,16 @@ For company C, the rows sorted are as follows:
 +----+---------+--------+
  */
  
+ # Solution 
+ 
+WITH t  AS
+(SELECT *, PERCENT_RANK() OVER (PARTITION BY company ORDER BY salary,id ) ranking,
+COUNT(*) OVER  (PARTITION BY company) size
+FROM employee)
+
+
+SELECT id, company, salary FROM t WHERE ABS(ranking-0.5) < IF(size=1,1,1/(size-1))
+ 
  
  
  
