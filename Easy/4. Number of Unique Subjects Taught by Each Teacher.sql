@@ -1,4 +1,6 @@
-/* Table: Teacher
+/* 
+Question: 2356
+Table: Teacher
 
 +-------------+------+
 | Column Name | Type |
