@@ -1,4 +1,6 @@
-/* Table: Departments
+/* 
+Question: 1350
+Table: Departments
 
 +---------------+---------+
 | Column Name   | Type    |
