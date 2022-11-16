@@ -47,4 +47,4 @@ Tweet 2 has length = 32. It is an invalid tweet.
  
  # Solution
  
- SELECT tweet_id FROM tweets WHERE LENGTH(content) > 15
+ SELECT tweet_id FROM tweets WHERE LENGTH(content) > 15;
