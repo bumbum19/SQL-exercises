@@ -56,7 +56,7 @@ Teacher 2:
   
 # Solution
 
-SELECT teacher_id, COUNT(DISTINCT subject_id) cnt  FROM teacher GROUP BY 1
+SELECT teacher_id, COUNT(DISTINCT subject_id) cnt  FROM teacher GROUP BY 1;
   
   
   
