@@ -1,8 +1,5 @@
 /* 
-
 Question: 1741
-
-
 Table: Employees
 
 +-------------+------+
@@ -57,9 +54,9 @@ Employee 2 has two events: one on day 2020-11-28 with a total of (33 - 3) = 30, 
 
  */
  
- # Solution:
+# Solution
  
-SELECT event_day AS day, emp_id, SUM(out_time-in_time) AS total_time FROM Employees 
-GROUP BY emp_id, day;
+SELECT event_day AS day, emp_id, SUM(out_time)-SUM(in_time) total_time FROM employees 
+GROUP BY 2, 1;
  
  
