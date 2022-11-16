@@ -73,5 +73,5 @@ The unique ID of Jonathan is 1.
 
  */
  
- # Write your MySQL query statement below
-SELECT unique_id, name FROM employees e LEFT JOIN employeeuni AS e2 ON e.id = e2.id
+# Write your MySQL query statement below
+SELECT unique_id, name FROM employees NATURAL LEFT JOIN EmployeeUNI;
