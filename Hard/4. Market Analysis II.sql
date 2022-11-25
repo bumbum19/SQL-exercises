@@ -101,7 +101,16 @@ The answer for the user with id 4 is no because the brand of their second sold i
 # Solution:
 
 WITH t AS 
-(SELECT seller_id,   RANK( )OVER w second_item, COUNT(*) OVER (PARTITION BY seller_id) item_count, item_id FROM orders WINDOW w AS (PARTITION BY seller_id ORDER BY order_date ) )
+(SELECT seller_id,   RANK( )OVER w second_item, COUNT(*) OVER (PARTITION BY seller_id) item_count, item_id 
+ FROM orders WINDOW w AS (PARTITION BY seller_id ORDER BY order_date ) )
 
-SELECT user_id seller_id, IF(favorite_brand=item_brand AND second_item=2 ,'yes','no') 2nd_item_fav_brand  FROM users u LEFT JOIN t ON u.user_id = t.seller_id  NATURAL LEFT JOIN items 
+SELECT user_id seller_id, IF(favorite_brand=item_brand AND second_item=2 ,'yes','no') 2nd_item_fav_brand  
+FROM users u LEFT JOIN t ON u.user_id = t.seller_id  NATURAL LEFT JOIN items 
 WHERE  second_item = 2 OR item_count=1 OR   item_count IS NULL
+
+
+
+
+
+
+
