@@ -70,4 +70,4 @@ Output:
 # Solution
  
 SELECT name, bonus FROM employee NATURAL LEFT JOIN bonus 
-WHERE bonus < 1000 OR bonus IS NULL
+WHERE IFNULL(bonus,0) < 1000 
