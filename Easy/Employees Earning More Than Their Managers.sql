@@ -47,5 +47,5 @@ Explanation: Joe is the only employee who earns more than his manager.
  
 # Solution
 
-SELECT e1.name AS employee FROM employee e1 CROSS JOIN employee e2 WHERE e1.managerid = e2.id AND
+SELECT e1.name AS employee FROM employee e1  JOIN employee e2 ON  e1.managerid = e2.id AND
 e1.salary > e2.salary
