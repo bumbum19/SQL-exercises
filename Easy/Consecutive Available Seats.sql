@@ -51,8 +51,8 @@ Output:
  
 
 
-WITH table1 AS
+WITH t AS
 (SELECT seat_id, free, LEAD(free) OVER w AS forward, LAG(free) OVER w AS back
 FROM cinema WINDOW w AS (ORDER BY seat_id))
 
-SELECT seat_id FROM table1 WHERE free = 1 AND (forward = 1 OR back = 1) ORDER BY seat_id
+SELECT seat_id FROM t WHERE free = 1 AND (forward = 1 OR back = 1) ORDER BY seat_id
