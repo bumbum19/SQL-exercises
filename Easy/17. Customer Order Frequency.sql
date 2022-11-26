@@ -103,12 +103,9 @@ Moustafa spent $110 (10 * 2 + 45 * 2) in June and $0 in July 2020.
  
 # Solution
 
-# Write your MySQL query statement below
-
 WITH t AS
-(SELECT customer_id, name, product_id, MONTH(order_date) AS month, SUM(quantity*price) total 
-FROM orders NATURAL JOIN product NATURAL JOIN customers 
-WHERE YEAR(order_date)=2020 AND MONTH(order_date) IN (6,7) GROUP BY customer_id, name, month 
-HAVING total >= 100) 
+(SELECT customer_id, MONTH(order_date) AS month, SUM(quantity*price) total FROM orders NATURAL JOIN product NATURAL JOIN customers 
+WHERE order_date BETWEEN '2020-06-01' AND '2020-07-31' 
+GROUP BY 1,2 HAVING total >= 100 )
 
-SELECT customer_id, name FROM t GROUP BY customer_id, name HAVING COUNT(*) = 2
+SELECT customer_id, name FROM t NATURAL JOIN customers GROUP BY 1, 2 HAVING COUNT(*) = 2
