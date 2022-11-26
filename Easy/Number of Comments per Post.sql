@@ -67,5 +67,5 @@ The comment with id 6 is a comment on a deleted post with id 7 so we ignored it.
 WITH t AS
 (SELECT sub_id AS post_id   FROM submissions  WHERE parent_id IS NULL)
 
-SELECT  post_id, COUNT(DISTINCT sub_id) AS number_of_comments   FROM t  LEFT JOIN submissions s ON t.post_id = s.parent_id GROUP BY post_id
+SELECT  post_id, COUNT(DISTINCT sub_id)  number_of_comments  FROM t  LEFT JOIN submissions s ON t.post_id = s.parent_id GROUP BY post_id
  
