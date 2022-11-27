@@ -30,4 +30,4 @@ Each row of this table contains information about one employee.
  
 # Solution
 
-SELECT project_id, ROUND(AVG(experience_years),2) AS average_years  FROM project p JOIN employee e ON p.employee_id = e.employee_id GROUP BY project_id
+SELECT project_id, ROUND(AVG(experience_years),2) average_years  FROM project NATURAL JOIN employee GROUP BY 1
