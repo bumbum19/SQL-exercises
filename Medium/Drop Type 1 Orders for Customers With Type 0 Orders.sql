@@ -64,7 +64,7 @@ Customer 4 has two orders of type 1. We return both of them.
 #Solution
 
 WITH t AS 
-(SELECT DISTINCT customer_id, 1 AS dummy_type0 FROM orders WHERE order_type=0 )
+(SELECT DISTINCT customer_id, 1 dummy FROM orders WHERE order_type=0 )
 
 SELECT order_id, customer_id, order_type FROM orders NATURAL LEFT JOIN t 
-WHERE order_type <> IFNULL(dummy_type0,0)
+WHERE order_type <> IFNULL(dummy,0)
