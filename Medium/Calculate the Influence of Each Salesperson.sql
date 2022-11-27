@@ -102,5 +102,5 @@ The total for Jerry is 0.
 
 # Solution
 
-SELECT salesperson_id, name, SUM(IFNULL(price,0)) total  FROM salesperson NATURAL LEFT JOIN customer 
+SELECT salesperson_id, name, IFNULL(SUM(price),0) total  FROM salesperson NATURAL LEFT JOIN customer 
 NATURAL LEFT JOIN sales GROUP BY 1,2
