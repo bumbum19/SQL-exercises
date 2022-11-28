@@ -51,7 +51,7 @@ Explanation:
 We order the result table by transaction_id after collecting these IDs.
  */
  
- # Solution
+# Solution
  
 WITH t AS 
 (SELECT transaction_id, amount, MAX(amount) OVER w max_amount FROM transactions 
