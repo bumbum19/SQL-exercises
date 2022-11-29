@@ -50,8 +50,7 @@ Note that if the number of students is odd, there is no need to change the last 
 
 */
 
-WITH t AS
-(SELECT COUNT(*) FROM seat)
+# Solution
 
-SELECT CASE WHEN id = (SELECT *FROM t) AND  id%2=1   THEN id WHEN id % 2 = 1 THEN id+1 ELSE
+SELECT CASE WHEN id = (SELECT COUNT(*) FROM seat) AND id%2=1   THEN id WHEN id % 2 = 1 THEN id+1 ELSE
 id-1 END AS id, student FROM seat ORDER BY id
