@@ -56,17 +56,12 @@ Note that the rows in the output are the same as in the input.
 
 # Solution
 
-WITH t AS 
+WITH RECURSIVE t AS 
 (SELECT *, ROW_NUMBER() OVER w ranking FROM CoffeeShop  WINDOW w AS () ),
-t2 AS
-(SELECT s1.id, s2.ranking FROM t s1, t s2 WHERE s1.ranking > s2.ranking  AND s1.drink IS NULL AND  s2.drink IS NOT NULL),
-t3 AS 
-(SELECT id, MAX(ranking) ranking FROM t2 GROUP BY 1),
-t4 AS
-(SELECT t3.id, drink FROM t3 JOIN t USING(ranking)),
-t5 AS
-(SELECT id, t4.drink, ranking FROM t4 JOIN t USING (id) UNION 
-SELECT * FROM t WHERE drink IS NOT NULL)
+t2 AS 
+(SELECT id, drink,ranking FROM t WHERE ranking = 1
+    UNION ALL
+SELECT t.id,  IFNULL(t.drink,t2.drink), t.ranking  FROM t  JOIN t2 ON t.ranking = t2.ranking+1
+)
 
-SELECT id, drink FROM t5 ORDER BY ranking
-
+SELECT id, drink FROM t2
