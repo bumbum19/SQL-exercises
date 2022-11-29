@@ -62,4 +62,4 @@ WITH t AS
 FROM relations r1  JOIN relations r2 ON 
 r1.follower_id = r2.follower_id AND r1.user_id < r2.user_id GROUP BY 1,2 )
 
-SELECT user1_id, user2_id FROM t WHERE common_followers >= ALL(SELECT DISTINCT common_followers FROM t)
+SELECT user1_id, user2_id FROM t WHERE common_followers = (SELECT  MAX(common_followers) FROM t)
