@@ -97,8 +97,9 @@ Output:
 
 # Solution
 
-WITH
-orders_2019 AS (SELECT order_id, order_date, buyer_id AS buyer_id2 FROM orders WHERE YEAR(order_date) = 2019 )
+WITH t AS 
+(SELECT buyer_id user_id, COUNT(*) orders_in_2019 FROM orders WHERE order_date BETWEEN '2019-01-01'
+AND '2019-12-31' GROUP BY 1 )
 
-SELECT user_id AS buyer_id, join_date, COUNT(order_id) AS orders_in_2019 FROM orders_2019 o  RIGHT JOIN users u
-ON o.buyer_id2 = u.user_id  GROUP BY buyer_id, join_date
+SELECT user_id buyer_id, join_date, IFNULL(orders_in_2019,0) orders_in_2019  FROM users NATURAL LEFT JOIN
+t
