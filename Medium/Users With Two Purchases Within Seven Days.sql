@@ -1,5 +1,6 @@
 /*
 Question: 2228
+Table: Purchases
 +---------------+------+
 | Column Name   | Type |
 +---------------+------+
@@ -54,6 +55,6 @@ WITH t AS
 WINDOW w AS(PARTITION BY user_id ORDER BY purchase_date ))
 
 SELECT DISTINCT user_id FROM t
-WHERE DATEDIFF(next_date,purchase_date) <= 7 GROUP BY 1
+WHERE DATEDIFF(next_date,purchase_date) <= 7 
 ORDER BY 1
 
