@@ -52,9 +52,6 @@ Output:
 
 # Solution
 
-WITH t AS
-(SELECT viewer_id id, view_date, COUNT( DISTINCT article_id) count_articles FROM views GROUP BY 1,2 
-HAVING count_articles > 1)
-
-SELECT DISTINCT id FROM t ORDER BY 1
+SELECT DISTINCT viewer_id id FROM views GROUP BY 1,view_date
+HAVING COUNT( DISTINCT article_id) > 1
 
