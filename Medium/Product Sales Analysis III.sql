@@ -72,8 +72,7 @@ Output:
 # Solution
 
 WITH t AS
+(SELECT  product_id, year, quantity, price, RANK() OVER (PARTITION BY product_id
+ORDER BY year) ranking FROM sales )
 
-(SELECT product_id, MIN(year) AS year FROM sales GROUP BY 1)
-
-SELECT product_id, year AS first_year, quantity, price FROM sales NATURAL JOIN t
-
+SELECT product_id, year first_year , quantity, price FROM t WHERE ranking = 1
