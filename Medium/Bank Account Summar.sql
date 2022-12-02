@@ -84,8 +84,27 @@ Luis did not received any transfer, credit = $800
 
 # Solution
 
-WITH t AS
-(SELECT user_id, user_name, credit + IFNULL(SUM(IF(user_id = paid_to,amount,-amount)),0) credit 
-FROM users LEFT JOIN transactions ON user_id IN (paid_by,paid_to) GROUP BY 1)
+# Write your MySQL query statement below
 
-SELECT *, IF(credit<0, 'Yes','No') credit_limit_breached FROM t 
+
+
+SELECT t.*, IF(t2.credit<0, 'Yes','No') credit_limit_breached FROM  
+(SELECT user_id, user_name, credit + IFNULL(SUM(IF(user_id = paid_to,amount,-amount)),0) credit 
+FROM users LEFT JOIN transactions ON user_id IN (paid_by,paid_to) GROUP BY 1) t JOIN LATERAL (SELECT credit) t2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
