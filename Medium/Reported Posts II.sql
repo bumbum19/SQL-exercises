@@ -81,7 +81,7 @@ Note that the output is only one number and that we do not care about the remove
 # Solution
 
 WITH t AS 
-(SELECT  action_date, COUNT( remove_date) /COUNT(DISTINCT post_id) average_spam FROM (SELECT DISTINCT
+(SELECT  action_date, COUNT( remove_date) /COUNT post_id) average_spam FROM (SELECT DISTINCT
 post_id, action_date FROM actions WHERE extra='spam' ) t2
 NATURAL LEFT JOIN removals  GROUP BY 1)
 
