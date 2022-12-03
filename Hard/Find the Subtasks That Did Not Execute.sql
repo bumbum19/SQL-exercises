@@ -74,18 +74,18 @@ Task 3 was divided into 4 subtasks (1, 2, 3, 4). All of the subtasks were execut
  */
  
  
- # Solution
+# Solution
  
-WITH t AS 
+WITH RECURSIVE cte  AS
+(
+SELECT 1 subtask_id
+UNION ALL
+SELECT subtask_id + 1 FROM cte LIMIT 20
+)
 
-(SELECT 1 subtask_id UNION SELECT 2  UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 
-UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12 UNION SELECT 13 UNION SELECT 14
-UNION SELECT 15 UNION SELECT 16 UNION SELECT 17 UNION SELECT 18 UNION SELECT 19  UNION SELECT 20),
-
-t2 AS
-(SELECT task_id, subtask_id   FROM tasks,t WHERE subtask_id <= subtasks_count )
-
-SELECT t2.task_id, t2.subtask_id FROM t2 LEFT  JOIN executed e ON t2.task_id = e.task_id AND t2.subtask_id = e.subtask_id
+SELECT t.task_id, cte.subtask_id FROM tasks t JOIN cte ON subtask_id <= subtasks_count
+LEFT JOIN executed e ON t.task_id = e.task_id AND cte.subtask_id= e.subtask_id 
 WHERE e.task_id IS NULL
+
  
  
