@@ -142,10 +142,13 @@ By the end of December --> six active drivers (10, 8, 5, 7, 4, 1) and one accept
  
  # Solution 
  
-WITH t AS 
-(SELECT 1 month UNION SELECT 2 month  UNION SELECT 3 month UNION SELECT 4 month 
-UNION SELECT 5 month UNION SELECT 6 month UNION SELECT 7 month UNION SELECT 8 month
-UNION SELECT 9 month UNION SELECT 10 month UNION SELECT 11 month UNION SELECT 12 month),
+WITH RECURSIVE t AS (
+SELECT 1 AS month
+UNION ALL
+SELECT month + 1 AS month
+FROM t
+WHERE month < 12
+),
 t2 AS
 (SELECT driver_id, CASE WHEN YEAR(join_date)=2019 THEN 1 WHEN YEAR(join_date)=2021 THEN NULL
 ELSE MONTH(join_date) END month FROM drivers),
@@ -159,6 +162,7 @@ WHERE YEAR(requested_at) = 2020 GROUP BY MONTH(requested_at))
 
 SELECT month, active_drivers, IFNULL(accepted_rides,0) accepted_rides FROM t4 NATURAL LEFT JOIN t5
 ORDER BY 1
+
 
 
 
