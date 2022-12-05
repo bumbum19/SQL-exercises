@@ -68,14 +68,10 @@ The longest winning streak was 1 match.
 # Solution
 
 WITH t AS
-(SELECT player_id, match_day, IF(result='Win',1,0) result, 
-IF( NOT LAG(result) OVER w = 'Win',0,1 ) dummy FROM matches 
+(SELECT player_id, match_day, result, ROW_NUMBER() OVER w -SUM(result = 'win') OVER w block  FROM matches
 WINDOW w AS (PARTITION BY player_id ORDER BY match_day) ),
-t2 AS 
-(SELECT player_id, match_day, result, ROW_NUMBER() OVER w -SUM(result) OVER w block  FROM t 
-WHERE NOT(result=0 AND dummy =0)
-WINDOW w AS (PARTITION BY player_id ORDER BY match_day)),
-t3 AS 
-(SELECT player_id, block, SUM(result) streak  FROM t2 GROUP BY 1,2)
+t2 AS
+(SELECT player_id, SUM(result) streak  FROM t WHERE result = 'Win' GROUP BY 1,block)
 
-SELECT player_id, MAX(streak) longest_streak FROM t3 GROUP BY 1
+SELECT player_id, IFNULL(longest_streak,0) longest_streak FROM (SELECT DISTINCT player_id FROM matches) s NATURAL LEFT JOIN 
+(SELECT player_id, MAX(streak) longest_streak FROM t2 GROUP BY 1) s2
