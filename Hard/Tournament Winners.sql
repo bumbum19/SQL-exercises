@@ -79,14 +79,10 @@ Output:
 
 # Solution 
 
-WITH t1 AS 
-(SELECT * FROM matches 
-UNION SELECT match_id,second_player first_player,first_player second_player,
-second_score first_score,first_score second_score
-FROM matches),
-t2 AS 
-(SELECT first_player player_id, SUM(first_score) AS points FROM t1 GROUP BY 1),
-t3 AS
+WITH t AS
+(SELECT group_id, player_id, 
+RANK() OVER (PARTITION BY group_id ORDER BY IFNULL(SUM(IF(player_id=first_player,first_score,second_score)),0) DESC, player_id ) ranking
+FROM players LEFT JOIN matches ON first_player = player_id OR second_player = player_id
+GROUP BY 2)
 
-(SELECT *, RANK() OVER (PARTITION BY group_id ORDER BY points DESC,player_id) ranking FROM players NATURAL JOIN t2 )
-SELECT group_id, player_id FROM t3 WHERE ranking=1 
+SELECT group_id, player_id FROM t WHERE ranking=1
