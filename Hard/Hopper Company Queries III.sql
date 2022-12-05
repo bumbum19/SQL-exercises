@@ -141,7 +141,7 @@ SELECT 1 AS month
 UNION ALL
 SELECT month + 1 AS month
 FROM t
-WHERE month <= 12
+WHERE month < 12
 ),
 t2 AS
 (SELECT MONTH(requested_at) month, SUM(ride_distance) ride_distance, SUM(ride_duration) ride_duration 
