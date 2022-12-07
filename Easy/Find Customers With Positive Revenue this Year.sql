@@ -56,4 +56,8 @@ Thus only customers 1 and 4 have positive revenue in the year 2021.
  
  # Solution
  
- SELECT customer_id FROM customers WHERE revenue > 0 AND year = 2021 
+ SELECT 
+  customer_id 
+ FROM customers 
+ WHERE revenue > 0 
+  AND year = 2021 
