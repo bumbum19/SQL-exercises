@@ -44,4 +44,6 @@ Explanation: Please note that the output is case-sensitive.
 
 # Solution
 
-SELECT DATE_FORMAT(day, '%W, %M %e, %Y') day FROM days 
+SELECT
+  DATE_FORMAT(day, '%W, %M %e, %Y') AS day 
+FROM days;
