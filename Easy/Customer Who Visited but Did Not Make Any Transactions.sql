@@ -81,6 +81,10 @@ As we can see, users with IDs 30 and 96 visited the mall one time without making
  
 # Solution
  
-SELECT customer_id, COUNT(visits.visit_id)-COUNT(transaction_id ) count_no_trans
-FROM visits NATURAL LEFT  JOIN transactions GROUP BY customer_id
-HAVING count_no_trans > 0
+SELECT 
+ customer_id, 
+ COUNT(visits.visit_id)-COUNT(transaction_id ) AS count_no_trans
+FROM visits 
+ NATURAL LEFT JOIN transactions 
+GROUP BY customer_id
+HAVING count_no_trans > 0;
