@@ -83,4 +83,9 @@ The npv values of all other queries can be found in the NPV table.
  
  # Solution
  
- SELECT id, year, COALESCE(npv,0) npv FROM npv NATURAL RIGHT JOIN queries 
+ SELECT 
+ id, 
+ year, 
+ IFNULL(npv,0) AS npv 
+FROM queries 
+ NATURAL LEFT JOIN npv;
