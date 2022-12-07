@@ -101,8 +101,16 @@ Let us see all the possible triplets.
 
 # Solution
 
-SELECT a.student_name member_A, b.student_name member_B, c.student_name member_C
-FROM schoola a  JOIN schoolb b  ON a.student_name != b.student_name
-AND a.student_id != b.student_id JOIN schoolc c ON 
-b.student_name != c.student_name AND b.student_id!= c.student_id AND 
-a.student_name != c.student_name AND a.student_id!= c.student_id
+SELECT 
+    a.student_name AS member_A, 
+    b.student_name AS member_B, 
+    c.student_name AS member_C
+FROM schoola AS a  
+    JOIN schoolb AS b  
+        ON a.student_name != b.student_name
+        AND a.student_id != b.student_id 
+    JOIN schoolc AS c 
+        ON b.student_name != c.student_name 
+        AND b.student_id!= c.student_id
+        AND a.student_name != c.student_name 
+        AND a.student_id!= c.student_id;
