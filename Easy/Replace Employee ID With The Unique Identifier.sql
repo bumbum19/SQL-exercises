@@ -75,4 +75,8 @@ The unique ID of Jonathan is 1.
 
 # Solution
 
-SELECT unique_id, name FROM employees NATURAL LEFT JOIN EmployeeUNI
+SELECT
+  unique_id, 
+  name 
+FROM employees 
+  NATURAL LEFT JOIN EmployeeUNI
