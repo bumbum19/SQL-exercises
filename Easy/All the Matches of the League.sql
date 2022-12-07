@@ -48,6 +48,13 @@ Explanation: All the matches of the league are shown in the table.
  
 # Solution
  
-SELECT t1.team_name home_team, t2.team_name away_team FROM Teams t1 CROSS JOIN Teams t2
-WHERE t1.team_name <> t2.team_name
+SELECT
+ t1.team_name AS home_team, 
+ t2.team_name AS away_team 
+FROM 
+ Teams AS t1 
+ JOIN 
+ Teams AS t2
+WHERE 
+ t1.team_name != t2.team_name;
  
