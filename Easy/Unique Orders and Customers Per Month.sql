@@ -61,7 +61,10 @@ In January 2021 we have two orders from 2 different customers, but only one of t
 
 # Solution
 
-SELECT DATE_FORMAT(order_date, '%Y-%m') month, COUNT(order_id) order_count, 
-COUNT(DISTINCT customer_id) customer_count 
-FROM orders WHERE invoice > 20
+SELECT
+  DATE_FORMAT(order_date, '%Y-%m') AS month, 
+  COUNT(order_id) AS order_count, 
+  COUNT(DISTINCT customer_id) AS customer_count 
+FROM orders 
+WHERE invoice > 20;
 GROUP BY  1 
