@@ -51,8 +51,10 @@ Product 1 price's are 70 for store1, 80 for store3 and, it's not sold in store2.
 
 # Solution
 
-SELECT product_id, 
-SUM(IF(store='store1', price, NULL)) store1, 
-SUM(IF(store='store2', price, NULL)) store2, 
-SUM(IF(store='store3', price, NULL)) store3 
-FROM products GROUP BY 1
+SELECT
+  product_id, 
+  SUM(IF(store='store1', price, NULL)) AS store1, 
+  SUM(IF(store='store2', price, NULL)) AS store2, 
+  SUM(IF(store='store3', price, NULL)) AS store3 
+FROM products 
+GROUP BY product_id;
