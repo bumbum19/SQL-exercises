@@ -77,5 +77,10 @@ Charlie's balance is (6000 + 6000 - 4000) = 8000.
 
 # Solution
 
-SELECT name, SUM(amount) balance FROM users NATURAL JOIN transactions
-GROUP BY name HAVING balance > 10000
+SELECT 
+  name, 
+  SUM(amount) AS balance 
+FROM users
+  NATURAL JOIN transactions
+GROUP BY name 
+HAVING balance > 10000;
