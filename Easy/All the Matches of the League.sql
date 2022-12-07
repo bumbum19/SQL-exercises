@@ -53,7 +53,7 @@ SELECT
  t2.team_name AS away_team 
 FROM 
  Teams AS t1 
- CROSS JOIN 
+ JOIN 
  Teams AS t2
 WHERE 
  t1.team_name != t2.team_name;
