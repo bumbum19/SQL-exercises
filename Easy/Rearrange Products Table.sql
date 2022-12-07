@@ -52,10 +52,15 @@ Product 1 is available in store1 with price 70 and store3 with price 80. The pro
 
 # Solution
 
-SELECT * FROM (
-SELECT product_Id AS product_id, 'store1' AS store, store1 AS price FROM  products
-UNION 
-SELECT product_Id AS product_id, 'store2' AS store, store2 AS price FROM products
-UNION 
-SELECT product_Id AS product_id, 'store3' AS store, store3 AS price FROM products)  AS t
-WHERE price > 0
+SELECT 
+  product_id, 
+  store, 
+  price 
+FROM(
+  SELECT 
+    product_id AS product_id, 'store1' AS store, store1 AS price FROM  products
+  UNION ALL
+  SELECT product_id AS product_id, 'store2' AS store, store2 AS price FROM products
+  UNION ALL
+  SELECT product_id AS product_id, 'store3' AS store, store3 AS price FROM products) AS dt
+WHERE price > 0;
