@@ -58,4 +58,8 @@ Problems 7, 10, 11, and 13 are low-quality problems because their like percentag
 
 # Solution
 
-SELECT problem_id FROM problems WHERE likes/(likes+dislikes) < 0.6 ORDER BY 1
+SELECT 
+  problem_id 
+FROM problems 
+WHERE likes/(likes+dislikes) < 0.6 
+ORDER BY problem_id;
