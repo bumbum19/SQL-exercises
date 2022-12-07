@@ -79,4 +79,4 @@ SELECT
   unique_id, 
   name 
 FROM employees 
-  NATURAL LEFT JOIN EmployeeUNI
+  NATURAL LEFT JOIN EmployeeUNI;
