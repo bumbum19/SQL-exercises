@@ -31,5 +31,14 @@ Each row of this table indicates the date, units, and product_id of each product
  
  # Solution
  
- SELECT product_id, ROUND(SUM(units*price)/SUM(units),2) average_price  FROM unitssold NATURAL  JOIN prices  
- WHERE purchase_date BETWEEN start_date AND  end_date GROUP BY product_id
+SELECT 
+ product_id, 
+ ROUND(SUM(units*price) / SUM(units), 2) AS average_price 
+FROM 
+ unitssold 
+ NATURAL JOIN prices  
+WHERE 
+ purchase_date >= start_date AND 
+ purchase_date <= end_date
+GROUP BY 
+ product_id;
