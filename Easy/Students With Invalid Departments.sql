@@ -82,4 +82,4 @@ SELECT
   name 
 FROM students 
 WHERE department_id 
-  NOT IN (SELECT id FROM departments)
+  NOT IN (SELECT id FROM departments);
