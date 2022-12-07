@@ -77,4 +77,9 @@ John, Daiana, Steve, and Jasmine are enrolled in departments 14, 33, 74, and 77 
 
 # Solution
 
-SELECT id, name FROM students WHERE department_id NOT IN (SELECT id FROM departments)
+SELECT 
+  id, 
+  name 
+FROM students 
+WHERE department_id 
+  NOT IN (SELECT id FROM departments)
