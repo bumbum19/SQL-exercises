@@ -84,4 +84,9 @@ LCHouse3: 1 unit of LC-T-Shirt.
 
 # Solution
 
-SELECT name warehouse_name, SUM(width*length*height*units) volume FROM warehouse NATURAL JOIN products GROUP BY 1
+SELECT 
+ name AS warehouse_name, 
+ SUM(width*length*height*units) AS volume 
+FROM warehouse 
+ NATURAL JOIN products 
+GROUP BY warehouse_name;
