@@ -59,5 +59,10 @@ For 2020-12-7, toyota gets leads = [0] and partners = [1, 2] while honda gets le
 
 # Solution
 
-SELECT date_id, make_name, COUNT(DISTINCT lead_id) unique_leads, COUNT(DISTINCT partner_id) 
-unique_partners FROM DailySales GROUP BY 1,2
+SELECT 
+  date_id, 
+  make_name, 
+  COUNT(DISTINCT lead_id) AS unique_leads, 
+  COUNT(DISTINCT partner_id) AS unique_partners 
+FROM DailySales 
+GROUP BY date_id,make_name
