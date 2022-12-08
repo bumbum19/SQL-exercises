@@ -59,7 +59,7 @@ FROM
   tweets 
 WHERE
   -- MS SQL Server 2019 has a different function 
-  -- for lenghth
+  -- for length
   LEN(content) > 15;
   
   
