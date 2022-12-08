@@ -81,13 +81,13 @@ SELECT
 FROM employees 
   NATURAL LEFT JOIN EmployeeUNI;
   
- 
+# Solution(MS SQL Server) 
 SELECT 
   unique_id, 
   name 
 FROM 
   employees e 
---Microsoft SQL Server 2019 has no NAURAL JOIN
+--Microsoft SQL Server 2019 has no NATURAL JOIN
 LEFT JOIN 
   EmployeeUNI eu 
   ON e.id = eu.id;
