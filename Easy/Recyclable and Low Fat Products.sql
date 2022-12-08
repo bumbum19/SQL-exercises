@@ -58,7 +58,7 @@ WHERE
   recyclable = 'Y';
 
 
-# Alternative Solution(works in MySQL and Oracle but not MS SQL Server)
+# Solution2 (MySQL,Oracle)
 
 SELECT 
   product_id 
