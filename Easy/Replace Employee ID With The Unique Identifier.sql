@@ -81,12 +81,11 @@ SELECT
   name 
 FROM 
   employees e 
-
 LEFT JOIN 
   EmployeeUNI eu 
   ON e.id = eu.id;
   
-# Solution2 (MySQL, Oracle)
+# Solution2(MySQL, Oracle)
 
 SELECT
   unique_id, 
