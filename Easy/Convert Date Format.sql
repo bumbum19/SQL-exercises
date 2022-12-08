@@ -53,3 +53,9 @@ FROM days;
 SELECT
 FORMAT( day, 'D', 'en-US' ) AS day 
 FROM days;
+
+# Solution3(Oracle)
+
+SELECT 
+TO_CHAR(day, 'FMDay, Month DD, YYYY') AS day
+FROM Days;
