@@ -57,5 +57,7 @@ Employees with Id 5,6 are part of a team with team_id = 9.
 
 SELECT 
   employee_id, 
-  COUNT(team_id) OVER (PARTITION BY team_id) AS team_size  
-FROM employee
+  COUNT(team_id) 
+    OVER (PARTITION BY team_id) AS team_size  
+FROM 
+  employee;
