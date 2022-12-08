@@ -53,6 +53,7 @@ WHERE
   LENGTH(content) > 15;
 
 # Solution2(MS SQL Server)  
+
 SELECT 
   tweet_id 
 FROM 
