@@ -31,7 +31,8 @@ All accounts start with a balance of 0.
 
  
 
-Write an SQL query to report the name and balance of users with a balance higher than 10000. The balance of an account is equal to the sum of the amounts of all transactions involving that account.
+Write an SQL query to report the name and balance of users with a balance higher than 10000. 
+The balance of an account is equal to the sum of the amounts of all transactions involving that account.
 
 Return the result table in any order.
 
@@ -78,9 +79,23 @@ Charlie's balance is (6000 + 6000 - 4000) = 8000.
 # Solution
 
 SELECT 
-  name, 
-  SUM(amount) AS balance 
-FROM users
-  NATURAL JOIN transactions
+name, 
+SUM(amount) AS balance 
+FROM users u
+JOIN transactions t
+  ON u.accounct = t.account
 GROUP BY name 
+HAVING SUM(amount) > 10000;
+
+# Solution2(MySQL)
+
+SELECT 
+name, 
+SUM(amount) AS balance 
+FROM users u
+JOIN transactions t
+  ON u.accounct = t.account
+GROUP BY name 
+-- reference from alias in select
 HAVING balance > 10000;
+
