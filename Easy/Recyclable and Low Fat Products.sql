@@ -65,6 +65,6 @@ SELECT
 FROM 
   products 
 WHERE 
-  (low_fats,recyclable) IN ( ('Y', 'Y') )
+  (low_fats,recyclable) IN ( ('Y', 'Y') );
 
 
