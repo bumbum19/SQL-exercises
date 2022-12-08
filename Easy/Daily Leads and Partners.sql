@@ -57,12 +57,27 @@ For 2020-12-7, toyota gets leads = [0] and partners = [1, 2] while honda gets le
 
 */
 
-# Solution
+# Solution(MySQL, MS SQL Server)
 
 SELECT 
   date_id, 
   make_name, 
   COUNT(DISTINCT lead_id) AS unique_leads, 
   COUNT(DISTINCT partner_id) AS unique_partners 
-FROM DailySales 
-GROUP BY date_id, make_name;
+FROM 
+  DailySales 
+GROUP BY 
+  date_id, make_name;
+
+
+# Solution2(Oracle)
+
+SELECT 
+  TO_CHAR(date_id) AS date_id, 
+  make_name, 
+  COUNT(DISTINCT lead_id) AS unique_leads, 
+  COUNT(DISTINCT partner_id) AS unique_partners 
+FROM 
+  DailySales 
+GROUP BY 
+  date_id, make_name;
