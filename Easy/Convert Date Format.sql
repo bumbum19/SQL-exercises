@@ -42,8 +42,14 @@ Explanation: Please note that the output is case-sensitive.
 
 */
 
-# Solution
+# Solution(MySQL)
 
 SELECT
-  DATE_FORMAT(day, '%W, %M %e, %Y') AS day 
+DATE_FORMAT(day, '%W, %M %e, %Y') AS day 
+FROM days;
+
+# Solution2(MS SQL Server)
+
+SELECT
+FORMAT( day, 'D', 'en-US' ) AS day 
 FROM days;
