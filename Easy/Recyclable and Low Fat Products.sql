@@ -50,8 +50,21 @@ Explanation: Only products 1 and 3 are both low fat and recyclable.
 # Solution
 
 SELECT 
-product_id 
-FROM products 
-WHERE low_fats = 'Y' 
-AND recyclable = 'Y';
+  product_id 
+FROM 
+  products 
+WHERE 
+  low_fats = 'Y'  AND 
+  recyclable = 'Y';
+
+
+# Alternative Solution(works in MySQL and Oracle but not MS SQL Server)
+
+SELECT 
+  product_id 
+FROM 
+  products 
+WHERE 
+  (low_fats,recyclable) IN ( ('Y', 'Y') )
+
 
