@@ -73,24 +73,27 @@ The unique ID of Jonathan is 1.
 
 */
 
-# Solution(MySQL, Oracle)
 
-SELECT
-  unique_id, 
-  name 
-FROM employees 
-  NATURAL LEFT JOIN EmployeeUNI;
   
-# Solution(MS SQL Server) 
+# Solution 
 SELECT 
   unique_id, 
   name 
 FROM 
   employees e 
---Microsoft SQL Server 2019 has no NATURAL JOIN
+
 LEFT JOIN 
   EmployeeUNI eu 
   ON e.id = eu.id;
+  
+# Solution2 (MySQL, Oracle)
+
+SELECT
+  unique_id, 
+  name 
+FROM employees 
+--Microsoft SQL Server 2019 has no NATURAL JOIN
+  NATURAL LEFT JOIN EmployeeUNI;
   
 
 
