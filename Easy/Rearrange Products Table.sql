@@ -50,8 +50,9 @@ Product 1 is available in store1 with price 70 and store3 with price 80. The pro
 
 */
 
-# Solution(MySQL)
--- MySQL has no UNPIVOT clause
+# Solution
+
+-- MySQL 
 
 SELECT 
 product_id, 
@@ -66,7 +67,7 @@ FROM(
   SELECT product_id AS product_id, 'store3' AS store, store3 AS price FROM products) AS dt
 WHERE price > 0;
 
-# Solution2(MS SQL Server)
+-- MS SQL Server
 
 SELECT 
 product_id, 
@@ -81,7 +82,7 @@ UNPIVOT
 ) AS unpvt; 
 
 
-# Solution3(Oracle)
+-- Oracle
 
 SELECT 
 product_id,
