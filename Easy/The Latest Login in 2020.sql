@@ -55,7 +55,21 @@ User 14 did not login in 2020, so we do not include them in the result table.
  */
  
 # Solution
- 
-SELECT user_id, MAX(time_stamp) last_stamp FROM logins 
+
+-- MySQL, MS SQL Server
+
+SELECT 
+user_id, 
+MAX(time_stamp) AS last_stamp 
+FROM logins 
 WHERE YEAR(time_stamp) = 2020
-GROUP BY 1
+GROUP BY user_id;
+
+-- Oracle
+
+SELECT 
+user_id, 
+MAX(time_stamp) AS last_stamp 
+FROM logins 
+WHERE EXTRACT(year FROM time_stamp) = 2020
+GROUP BY user_id;
