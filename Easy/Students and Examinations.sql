@@ -109,10 +109,18 @@ John attended the Math exam 1 time, the Physics exam 1 time, and the Programming
 
 */
 
-WITH t AS (SELECT *
+WITH std_sub AS (SELECT *
 FROM students
 CROSS JOIN subjects) 
 
-SELECT t.student_id, student_name, t.subject_name, COUNT(e.subject_name) AS attended_exams  
-FROM examinations e RIGHT JOIN  t ON e.student_id = t.student_id AND e.subject_name = t.subject_name 
-GROUP BY 1,2,3 ORDER BY 1,2
+SELECT 
+t.student_id, 
+student_name, 
+t.subject_name, 
+COUNT(e.subject_name) AS attended_exams  
+FROM std_sub s 
+LEFT JOIN examinations e 
+  ON s.student_id = e.student_id 
+AND  s.subject_name = e.subject_name 
+GROUP BY s.student_id, student_name, s.subject_name 
+ORDER BY 1,2;
