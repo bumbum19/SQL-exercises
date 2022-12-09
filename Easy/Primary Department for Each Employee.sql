@@ -60,7 +60,23 @@ Explanation:
 
 # Solution
 
-SELECT employee_id, department_id FROM employee WHERE primary_flag = 'Y' 
-UNION
-SELECT employee_id, department_id FROM employee GROUP BY 1 HAVING
-COUNT(*) = 1
+-- MySQL
+
+SELECT 
+DISTINCT employee_id, 
+FIRST_VALUE(department_id) 
+  OVER (PARTITION BY employee_id
+  ORDER BY primary_flag ) AS department_id 
+FROM employee;
+
+-- MS SQL Server, Oracle
+
+SELECT 
+DISTINCT employee_id, 
+  FIRST_VALUE(department_id) 
+  OVER (PARTITION BY employee_id
+-- order descending
+ORDER BY primary_flag DESC ) AS department_id 
+FROM employee;
+
+
