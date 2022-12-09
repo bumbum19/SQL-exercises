@@ -70,5 +70,9 @@ Output:
  
 # Solution
 
-SELECT product_id, SUM(quantity) total_quantity FROM sales GROUP BY 1
+SELECT 
+product_id,
+SUM(quantity) AStotal_quantity 
+FROM sales 
+GROUP BY product_id;
  
