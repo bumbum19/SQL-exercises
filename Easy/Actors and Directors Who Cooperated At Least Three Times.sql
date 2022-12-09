@@ -48,5 +48,9 @@ Explanation: The only pair is (1, 1) where they cooperated exactly 3 times.
 
 # Solution
 
-SELECT actor_id, director_id FROM ActorDirector GROUP BY 1, 2
-HAVING COUNT(actor_id) > 2
+SELECT 
+actor_id, 
+director_id 
+FROM ActorDirector 
+GROUP BY actor_id, director_id2
+HAVING COUNT(*) > 2;
