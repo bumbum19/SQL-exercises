@@ -40,5 +40,7 @@ Explanation: The shortest distance is between points -1 and 0 which is |(-1) - 0
 
 # Solution
 
-SELECT MIN(ABS(p1.x - p2.x)) shortest  FROM point p1  
-JOIN point p2 ON p1.x != p2.x
+SELECT MIN(ABS(p1.x - p2.x)) AS shortest 
+FROM point p1  
+JOIN point p2
+  ON p1.x != p2.x;
