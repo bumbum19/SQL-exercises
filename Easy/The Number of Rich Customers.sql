@@ -48,4 +48,7 @@ Customer 3 has one bill with an amount strictly greater than 500.
 
 # Solution
 
-SELECT COUNT(DISTINCT customer_id )rich_count FROM store WHERE amount > 500
+SELECT 
+COUNT(DISTINCT customer_id ) AS rich_count 
+FROM store 
+WHERE amount > 500;
