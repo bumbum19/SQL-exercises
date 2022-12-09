@@ -102,9 +102,9 @@ Let us see all the possible triplets.
 # Solution
 
 SELECT 
-    a.student_name AS member_A, 
-    b.student_name AS member_B, 
-    c.student_name AS member_C
+a.student_name AS member_A, 
+b.student_name AS member_B, 
+c.student_name AS member_C
 FROM schoola AS a  
 JOIN schoolb AS b  
     ON a.student_name != b.student_name
