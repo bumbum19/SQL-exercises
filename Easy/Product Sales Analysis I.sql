@@ -75,4 +75,10 @@ From sale_id = 7, we can conclude that Apple was sold for 9000 in the year 2011.
  
 # Solution
  
-SELECT product_name, year, price FROM sales NATURAL JOIN product
+SELECT 
+product_name, 
+year, 
+price 
+FROM sales s
+JOIN product p
+ ON s.product_id = p.product_id;
