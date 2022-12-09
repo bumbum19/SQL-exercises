@@ -74,4 +74,4 @@ COUNT(session_id) AS total
 FROM category c 
 LEFT JOIN label l 
     ON c.bin = l.bin
-GROUP BY c.bin
+GROUP BY c.bin;
