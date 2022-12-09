@@ -59,5 +59,11 @@ Israel comes before Egypt because it has more bronze medals.
 
 # Solution
 
-SELECT country, gold_medals , silver_medals, bronze_medals FROM Olympic 
-ORDER BY 2 DESC, 3 DESC, 4 DESC, 1 
+SELECT 
+country, 
+gold_medals, 
+silver_medals, 
+bronze_medals 
+FROM Olympic 
+ORDER BY gold_medals DESC, silver_medals DESC, 
+    bronze_medals DESC, country;
