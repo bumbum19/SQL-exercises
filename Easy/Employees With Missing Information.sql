@@ -72,7 +72,29 @@ The salary of employee 2 is missing.
 
 # Solution
 
-SELECT employee_id FROM employees NATURAL LEFT JOIN salaries  WHERE salary IS NULL
-UNION
-SELECT employee_id FROM employees NATURAL RIGHT  JOIN salaries  WHERE name IS NULL 
-ORDER BY employee_id
+-- MySQL
+
+SELECT e.employee_id 
+FROM employees e
+LEFT JOIN salaries s  
+    ON e.employee_id = s.employee_id
+WHERE salary IS NULL
+UNION ALL
+SELECT s.employee_id 
+FROM employees e
+RIGHT JOIN salaries s  
+    ON e.employee_id = s.employee_id
+WHERE name IS NULL
+ORDER BY employee_id;
+
+
+
+-- MS SQL Server, Oracle
+
+SELECT COALESCE(e.employee_id,s.employee_id) AS employee_id
+FROM employees e
+FULL JOIN salaries s  
+    ON e.employee_id = s.employee_id
+WHERE salary IS NULL 
+OR name IS NULL
+ORDER BY employee_id;
