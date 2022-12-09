@@ -53,10 +53,25 @@ For session_id 5 has a duration greater than or equal to 15 minutes.
 */
 
 # Solution
-WITH t AS
-(SELECT  CASE WHEN duration < 300 THEN '[0-5>' WHEN duration < 600 THEN '[5-10>' 
-WHEN duration < 900 THEN '[10-15>' ELSE '15 or more' END  bin, 1 dummy FROM sessions),
-t2 AS 
-(SELECT '[0-5>'AS bin UNION SELECT '[5-10>' UNION SELECT '[10-15>'UNION SELECT '15 or more')
 
-SELECT bin, COUNT(dummy) total FROM t NATURAL RIGHT JOIN t2 GROUP BY 1
+WITH label AS
+(SELECT session_id,
+CASE WHEN duration < 300 THEN '[0-5>' 
+     WHEN duration < 600 THEN '[5-10>' 
+     WHEN duration < 900 THEN '[10-15>' 
+     ELSE '15 or more' END  AS bin 
+FROM sessions)
+,
+category AS 
+(SELECT '[0-5>'AS bin 
+UNION ALL SELECT '[5-10>' 
+UNION ALL SELECT '[10-15>'
+UNION ALL SELECT '15 or more'
+)
+SELECT 
+c.bin, 
+COUNT(session_id) AS total
+FROM category c 
+LEFT JOIN label l 
+    ON c.bin = l.bin
+GROUP BY c.bin
