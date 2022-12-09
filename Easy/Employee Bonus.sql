@@ -69,5 +69,10 @@ Output:
  
 # Solution
  
-SELECT name, bonus FROM employee NATURAL LEFT JOIN bonus 
-WHERE IFNULL(bonus,0) < 1000 
+SELECT 
+name, 
+bonus 
+FROM employee e 
+LEFT JOIN bonus b
+ ON e.empid = b.empid
+WHERE COALESCE(bonus,0) < 1000 ;
