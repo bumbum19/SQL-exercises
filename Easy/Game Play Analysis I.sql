@@ -50,4 +50,19 @@ Output:
 
 # Solution
 
-SELECT player_id, MIN(event_date) first_login FROM activity GROUP BY 1
+-- MySQL, MS SQL Server
+
+SELECT player_id, 
+MIN(event_date) AS first_login 
+FROM activity 
+GROUP BY player_id;
+
+--Oracle
+
+SELECT player_id, 
+TO_CHAR(MIN(event_date)) AS first_login 
+FROM activity 
+GROUP BY player_id;
+
+
+
