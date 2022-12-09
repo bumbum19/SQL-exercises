@@ -85,11 +85,9 @@ LCHouse3: 1 unit of LC-T-Shirt.
 # Solution
 
 SELECT 
- name AS warehouse_name, 
- SUM(width*length*height*units) AS volume 
-FROM 
- warehouse w
- JOIN products p 
+name AS warehouse_name, 
+SUM(width*length*height*units) AS volume 
+FROM warehouse w
+JOIN products p 
   ON w.product_id = p.product_id
-GROUP BY 
- name;
+GROUP BY name;
