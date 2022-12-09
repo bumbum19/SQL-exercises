@@ -50,9 +50,8 @@ Explanation: The orders with delivery id 2 and 3 are immediate while the others 
 # Solution
 
 SELECT 
-  ROUND(
-    (SELECT COUNT(*) FROM delivery WHERE order_date != customer_pref_delivery_date ) /
-    COUNT(*) * 100, 2) AS immediate_percentage 
+ROUND(CAST(SUM(CASE WHEN order_date=customer_pref_delivery_date 
+THEN 1 ELSE 0 END) AS FLOAT)
+  / COUNT(*) * 100,2) AS immediate_percentage 
 FROM delivery;
-
 
