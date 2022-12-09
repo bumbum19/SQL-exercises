@@ -69,7 +69,11 @@ Explanation: Both sellers with id 1 and 3 sold products with the most total pric
 
 */
 
-WITH t AS
-(SELECT seller_id, SUM(price) AS total FROM sales GROUP BY seller_id)
-
-SELECT seller_id  FROM t WHERE total = (SELECT MAX(total)  FROM t)
+WITH sell_total AS
+(SELECT seller_id, SUM(price) AS total 
+ FROM sales 
+ GROUP BY seller_id
+)
+SELECT seller_id 
+FROM sell_total 
+WHERE total = (SELECT MAX(total) FROM sell_total);
