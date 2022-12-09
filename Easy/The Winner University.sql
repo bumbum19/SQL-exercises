@@ -122,6 +122,16 @@ Both New York University and California University have 1 excellent student.
 
 # Solution
 
-SELECT CASE WHEN (SELECT @s:= COUNT(*) FROM newyork WHERE score >= 90) > (SELECT  @s2:= COUNT(*) FROM california WHERE score >= 90) THEN 'New York University'  
-            WHEN @s < @s2 THEN 'California University' 
-            ELSE 'No Winner' END  winner
+
+
+WITH ny AS
+(SELECT COUNT(*) AS score FROM newyork WHERE score >= 90)
+,
+cl AS 
+(SELECT COUNT(*) AS score FROM california WHERE score >= 90)
+
+
+SELECT 
+CASE WHEN (SELECT score FROM ny) > (SELECT score FROM cl) THEN 'New York University' 
+     WHEN (SELECT score FROM ny) < (SELECT score FROM cl) THEN 'California University' 
+     ELSE 'No Winner' END AS winner;
