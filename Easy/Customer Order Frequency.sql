@@ -103,9 +103,45 @@ Moustafa spent $110 (10 * 2 + 45 * 2) in June and $0 in July 2020.
  
 # Solution
 
-WITH t AS
-(SELECT customer_id, MONTH(order_date) AS month, SUM(quantity*price) total FROM orders NATURAL JOIN product NATURAL JOIN customers 
-WHERE order_date BETWEEN '2020-06-01' AND '2020-07-31' 
-GROUP BY 1,2 HAVING total >= 100 )
+-- MySQL, MS SQL Server
 
-SELECT customer_id, name FROM t NATURAL JOIN customers GROUP BY 1, 2 HAVING COUNT(*) = 2
+WITH cust_total 
+AS
+(SELECT customer_id, 
+ MONTH(order_date) AS month, 
+ SUM(quantity*price) AS total 
+ FROM orders o JOIN product p ON o.product_id = p.product_id
+ WHERE order_date >= '2020-06-01' AND order_date <= '2020-07-31' 
+ GROUP BY customer_id, MONTH(order_date)
+ HAVING SUM(quantity*price) >= 100 
+)
+SELECT 
+cu.customer_id, 
+name 
+FROM cust_total ct  
+JOIN customers cu
+ ON ct.customer_id = cu.customer_id
+GROUP BY cu.customer_id, name 
+HAVING COUNT(*) = 2;
+
+-- MySQL, Oracle
+
+WITH cust_total 
+AS
+(SELECT customer_id, 
+ EXTRACT(MONTH FROM order_date) AS month, 
+ SUM(quantity*price) AS total 
+ FROM orders o JOIN product p ON o.product_id = p.product_id
+ WHERE order_date >= '2020-06-01' AND order_date <= '2020-07-31' 
+ GROUP BY customer_id, EXTRACT(MONTH FROM order_date) 
+ HAVING SUM(quantity*price) >= 100 
+)
+SELECT 
+cu.customer_id, 
+name 
+FROM cust_total ct  
+JOIN customers cu
+ ON ct.customer_id = cu.customer_id
+GROUP BY cu.customer_id, name 
+HAVING COUNT(*) = 2;
+
