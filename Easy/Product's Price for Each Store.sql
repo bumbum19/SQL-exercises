@@ -49,7 +49,9 @@ Product 1 price's are 70 for store1, 80 for store3 and, it's not sold in store2.
 
 */
 
-# Solution(MySQL)
+# Solution
+
+-- MySQL
 
 SELECT
 product_id, 
@@ -59,15 +61,15 @@ SUM(IF(store='store3', price, NULL)) AS store3
 FROM products 
 GROUP BY product_id;
 
-# Solution2(MS SQL Server)
+-- MS SQL Server
 
 SELECT product_id, store1, store2, store3
 FROM (
   SELECT product_id, store, price
   FROM products) AS SourceTable  
-PIVOT ( SUM(price) FOR store IN (store1, store2, store3)  ) AS pvt
+PIVOT ( SUM(price) FOR store IN (store1, store2, store3)  ) AS pvt;
 
-# Solution3(Oracle)
+-- Oracle
 
 SELECT *
 FROM products
