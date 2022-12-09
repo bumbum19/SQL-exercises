@@ -69,5 +69,12 @@ addressId = 1 contains information about the address of personId = 2.
  
 # Solution
  
-SELECT firstName, lastName, city, state FROM person NATURAL LEFT JOIN
-address 
+SELECT 
+firstName, 
+lastName, 
+city, 
+state 
+FROM person p 
+LEFT JOIN address a
+ ON p.personId = a.personId;
+ 
