@@ -53,7 +53,8 @@ Note that the result table has 13 columns (1 for the department id + 12 for the 
  
  # Write your MySQL query statement below
 
-SELECT  id,
+SELECT  
+id,
 SUM(CASE WHEN month = "Jan" THEN revenue  END) AS Jan_Revenue,
 SUM(CASE WHEN month = "Feb" THEN revenue  END) AS Feb_Revenue,
 SUM(CASE WHEN month = "Mar" THEN revenue  END) AS Mar_Revenue,
@@ -66,7 +67,8 @@ SUM(CASE WHEN month = "Sep" THEN revenue  END) AS Sep_Revenue,
 SUM(CASE WHEN month = "Oct" THEN revenue  END) AS Oct_Revenue,
 SUM(CASE WHEN month = "Nov" THEN revenue  END) AS Nov_Revenue,
 SUM(CASE WHEN month = "Dec" THEN revenue  END) AS Dec_Revenue
-FROM department GROUP BY 1
+FROM department 
+GROUP BY 1;
 
 
 
