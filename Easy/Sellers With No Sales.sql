@@ -96,11 +96,11 @@ Frank made 1 sale in 2019 but no sales in 2020.
 # Solution
 
 SELECT 
-seller_name
-FROM seller s 
-LEFT JOIN orders o 
-    ON s.seller_id = o.seller_id 
-    AND sale_date >= '2020-01-01'
-WHERE order_id IS NULL 
-ORDER BY seller_name;
-
+p.product_id, 
+p.product_name 
+FROM sales s 
+JOIN product p 
+  ON s.product_id = p.product_id
+GROUP BY p.product_id, p.product_name 
+HAVING MIN(sale_date) >= '2019-01-01' 
+AND MAX(sale_date) <= '2019-03-31';
