@@ -60,10 +60,34 @@ In March, one matryoshka was sold.
 
 # Solution
 
+-- MySQL
+
 SELECT 
 TRIM(LOWER(product_name)) AS product_name, 
 DATE_FORMAT(sale_date, '%Y-%m') AS  sale_date,
 COUNT(*) AS total 
 FROM sales 
-GROUP BY 1, 2 
-ORDER BY product_name, product_name;
+GROUP BY TRIM(LOWER(product_name)), DATE_FORMAT(sale_date, '%Y-%m') 
+ORDER BY product_name, sale_date;
+
+
+-- MS SQL Server
+
+SELECT 
+TRIM(LOWER(product_name)) AS product_name, 
+FORMAT(sale_date, 'yyyy-MM') AS  sale_date,
+COUNT(*) AS total 
+FROM sales 
+GROUP BY TRIM(LOWER(product_name)), FORMAT(sale_date, 'yyyy-MM')
+ORDER BY product_name, sale_date;
+
+-- Oracle
+
+SELECT 
+TRIM(LOWER(product_name)) AS product_name,
+TO_CHAR(sale_date, 'YYYY-MM') AS sale_date,
+COUNT(*) AS total 
+FROM sales 
+GROUP BY TRIM(LOWER(product_name)),TO_CHAR(sale_date, 'YYYY-MM')
+ORDER BY product_name, sale_date;
+
