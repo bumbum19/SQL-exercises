@@ -50,4 +50,9 @@ The followers of 2 are {0,1}
 
 # Solution
 
-SELECT user_id, COUNT(*) followers_count FROM followers GROUP BY 1 ORDER BY 1
+SELECT 
+user_id, 
+COUNT(*) AS followers_count
+FROM followers 
+GROUP BY user_id 
+ORDER BY user_id;
