@@ -43,5 +43,22 @@ Output:
 
 # Solution
 
-SELECT user_id, CONCAT(UPPER(SUBSTRING(name, 1, 1)),LOWER(SUBSTRING(name, 2))) name
-From users ORDER BY 1
+-- MySQL, MS SQL Server
+
+SELECT 
+user_id, 
+CONCAT(UPPER(SUBSTRING(name, 1, 1)),
+       LOWER(SUBSTRING(name, 2, 100))) AS name
+FROM users 
+ORDER BY user_id;
+
+-- Oracle
+
+SELECT 
+user_id, 
+CONCAT(UPPER(SUBSTR(name, 1, 1)),
+       LOWER(SUBSTR(name, 2)) AS name
+FROM users 
+ORDER BY user_id;
+
+
