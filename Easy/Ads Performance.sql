@@ -66,8 +66,11 @@ Note that we do not care about Ignored Ads.
 
 # Solution
 
-SELECT ad_id, 
-COALESCE(ROUND(SUM(CASE WHEN action='Clicked ' THEN 1 ELSE 0 END)/
-(SUM(CASE WHEN action='Clicked ' THEN 1 ELSE 0 END)+
-SUM(CASE WHEN action='Viewed ' THEN 1 ELSE 0 END)) *100,2),0)  ctr FROM ads
-GROUP BY 1 ORDER BY 2 DESC, 1
+SELECT 
+ad_id, 
+COALESCE(ROUND(SUM(CASE WHEN action='Clicked ' THEN 1 ELSE 0 END) * 100.00 /
+    (NULLIF(SUM(CASE WHEN action='Clicked ' THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN action='Viewed ' THEN 1 ELSE 0 END),0) ) ,2),0) AS ctr 
+FROM ads
+GROUP BY ad_id 
+ORDER BY ctr DESC, ad_id;
