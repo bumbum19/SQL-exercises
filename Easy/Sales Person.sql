@@ -102,7 +102,15 @@ According to orders 3 and 4 in the Orders table, it is easy to tell that only sa
 
 # Solution
 
-WITH t AS
-(SELECT  sales_id, name company  FROM orders NATURAL JOIN company WHERE name = 'RED')
+WITH SalesRed AS
+(SELECT  sales_id, name AS company  
+ FROM orders o JOIN company c
+  ON o.com_id = c.com_id
+ WHERE name = 'RED')
 
-SELECT name  FROM SalesPerson NATURAL LEFT JOIN t WHERE company IS NULL
+SELECT 
+name  
+FROM SalesPerson sp  
+LEFT JOIN SalesRed sr
+  ON sp.sales_id = sr.sales_id 
+WHERE company IS NULL;
