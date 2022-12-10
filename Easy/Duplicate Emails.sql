@@ -44,4 +44,8 @@ Explanation: a@b.com is repeated two times.
 
 # Solution
 
-SELECT email FROM person GROUP BY email HAVING COUNT(*) > 1
+SELECT 
+email 
+FROM person 
+GROUP BY email 
+HAVING COUNT(*) > 1;
