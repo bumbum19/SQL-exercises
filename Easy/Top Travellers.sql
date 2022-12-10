@@ -85,5 +85,11 @@ Donald did not have any rides, the distance traveled by him is 0.
 
 # Solution
 
-SELECT name, COALESCE(SUM(distance),0) travelled_distance  
-FROM rides r  RIGHT JOIN users u ON u.id = r.user_id GROUP BY u.id,name ORDER BY 2 DESC, 1
+SELECT 
+name, 
+COALESCE(SUM(distance),0) AS travelled_distance  
+FROM users u  
+LEFT JOIN rides r 
+  ON u.id = r.user_id 
+GROUP BY u.id, name 
+ORDER BY travelled_distance DESC, name;
