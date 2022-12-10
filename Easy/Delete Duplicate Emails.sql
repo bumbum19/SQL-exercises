@@ -45,5 +45,21 @@ Explanation: john@example.com is repeated two times. We keep the row with the sm
 
 # Solution
 
-DELETE p1 FROM person p1 JOIN person p2 ON p1.email=p2.email
-WHERE p1.id > p2.id
+--MySQL, MS SQL Server
+
+DELETE 
+p1 
+FROM person p1 
+JOIN person p2 
+  ON p1.email  =p2.email;
+  
+-- MS Server, Oracle
+
+
+DELETE FROM person
+WHERE EXISTS
+  ( SELECT *
+    FROM person  person2
+    WHERE person.email = person2.email
+    AND person.id > person2.id );
+WHERE p1.id > p2.id;
