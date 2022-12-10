@@ -44,6 +44,12 @@ Output:
  
 # Solution
  
-SELECT x, y, z, CASE 
-WHEN  x + y <= z OR x + z <= y OR z + y <= x  THEN 'No'
-ELSE 'Yes' END  triangle FROM triangle
+SELECT 
+x, 
+y, 
+z, 
+CASE WHEN x + y <= z 
+     OR x + z <= y 
+     OR z + y <= x  THEN 'No'
+     ELSE 'Yes' END AS  triangle 
+FROM triangle;
