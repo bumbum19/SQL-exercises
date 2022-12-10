@@ -80,6 +80,36 @@ User 7 requested two messages within 24 hours and 1 second of each other, so we 
 
 # Solution 
 
-SELECT  DISTINCT c1.user_id FROM confirmations c1  JOIN Confirmations c2 ON 
-c1.user_id = c2.user_id AND c1.time_stamp < c2.time_stamp 
-WHERE TIMESTAMPDIFF(SECOND,c1.time_stamp,c2.time_stamp) <= 86400
+-- MySQL
+
+SELECT 
+DISTINCT c1.user_id 
+FROM confirmations c1  
+JOIN confirmations c2 
+ON c1.user_id = c2.user_id 
+  AND c1.time_stamp < c2.time_stamp 
+WHERE TIMESTAMPDIFF(SECOND,c1.time_stamp,c2.time_stamp) <= 86400;
+
+-- MS SQL Server
+
+SELECT 
+DISTINCT c1.user_id
+FROM confirmations c1  
+JOIN confirmations c2 
+ON c1.user_id = c2.user_id 
+  AND c1.time_stamp < c2.time_stamp 
+WHERE DATEDIFF(SECOND,c1.time_stamp,c2.time_stamp) <= 86400;
+
+-- Oracle
+
+SELECT 
+DISTINCT c1.user_id
+FROM confirmations c1  
+JOIN confirmations c2 
+ON c1.user_id = c2.user_id 
+  AND c1.time_stamp < c2.time_stamp 
+WHERE c1.time_stamp-c2.time_stamp >= -1;
+
+
+
+
