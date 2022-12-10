@@ -66,5 +66,10 @@ Each Metal element pairs with a Nonmetal element in the output table.
 
 # Solution
 
-SELECT e1.symbol metal, e2.symbol nonmetal FROM elements e1, elements e2 
-WHERE e1.type = 1 AND e2.type = 2
+SELECT 
+e1.symbol AS metal, 
+e2.symbol AS nonmetal 
+FROM elements e1
+CROSS JOIN elements e2 
+WHERE e1.type = 'Metal' 
+AND e2.type = 'Nonmetal';
