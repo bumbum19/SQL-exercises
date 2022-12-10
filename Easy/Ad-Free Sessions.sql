@@ -79,5 +79,11 @@ We can see that sessions 1 and 4 had at least one ad. Sessions 2, 3, and 5 did n
 
 # Solution
 
-SELECT  session_id FROM playback p  LEFT JOIN ads a ON p.customer_id = a.customer_id
-AND timestamp   >= start_time AND timestamp <= end_time WHERE ad_id IS NULL
+SELECT  
+session_id 
+FROM playback p  
+LEFT JOIN ads a 
+  ON p.customer_id = a.customer_id
+  AND timestamp   >= start_time 
+  AND timestamp <= end_time
+WHERE ad_id IS NULL;
