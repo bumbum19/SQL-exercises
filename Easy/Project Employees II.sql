@@ -70,7 +70,15 @@ Explanation: The first project has 3 employees while the second one has 2.
 
 # Solution
 
-WITH t AS
-(SELECT project_id, COUNT(*) AS total FROM project  GROUP BY project_id)
-SELECT project_id FROM table1 WHERE total =(SELECT MAX(total) FROM t)
+WITH cnt_emp AS
+(SELECT project_id, COUNT(*) AS total 
+ FROM project  
+ GROUP BY project_id)
+
+SELECT 
+project_id 
+FROM cnt_emp 
+WHERE total = (
+  SELECT MAX(total) FROM cnt_emp
+  );
 
