@@ -53,6 +53,10 @@ Joziah's manager is employee 6, who left the company because there is no row for
 
 # Solution
 
-SELECT employee_id FROM employees WHERE salary < 30000 
-AND manager_id NOT IN (SELECT employee_id FROM employees)
-ORDER BY 1
+SELECT 
+employee_id 
+FROM employees
+WHERE salary < 30000 
+AND manager_id NOT IN 
+  (SELECT employee_id FROM employees)
+ORDER BY employee_id;
