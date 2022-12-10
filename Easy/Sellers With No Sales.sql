@@ -95,6 +95,12 @@ Frank made 1 sale in 2019 but no sales in 2020.
 
 # Solution
 
-SELECT seller_name FROM seller s LEFT JOIN orders o ON s.seller_id = o.seller_id 
-AND YEAR(sale_date) = 2020
-WHERE order_id IS NULL ORDER BY 1 
+SELECT 
+seller_name
+FROM seller s 
+LEFT JOIN orders o 
+    ON s.seller_id = o.seller_id 
+    AND sale_date >= '2020-01-01'
+WHERE order_id IS NULL 
+ORDER BY seller_name;
+
