@@ -54,4 +54,8 @@ Explanation:
 
 # Solution
 
-SELECT class FROM courses GROUP BY 1 HAVING COUNT(*) >= 5
+SELECT 
+class 
+FROM courses 
+GROUP BY class 
+HAVING COUNT(*) >= 5;
