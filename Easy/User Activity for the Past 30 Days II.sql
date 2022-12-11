@@ -57,6 +57,15 @@ Explanation: User 1 and 2 each had 1 session in the past 30 days while user 3 ha
 
 # Solution
 
-SELECT COALESCE(ROUND(AVG(total),2),0)  average_sessions_per_user  FROM (
-SELECT COUNT(DISTINCT session_id)  total FROM activity WHERE activity_date BETWEEN
- '2019-06-28' AND '2019-07-27' GROUP BY user_id) t
+WITH sess_user AS 
+(
+    SELECT COUNT(DISTINCT session_id) *1.0 AS  total 
+    FROM activity 
+    WHERE activity_date >= '2019-06-28'
+    AND  activity_date < '2019-07-28' 
+    GROUP BY user_id
+)
+
+SELECT 
+COALESCE(ROUND(AVG(total),2),0) AS  average_sessions_per_user  
+FROM  sess_user;
