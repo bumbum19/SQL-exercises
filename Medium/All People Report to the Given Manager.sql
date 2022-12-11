@@ -61,7 +61,8 @@ The employees with employee_id 3, 8, and 9 do not report their work to the head 
 
 # Solution
 
-SELECT e1.employee_id  
+SELECT 
+e1.employee_id  
 FROM employees e1 
 JOIN employees e2 
   ON e1.manager_id = e2.employee_id 
