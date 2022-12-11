@@ -74,4 +74,24 @@ The fifth day is 2020-01-07, Bajrang scored 7 points and the total score for the
 
 # Solution
 
-SELECT gender, day, SUM(score_points) OVER (PARTITION BY gender ORDER BY day) total FROM scores ORDER BY 1,2
+-- MySQL, MS SQL Server
+
+SELECT 
+gender, 
+day, 
+SUM(score_points) 
+  OVER (PARTITION BY gender ORDER BY day) AS total 
+FROM scores 
+ORDER BY gender, day;
+
+
+-- Oracle
+
+SELECT 
+gender, 
+TO_CHAR(day) AS day, 
+SUM(score_points) 
+  OVER (PARTITION BY gender ORDER BY day) AS total 
+FROM scores 
+ORDER BY gender, day;
+
