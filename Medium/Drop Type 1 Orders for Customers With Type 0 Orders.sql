@@ -1,5 +1,5 @@
 /* 
-Question: 
+Question: 2084
 Table: Orders
 
 +-------------+------+
@@ -61,10 +61,20 @@ Customer 4 has two orders of type 1. We return both of them.
 
  */
  
-#Solution
+# Solution
 
-WITH t AS 
-(SELECT DISTINCT customer_id, 1 dummy FROM orders WHERE order_type=0 )
+WITH customers AS 
+(
+SELECT DISTINCT customer_id, 1 dummy
+ FROM orders 
+ WHERE order_type = 0
+ )
 
-SELECT order_id, customer_id, order_type FROM orders NATURAL LEFT JOIN t 
-WHERE order_type <> IFNULL(dummy,0)
+SELECT 
+order_id, 
+o.customer_id, 
+order_type 
+FROM orders o 
+LEFT JOIN customers c
+    ON o.customer_id = c.customer_id
+WHERE order_type != COALESCE(dummy,0);
