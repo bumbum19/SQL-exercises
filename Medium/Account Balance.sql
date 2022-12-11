@@ -62,7 +62,24 @@ Account 2:
 
 # Solution
 
-SELECT account_id, day, SUM(IF(type='Deposit',amount,-amount)) OVER w balance
+-- MySQL, MS SQL Server
+
+SELECT 
+account_id, 
+day, 
+SUM(CASE WHEN type='Deposit'THEN amount 
+    ELSE -amount END ) 
+        OVER (PARTITION BY account_id ORDER BY day) AS balance
 FROM transactions
-WINDOW w AS (PARTITION BY account_id ORDER BY day )
-ORDER BY 1,2
+ORDER BY account_id, day;
+
+-- Oracle
+
+SELECT 
+account_id, 
+TO_CHAR(day) AS day, 
+SUM(CASE WHEN type='Deposit'THEN amount 
+    ELSE -amount END ) 
+        OVER (PARTITION BY account_id ORDER BY day) AS balance
+FROM transactions
+ORDER BY account_id, day;
