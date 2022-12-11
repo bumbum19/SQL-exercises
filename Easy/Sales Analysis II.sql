@@ -70,10 +70,43 @@ Explanation: The buyer with id 1 bought an S8 but did not buy an iPhone. The buy
 
 # Solution
 
-SELECT DISTINCT buyer_id  FROM sales  NATURAL LEFT JOIN
-(SELECT  DISTINCT buyer_id, 1 dummy  FROM sales  WHERE product_id  IN (SELECT product_id  FROM product
-WHERE product_name = 'iPhone' )) t
+# 1.Version
+
+WITH buy_iphone AS 
+(SELECT  buyer_id, 1 AS dummy  
+ FROM sales  
+ WHERE product_id  
+  IN (SELECT product_id  
+      FROM product
+      WHERE product_name = 'iPhone' )
+) 
+SELECT 
+DISTINCT s.buyer_id  
+FROM sales s  
+LEFT JOIN buy_iphone b
+ ON s.buyer_id = b.buyer_id
 WHERE product_id  IN (SELECT product_id  FROM product
-WHERE product_name = 'S8' )  AND dummy IS NULL
+                      WHERE product_name = 'S8' )  
+AND dummy IS NULL;
+
+# 2.Version
+
+-- MS SQL Server
+
+SELECT  buyer_id  
+FROM sales 
+WHERE product_id  IN 
+     (SELECT product_id 
+      FROM product
+      WHERE product_name = 'S8') 
+EXCEPT 
+SELECT   
+FROM sales  
+WHERE product_id IN 
+      (SELECT product_id  FROM product
+       WHERE product_name = 'iPhone');
+
+
+
 
 
