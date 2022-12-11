@@ -54,9 +54,29 @@ Number 10 is contained in the table.
 
 # Solution
 
-WITH t AS 
-(SELECT log_id, RANK() OVER w 'rank' FROM logs  WINDOW w AS (ORDER BY log_id)),
-t2 AS (SELECT s2.log_id start_id, MAX(s1.log_id) end_id  
-FROM t s1 JOIN t s2 ON s1.log_id >= s2.log_id AND  s1.log_id-s2.log_id = s1.rank-s2.rank GROUP BY 1 ORDER BY 1)
+WITH ranking AS 
+(
+  SELECT log_id, 
+  RANK() OVER (ORDER BY log_id) AS rate
+  FROM logs  
+),
+max_range AS 
+(
 
-SELECT MIN(start_id) start_id, end_id FROM t2 GROUP BY 2 ORDER BY 1
+  SELECT 
+  r1.log_id AS start_id, 
+  MAX(r2.log_id) AS end_id  
+  FROM ranking r1 JOIN ranking r2 
+    ON r1.log_id <= r2.log_id 
+    AND  r2.log_id - r1.log_id = r2.rate - r1.rate
+  GROUP BY r1.log_id 
+  ORDER BY start_id
+)
+
+SELECT 
+MIN(start_id) AS start_id, 
+end_id 
+FROM max_range
+GROUP BY end_id 
+ORDER BY start_id;
+
