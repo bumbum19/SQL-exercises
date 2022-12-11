@@ -62,6 +62,10 @@ Corona Masks stock was bought at day 1 for 10$ and was sold at day 3 for 1010$. 
  
  # Solution
  
-SELECT stock_name, SUM(IF(operation='Sell' ,price,-price))  capital_gain_loss  
-FROM stocks GROUP BY 1
+SELECT 
+stock_name, 
+SUM(CASE WHEN operation='Sell' THEN price
+     ELSE -price END)  AS capital_gain_loss  
+FROM stocks 
+GROUP BY stock_name;
 
