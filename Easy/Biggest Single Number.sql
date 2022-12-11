@@ -72,4 +72,12 @@ Explanation: There are no single numbers in the input table so we return null.
 
 # Solution
 
-SELECT MAX(num) num FROM (SELECT num FROM MyNumbers GROUP BY num HAVING COUNT(*) = 1) t
+WITH dst_num AS
+(
+ SELECT num 
+ FROM MyNumbers 
+ GROUP BY num 
+ HAVING COUNT(*) = 1
+)
+SELECT MAX(num) AS num 
+FROM dst_num;
