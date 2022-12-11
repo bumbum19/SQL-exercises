@@ -81,5 +81,14 @@ Explanation:
 
 # Solution
 
-SELECT DISTINCT title FROM content NATURAL JOIN tvprogram WHERE content_type = 'Movies' AND 
-Kids_content = 'Y' AND program_date BETWEEN  '2020-06-01'  AND '2020-06-30'
+SELECT 
+DISTINCT title 
+FROM content c
+JOIN tvprogram t
+    ON c.content_id = t.content_id
+WHERE program_date >=  '2020-06-01'
+AND program_date < '2020-07-01'
+AND content_type = 'Movies' 
+AND Kids_content = 'Y';
+
+
