@@ -84,6 +84,14 @@ Explanation:
 
 # Solution
 
-SELECT name, COALESCE(SUM(rest),0) rest, COALESCE(SUM(paid),0) paid, 
-COALESCE(SUM(canceled),0)  canceled, COALESCE(SUM(refunded),0) refunded
-FROM product  NATURAL LEFT JOIN invoice  GROUP BY 1 ORDER BY 1
+SELECT 
+name, 
+COALESCE(SUM(rest),0) AS rest, 
+COALESCE(SUM(paid),0) AS paid, 
+COALESCE(SUM(canceled),0) AS canceled, 
+COALESCE(SUM(refunded),0) AS refunded
+FROM product p  
+LEFT JOIN invoice i 
+  ON p.product_id = i.product_id
+GROUP BY name 
+ORDER BY name;
