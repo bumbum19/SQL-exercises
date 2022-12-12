@@ -111,7 +111,63 @@ John doesn't have any contacts.
 
 # Solution
 
-SELECT invoice_id, customer_name, price, COUNT(contact_name) contacts_cnt,
-SUM(IF(contact_email IN (SELECT email FROM customers ),1,0)) trusted_contacts_cnt
-FROM invoices i JOIN customers c ON i.user_id = c.customer_id 
-NATURAL LEFT JOIN contacts GROUP BY 1,2,3 ORDER BY 1
+# Version 1
+
+-- MySQL, Oracle(with subquery)
+
+
+SELECT 
+invoice_id, 
+customer_name, 
+price, 
+COUNT(contact_name) AS contacts_cnt,
+SUM(CASE WHEN contact_email IN (SELECT email FROM customers ) THEN 1 
+    ELSE 0 END) AS trusted_contacts_cnt
+FROM invoices i 
+JOIN customers cu  
+LEFT JOIN contacts co 
+    ON cu.customer_id = co.user_id
+    ON i.user_id = cu.customer_id
+
+GROUP BY invoice_id, customer_name, price 
+ORDER BY invoice_id;
+
+-- MS SQL Server(without subquery)
+
+
+SELECT 
+invoice_id, 
+customer_name, 
+price, 
+COUNT(contact_name) AS contacts_cnt,
+COALESCE(SUM(trusted),0) AS trusted_contacts_cnt  
+FROM invoices i 
+JOIN customers cu
+LEFT JOIN contacts co 
+CROSS APPLY
+(SELECT 1 AS trusted FROM customers cu2 WHERE cu2.email = co.contact_email ) l 
+    ON cu.customer_id = co.user_id 
+    ON i.user_id = cu.customer_id
+GROUP BY invoice_id, customer_name, price  
+ORDER BY invoice_id;
+
+
+# 2.Version
+
+-- MySQL(without subquery)
+
+SELECT 
+invoice_id, 
+customer_name, 
+price, 
+COUNT(contact_name) AS contacts_cnt,
+COALESCE(SUM(trusted),0) AS trusted_contacts_cnt  
+FROM invoices i 
+JOIN customers cu
+LEFT JOIN contacts co 
+LEFT JOIN LATERAL 
+(SELECT 1 AS trusted FROM customers cu2 WHERE cu2.email = co.contact_email ) l ON TRUE
+    ON cu.customer_id = co.user_id 
+    ON i.user_id = cu.customer_id
+GROUP BY invoice_id, customer_name, price  
+ORDER BY invoice_id;
