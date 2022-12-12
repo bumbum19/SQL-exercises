@@ -72,8 +72,17 @@ Explanation: Both employees with id 1 and 3 have the most experience among the e
 
 # Solution
 
-WITH t AS 
-(SELECT project_id, employee_id, experience_years,  MAX(experience_years) OVER (PARTITION BY project_id ) max_cnt
-FROM project NATURAL JOIN employee )
+WITH max_exp AS 
+(SELECT  project_id, e.employee_id, experience_years,  
+ MAX(experience_years) OVER 
+    (PARTITION BY project_id ) AS max_cnt
+ FROM project p  
+ JOIN employee e
+    ON p.employee_id = e.employee_id
+ )
 
-SELECT project_id, employee_id FROM t WHERE experience_years = max_cnt
+SELECT 
+project_id, 
+employee_id 
+FROM max_exp 
+WHERE experience_years = max_cnt;
