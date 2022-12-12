@@ -82,6 +82,9 @@ Total number of oranges = 15 + 25 + 8 + 28 + 15 + 15 + 17 = 123
 
 # Solution
 
-SELECT SUM(b.apple_count) + IFNULL(SUM(c.apple_count),0) apple_count,
-SUM(b.orange_count) + IFNULL(SUM(c.orange_count ),0) orange_count
-FROM boxes b  LEFT JOIN chests c USING (chest_id )
+SELECT 
+SUM(b.apple_count) + COALESCE(SUM(c.apple_count),0) AS apple_count,
+SUM(b.orange_count) + COALESCE(SUM(c.orange_count ),0) AS orange_count
+FROM boxes b  
+LEFT JOIN chests c 
+  ON b.chest_id = c.chest_id;
