@@ -61,7 +61,53 @@ For the third user, the only window in question is between dates 2020-11-11 and 
 
 # Solution
 
-WITH t AS
-(SELECT *, IFNULL(LEAD(visit_date) OVER w,'2021-1-1') next_visit FROM UserVisits WINDOW w AS (PARTITION BY user_id  ORDER BY visit_date ))
+-- MySQL
 
-SELECT user_id, MAX(DATEDIFF(next_visit,visit_date)) biggest_window FROM t GROUP BY 1 ORDER BY 1
+WITH lead_visit AS
+(SELECT user_id, visit_date,
+ COALESCE(LEAD(visit_date) OVER 
+            (PARTITION BY user_id  
+            ORDER BY visit_date ),'2021-1-1') AS next_visit 
+ FROM UserVisits )
+
+
+SELECT 
+user_id, 
+MAX(DATEDIFF(next_visit,visit_date)) AS biggest_window 
+FROM lead_visit 
+GROUP BY user_id
+ORDER BY user_id;
+
+-- MS SQL Server
+
+WITH lead_visit AS
+(SELECT user_id, visit_date,
+ COALESCE(LEAD(visit_date) OVER 
+            (PARTITION BY user_id  
+            ORDER BY visit_date ),'2021-1-1') AS next_visit 
+ FROM UserVisits )
+
+
+SELECT 
+user_id, 
+MAX(DATEDIFF(DAY,visit_date,next_visit)) AS biggest_window 
+FROM lead_visit 
+GROUP BY user_id
+ORDER BY user_id;
+
+-- Oracle
+
+WITH lead_visit AS
+(SELECT user_id, visit_date,
+ COALESCE(LEAD(visit_date) OVER 
+            (PARTITION BY user_id  
+            ORDER BY visit_date ), TO_DATE( '01 Jan 2021', 'DD-MM-YYYY' )) AS next_visit 
+ FROM UserVisits )
+
+
+SELECT 
+user_id,
+MAX(next_visit - visit_date) AS biggest_window 
+FROM lead_visit 
+GROUP BY user_id
+ORDER BY user_id;
