@@ -126,5 +126,5 @@ p.product_id,
 product_name 
 FROM cnt_max cm  
 JOIN products p
-ON cm.product_id = p.product_id
- WHERE cnt = max_cnt;
+ ON cm.product_id = p.product_id
+WHERE cnt = max_cnt;
