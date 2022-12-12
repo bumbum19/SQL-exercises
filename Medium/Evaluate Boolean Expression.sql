@@ -76,9 +76,16 @@ As shown, you need to find the value of each boolean expression in the table usi
 
 # Solution
 
-SELECT left_operand, operator, right_operand,
- CASE WHEN operator = '=' THEN IF(v1.value=v2.value,'true','false')
- WHEN operator = '<' THEN IF(v1.value<v2.value,'true','false')
- ELSE IF(v1.value>v2.value,'true','false') END value
-FROM expressions e JOIN variables v1 ON e.left_operand = v1.name JOIN
- variables v2 ON e.right_operand = v2.name
+SELECT 
+left_operand, 
+operator, 
+right_operand,
+CASE WHEN operator = '=' THEN CASE WHEN v1.value = v2.value THEN 'true'ELSE 'false' END
+     WHEN operator = '<' THEN CASE WHEN v1.value < v2.value THEN 'true'ELSE 'false' END
+     ELSE  CASE WHEN v1.value > v2.value THEN 'true' ELSE 'false' END 
+END  AS value
+FROM expressions e 
+JOIN variables v1 
+ ON e.left_operand = v1.name
+JOIN variables v2 
+ ON e.right_operand = v2.name
