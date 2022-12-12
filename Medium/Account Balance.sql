@@ -60,14 +60,14 @@ Account 2:
 
 */
 
-# Solution
+# Solutions
 
 -- MySQL, MS SQL Server
 
 SELECT 
 account_id, 
 day, 
-SUM(CASE WHEN type='Deposit'THEN amount 
+SUM(CASE WHEN type='Deposit' THEN amount 
     ELSE -amount END ) 
         OVER (PARTITION BY account_id ORDER BY day) AS balance
 FROM transactions
@@ -78,7 +78,7 @@ ORDER BY account_id, day;
 SELECT 
 account_id, 
 TO_CHAR(day) AS day, 
-SUM(CASE WHEN type='Deposit'THEN amount 
+SUM(CASE WHEN type='Deposit' THEN amount 
     ELSE -amount END ) 
         OVER (PARTITION BY account_id ORDER BY day) AS balance
 FROM transactions
