@@ -55,5 +55,11 @@ Users 3 and 4 had 4 calls and the total duration is 999 (100 + 200 + 200 + 499).
 
 # Solution
 
-SELECT LEAST(from_id,to_id) person1, GREATEST(from_id,to_id) person2, 
-COUNT(*) call_count, SUM(duration) total_duration FROM calls GROUP BY 1,2
+SELECT 
+CASE WHEN from_id < to_id THEN  from_id ELSE  to_id END AS person1, 
+CASE WHEN from_id > to_id THEN  from_id ELSE  to_id END AS person2, 
+COUNT(*) AS call_count, 
+SUM(duration) AS total_duration 
+FROM calls 
+GROUP BY CASE WHEN from_id < to_id THEN  from_id ELSE to_id END,
+CASE WHEN from_id > to_id THEN  from_id ELSE  to_id END;
