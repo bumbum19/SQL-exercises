@@ -82,5 +82,11 @@ Explanation:
 
 # Solution
 
-SELECT candidate_id FROM candidates NATURAL JOIN rounds WHERE years_of_exp >= 2
-GROUP BY 1 HAVING SUM(score) > 15
+SELECT 
+candidate_id 
+FROM candidates c
+JOIN rounds r
+  ON c.interview_id = r.interview_id
+WHERE years_of_exp >= 2
+GROUP BY candidate_id 
+HAVING SUM(score) > 15;
