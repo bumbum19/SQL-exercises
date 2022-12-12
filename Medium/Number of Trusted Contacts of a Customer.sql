@@ -144,7 +144,7 @@ COALESCE(SUM(trusted),0) AS trusted_contacts_cnt
 FROM invoices i 
 JOIN customers cu
 LEFT JOIN contacts co 
-CROSS APPLY
+OUTER APPLY
 (SELECT 1 AS trusted FROM customers cu2 WHERE cu2.email = co.contact_email ) l 
     ON cu.customer_id = co.user_id 
     ON i.user_id = cu.customer_id
