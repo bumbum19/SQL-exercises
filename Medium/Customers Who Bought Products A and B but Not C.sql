@@ -73,10 +73,68 @@ Explanation: Only the customer_id with id 3 bought the product A and B but not t
 
 # Solution
 
-WITH t AS 
-(SELECT DISTINCT customer_id,customer_name  FROM orders NATURAL JOIN customers WHERE product_name = 'A'),
-t2 AS 
-(SELECT customer_id,customer_name  FROM orders NATURAL JOIN t WHERE product_name = 'B')
+-- MySQL
 
-SELECT  * FROM t2 WHERE customer_id NOT IN (SELECT customer_id 
-FROM orders WHERE product_name = 'C') ORDER BY customer_id
+SELECT 
+DISTINCT c.customer_id, 
+customer_name
+FROM orders o1
+JOIN orders o2 
+    ON  o1.customer_id = o2.customer_id
+    AND ((o1.product_name = 'A' AND o2.product_name   = 'B') 
+    OR  ( o1.product_name = 'B' AND o2.product_name   = 'A'))
+JOIN customers c
+    ON c.customer_id = o1.customer_id
+WHERE c.customer_id NOT IN  
+        (SELECT customer_id 
+        FROM orders 
+        WHERE product_name = 'C'
+        );
+
+-- MS SQL Server
+
+WITH t AS
+(SELECT customer_id 
+ FROM orders 
+ WHERE product_name = 'A'
+ INTERSECT 
+ SELECT customer_id 
+ FROM orders 
+ WHERE product_name = 'B'
+ EXCEPT
+ SELECT customer_id 
+ FROM orders 
+ WHERE product_name = 'C'
+)
+
+SELECT 
+c.customer_id,
+customer_name       
+FROM customers c
+JOIN t 
+  ON c.customer_id = t.customer_id;
+   
+-- Oracle
+
+
+WITH t AS
+(SELECT customer_id 
+ FROM orders 
+ WHERE product_name = 'A'
+ INTERSECT 
+ SELECT customer_id 
+ FROM orders 
+ WHERE product_name = 'B'
+ MINUS
+ SELECT customer_id 
+ FROM orders 
+ WHERE product_name = 'C'
+)
+
+SELECT 
+c.customer_id,
+customer_name       
+FROM customers c
+JOIN t 
+  ON c.customer_id = t.customer_id;
+    
