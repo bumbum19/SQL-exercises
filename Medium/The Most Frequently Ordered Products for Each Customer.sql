@@ -111,12 +111,20 @@ John (customer 5) did not order anything, so we do not include them in the resul
 
 # Solution
 
-WITH t1 AS 
-(SELECT customer_id, product_id, COUNT(*) product_count FROM orders GROUP BY 1,2
-),
-t2 AS
-(SELECT *, MAX(product_count)  OVER w max_count FROM t1
-WINDOW w AS (PARTITION BY customer_id ))
+WITH cnt_max AS 
+(SELECT customer_id, product_id, 
+ COUNT(*) AS cnt, 
+ MAX(COUNT(*)) 
+  OVER (PARTITION BY customer_id ) AS max_cnt 
+ FROM orders 
+ GROUP BY customer_id,product_id
+)
 
-SELECT customer_id, product_id, product_name FROM t2 NATURAL JOIN products 
-WHERE product_count = max_count
+SELECT 
+customer_id, 
+p.product_id,
+product_name 
+FROM cnt_max cm  
+JOIN products p
+ON cm.product_id = p.product_id
+ WHERE cnt = max_cnt;
