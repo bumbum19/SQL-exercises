@@ -73,10 +73,15 @@ For example, Salary for Morninngcat (3, 15) after taxes = 7777 - 7777 * (24 / 10
 
 # Solution
 
-WITH t AS
-(SELECT company_id, MAX(salary) max_salary FROM salaries GROUP BY 1)
 
-SELECT company_id, employee_id, employee_name,
-CASE WHEN max_salary < 1000 THEN salary 
-WHEN max_salary BETWEEN 1000 AND 10000 THEN ROUND(0.76*salary)
-ELSE ROUND(0.51*salary) END salary FROM t NATURAL JOIN salaries
+SELECT 
+company_id, 
+employee_id, 
+employee_name,
+CASE WHEN  MAX(salary) OVER 
+        (PARTITION BY company_id ) < 1000 THEN salary 
+     WHEN MAX(salary) OVER 
+     (PARTITION BY company_id) 
+        BETWEEN 1000 AND 10000 THEN ROUND(0.76*salary,0)
+     ELSE ROUND(0.51*salary,0) END  AS salary 
+ FROM salaries;
