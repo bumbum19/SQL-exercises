@@ -52,9 +52,51 @@ We order the result table by transaction_id after collecting these IDs.
  */
  
 # Solution
- 
-WITH t AS 
-(SELECT transaction_id, amount, MAX(amount) OVER w max_amount FROM transactions 
-WINDOW w AS (PARTITION BY DATE_FORMAT(day,'%y-%m-%d')))
 
-SELECT transaction_id FROM t WHERE amount = max_amount ORDER BY 1 
+-- MySQL
+
+WITH find_mx AS 
+(SELECT transaction_id, amount, 
+ MAX(amount) OVER 
+    (PARTITION BY DATE_FORMAT(day,'%y-%m-%d')) AS max_amount 
+ FROM transactions 
+)
+
+SELECT 
+transaction_id 
+FROM find_mx
+WHERE amount = max_amount 
+ORDER BY transaction_id;
+
+
+-- MS SQL Server
+
+
+WITH find_mx AS 
+(SELECT transaction_id, amount, 
+ MAX(amount) OVER 
+    (PARTITION BY FORMAT(day,'d')) AS max_amount 
+ FROM transactions 
+)
+
+SELECT 
+transaction_id 
+FROM find_mx
+WHERE amount = max_amount 
+ORDER BY transaction_id;
+
+
+-- Oracle
+
+WITH find_mx AS 
+(SELECT transaction_id, amount, 
+ MAX(amount) OVER 
+    (PARTITION BY TO_CHAR(day,'YYYY-MM-DD')) AS max_amount 
+ FROM transactions 
+)
+
+SELECT 
+transaction_id 
+FROM find_mx
+WHERE amount = max_amount 
+ORDER BY transaction_id;
