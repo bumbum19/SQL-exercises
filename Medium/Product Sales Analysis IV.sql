@@ -85,10 +85,19 @@ User 102 spent the most money on products 1, 2, and 3.
 
 # Solution
 
-WITH t AS (SELECT user_id, 
-product_id,  RANK() OVER(PARTITION by user_id ORDER BY SUM(quantity*price) DESC) ranking
-FROM sales NATURAL JOIN product
-GROUP BY 1, 2
+WITH rank_prod AS 
+(SELECT user_id, p.product_id,  
+ RANK() OVER 
+    (PARTITION by user_id 
+    ORDER BY SUM(quantity*price) DESC) AS ranking
+ FROM sales s 
+ JOIN product p
+    ON s.product_id = p.product_id
+ GROUP BY user_id, p.product_id
 )
 
-SELECT user_id, product_id FROM t WHERE  ranking = 1
+SELECT 
+user_id, 
+product_id 
+FROM rank_prod 
+WHERE ranking = 1;
