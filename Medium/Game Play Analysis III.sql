@@ -56,5 +56,22 @@ Note that for each player we only care about the days when the player logged in.
 
 # Solution
 
-SELECT  player_id, event_date, SUM(games_played) OVER w games_played_so_far 
-FROM activity WINDOW w AS (PARTITION BY player_id ORDER BY event_date )
+-- MySQL, MS SQL Server
+
+SELECT 
+player_id, 
+event_date, 
+SUM(games_played) OVER 
+  (PARTITION BY player_id 
+   ORDER BY event_date) AS games_played_so_far 
+FROM activity;
+
+-- Oracle
+
+SELECT 
+player_id, 
+TO_CHAR(event_date) AS event_date, 
+SUM(games_played) OVER 
+  (PARTITION BY player_id 
+   ORDER BY TO_CHAR(event_date)) AS games_played_so_far 
+FROM activity;
