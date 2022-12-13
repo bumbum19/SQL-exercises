@@ -111,6 +111,7 @@ OUTER APPLY
      
      
 -- Oracle
+
 /* Oracle Sql 11.2. has no LATERAL or OUTER APPLY */
 
 
