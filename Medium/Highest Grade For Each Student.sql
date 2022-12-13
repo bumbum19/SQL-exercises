@@ -49,9 +49,21 @@ Output:
 
 # Solution
 
-WITH t AS
-(SELECT student_id, MAX(grade) grade FROM enrollments GROUP BY 1
+WITH max_grd AS
+(SELECT 
+ student_id, 
+ MAX(grade) AS grade 
+ FROM enrollments 
+ GROUP BY student_id
 )
 
-SELECT student_id, MIN(course_id) course_id, grade FROM enrollments NATURAL JOIN t
-GROUP BY 1, 3 ORDER BY 1
+SELECT 
+e.student_id, 
+MIN(course_id) AS course_id, 
+e.grade 
+FROM enrollments e 
+JOIN max_grd m
+  ON e.student_id = m.student_id
+  AND e.grade = m. grade
+GROUP BY e.student_id, e.grade
+ORDER BY student_id;
