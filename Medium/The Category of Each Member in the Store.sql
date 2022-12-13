@@ -113,12 +113,24 @@ Explanation:
 
 # Solution
 
-WITH t AS 
-(SELECT member_id, name, 100*COUNT(charged_amount)/COUNT(visit_date) conversion_rate FROM members 
-NATURAL LEFT JOIN visits NATURAL LEFT JOIN purchases 
-GROUP BY 1,2)
+WITH conv_rt AS 
+(
+ SELECT m.member_id, name,
+ 100.00 * COUNT(charged_amount) / 
+    NULLIF(COUNT(v.visit_date),0) AS conversion_rate 
+ FROM members m 
+ LEFT JOIN visits v
+    ON m.member_id = v.member_id
+ LEFT JOIN purchases p
+    ON v.visit_id = p.visit_id
+ GROUP BY m.member_id, name
+)
 
-SELECT member_id, name, CASE WHEN conversion_rate >= 80 THEN 'Diamond' 
+SELECT 
+member_id, 
+name, 
+CASE WHEN conversion_rate >= 80 THEN 'Diamond' 
     WHEN conversion_rate >= 50 THEN 'Gold'  
     WHEN conversion_rate >= 0  THEN 'Silver'
-ELSE 'Bronze' END category FROM t
+ELSE 'Bronze' END AS category 
+FROM conv_rt;
