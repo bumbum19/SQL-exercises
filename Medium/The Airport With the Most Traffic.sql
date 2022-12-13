@@ -80,10 +80,23 @@ The airports with the most traffic are airports 1, 2, 3, and 4.
 
 # Solution
 
-WITH t AS 
-(SELECT departure_airport airport_id, flights_count FROM flights
-UNION ALL SELECT arrival_airport, flights_count FROM flights),
-t2 AS 
-(SELECT airport_id, SUM(flights_count) sum_flights FROM t GROUP BY 1)
+WITH aiports AS 
+(SELECT departure_airport AS airport_id, 
+ flights_count FROM flights
+ UNION ALL 
+ SELECT arrival_airport, 
+ flights_count 
+ FROM flights)
+ ,
+ fligths_cnt AS
+ (SELECT airport_id, 
+ SUM(flights_count) AS sum_flights 
+ FROM aiports 
+ GROUP BY airport_id
+ )
 
-SELECT airport_id FROM t2 WHERE sum_flights = (SELECT MAX(sum_flights) FROM t2)
+ SELECT 
+ airport_id 
+ FROM fligths_cnt 
+ WHERE sum_flights = 
+  (SELECT MAX(sum_flights) FROM fligths_cnt);
