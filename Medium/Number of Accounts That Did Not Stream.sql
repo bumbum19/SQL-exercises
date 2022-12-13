@@ -74,5 +74,11 @@ User 11 did not subscribe in 2021.
 
 # Solution 
 
-SELECT COUNT(DISTINCT account_id) accounts_count FROM subscriptions
-NATURAL LEFT JOIN streams WHERE YEAR(end_date) >= 2021 AND NOT YEAR(stream_date) = 2021
+SELECT 
+COUNT(DISTINCT su.account_id) AS accounts_count 
+FROM subscriptions su
+LEFT JOIN streams st
+  ON su.account_id = st.account_id 
+WHERE end_date > '2020-12-31' 
+AND (stream_date < '2021-01-01'
+  OR stream_date > '2021-12-31');
