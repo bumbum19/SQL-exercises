@@ -64,10 +64,69 @@ Explanation:
 
 # Solution
 
-WITH t AS 
-(SELECT visited_on, SUM(amount) amount FROM customer GROUP BY 1),
-t2 AS 
-(SELECT visited_on, SUM(amount) OVER w amount, ROUND(AVG(amount) OVER w,2) average_amount, COUNT(*) OVER w count_window FROM t 
-WINDOW w AS (ORDER BY visited_on  ROWS BETWEEN 6 PRECEDING AND CURRENT ROW  ))
+-- MySQL, MS SQL Server
 
-SELECT visited_on, amount, average_amount  FROM t2 WHERE count_window = 7
+WITH amnt_day AS 
+(
+ SELECT visited_on, 
+ SUM(amount) AS amount 
+ FROM customer 
+ GROUP BY visited_on)
+,
+
+cte AS 
+(SELECT visited_on, 
+ SUM(amount)  OVER 
+    (ORDER BY visited_on
+     ROWS BETWEEN 6 PRECEDING 
+     AND CURRENT ROW ) AS amount, 
+ ROUND(AVG(1.0*amount) OVER 
+    (ORDER BY visited_on
+     ROWS BETWEEN 6 PRECEDING 
+     AND CURRENT ROW ),2) AS average_amount, 
+ COUNT(*) OVER   
+    (ORDER BY visited_on
+     ROWS BETWEEN 6 PRECEDING 
+     AND CURRENT ROW ) AS count_window 
+ FROM amnt_day )
+
+SELECT 
+visited_on, 
+amount, 
+average_amount  
+FROM cte 
+WHERE count_window = 7;
+
+
+-- Oracle
+
+WITH amnt_day AS 
+(
+ SELECT visited_on, 
+ SUM(amount) AS amount 
+ FROM customer 
+ GROUP BY visited_on)
+,
+
+cte AS 
+(SELECT visited_on, 
+ SUM(amount)  OVER 
+    (ORDER BY visited_on
+     ROWS BETWEEN 6 PRECEDING 
+     AND CURRENT ROW ) AS amount, 
+ ROUND(AVG(1.0*amount) OVER 
+    (ORDER BY visited_on
+     ROWS BETWEEN 6 PRECEDING 
+     AND CURRENT ROW ),2) AS average_amount, 
+ COUNT(*) OVER   
+    (ORDER BY visited_on
+     ROWS BETWEEN 6 PRECEDING 
+     AND CURRENT ROW ) AS count_window 
+ FROM amnt_day )
+
+SELECT 
+TO_CHAR(visited_on) AS visited_on, 
+amount, 
+average_amount  
+FROM cte 
+WHERE count_window = 7;
