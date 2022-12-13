@@ -76,7 +76,7 @@ Singing is performed by 2 friends (Victor J. and Jade W.)
 
 WITH act_cnt AS
 (SELECT activity, 
- COUNT(*) count_activity 
+ COUNT(*) AS count_activity 
  FROM friends 
  GROUP BY activity
 )
