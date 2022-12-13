@@ -74,8 +74,17 @@ Singing is performed by 2 friends (Victor J. and Jade W.)
 
 # Solution
 
-WITH t AS
-(SELECT activity, COUNT(*) count_activity FROM friends GROUP BY 1)
+WITH act_cnt AS
+(SELECT activity, 
+ COUNT(*) count_activity 
+ FROM friends 
+ GROUP BY activity
+)
 
-SELECT activity FROM t WHERE  count_activity > (SELECT  MIN(count_activity) FROM t) AND
-count_activity < (SELECT  MAX(count_activity) FROM t)
+SELECT
+activity 
+FROM act_cnt 
+WHERE  count_activity > 
+  (SELECT  MIN(count_activity) FROM act_cnt) 
+AND count_activity < 
+  (SELECT  MAX(count_activity) FROM act_cnt);
