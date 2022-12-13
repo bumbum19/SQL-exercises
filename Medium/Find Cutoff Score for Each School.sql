@@ -82,6 +82,59 @@ Explanation:
 
 # Solution
 
-SELECT school_id, IFNULL(t.score,-1) score FROM schools 
-LEFT JOIN LATERAL (SELECT score FROM exam  
-WHERE student_count <= capacity ORDER BY student_count DESC,1 LIMIT 1) t ON true 
+-- MySQL
+
+SELECT 
+school_id, 
+COALESCE(dt.score,-1) AS score 
+FROM schools 
+LEFT JOIN LATERAL 
+    (SELECT score 
+     FROM exam  
+     WHERE student_count <= capacity 
+     ORDER BY student_count DESC, score 
+     LIMIT 1) AS dt ON true;
+     
+     
+ -- MS SQL Server
+ 
+SELECT 
+school_id, 
+COALESCE(dt.score,-1) AS score 
+FROM schools 
+OUTER APPLY
+    (SELECT TOP(1) score 
+     FROM exam  
+     WHERE student_count <= capacity 
+     ORDER BY student_count DESC, score 
+     ) AS dt;
+     
+     
+-- Oracle
+/* Oracle Sql 11.2. has no LATERAL or OUTER APPLY
+
+
+WITH mx AS
+
+(SELECT school_id, 
+ MAX(student_count) AS student_count 
+ FROM schools  
+ CROSS JOIN exam  
+ WHERE  student_count <= capacity 
+ GROUP BY school_id),
+
+ mn AS
+ (SELECT school_id,
+  MIN(score) AS score 
+  FROM mx 
+  NATURAL JOIN exam 
+  GROUP BY school_id)
+
+SELECT 
+school_id, 
+COALESCE(score,-1)  AS score 
+FROM schools 
+NATURAL LEFT JOIN mn;
+
+     
+ 
