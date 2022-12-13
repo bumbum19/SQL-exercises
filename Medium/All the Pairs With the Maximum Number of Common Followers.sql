@@ -57,9 +57,20 @@ Note that we do not have any information about the users that follow users 3, 4,
 
 # Solution
 
-WITH t AS
-(SELECT r1.user_id user1_id, r2.user_id user2_id, COUNT(*) common_followers
-FROM relations r1  JOIN relations r2 ON 
-r1.follower_id = r2.follower_id AND r1.user_id < r2.user_id GROUP BY 1,2 )
+WITH followers AS
+(
+ SELECT r1.user_id  AS user1_id, r2.user_id AS user2_id, 
+ COUNT(*) AS common_followers
+ FROM relations r1  
+ JOIN relations r2 
+  ON r1.follower_id = r2.follower_id
+  AND r1.user_id < r2.user_id 
+ GROUP BY r1.user_id, r2.user_id 
+)
 
-SELECT user1_id, user2_id FROM t WHERE common_followers = (SELECT  MAX(common_followers) FROM t)
+SELECT 
+user1_id, 
+user2_id 
+FROM followers 
+WHERE common_followers = 
+  (SELECT  MAX(common_followers) FROM followers);
