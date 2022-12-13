@@ -103,7 +103,28 @@ New Zealand did not gain or lose points and their rank did not change.
 
 # Solution
 
-SELECT team_id, name,
-CONVERT( RANK() OVER (ORDER BY points DESC, name), SIGNED) -
-CONVERT(RANK() OVER (ORDER BY points + points_change DESC, name),SIGNED) rank_diff 
-FROM TeamPoints NATURAL JOIN PointsChange
+-- MySQL
+
+SELECT 
+team_id, 
+name,
+CONVERT( RANK() OVER 
+    (ORDER BY points DESC, name), SIGNED) -
+CONVERT(RANK() OVER 
+    (ORDER BY points + points_change DESC, name), SIGNED) AS rank_diff 
+FROM TeamPoints t
+JOIN PointsChange p
+  USING (team_id);
+  
+-- MS SQL Server, Oracle
+
+SELECT 
+t.team_id, 
+name,
+RANK() OVER 
+    (ORDER BY points DESC, name) -
+RANK() OVER 
+    (ORDER BY points + points_change DESC, name) AS rank_diff 
+FROM TeamPoints t
+JOIN PointsChange p
+  ON t.team_id = p.team_id;
