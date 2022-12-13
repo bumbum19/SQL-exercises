@@ -77,5 +77,11 @@ Orders 1 and 3 are imbalanced because they have a maximum quantity that exceeds 
 
 # Solution
 
-SELECT order_id FROM OrdersDetails GROUP BY 1
-HAVING MAX(quantity) > ALL(SELECT AVG(quantity) FROM OrdersDetails GROUP BY order_id)
+SELECT 
+order_id 
+FROM OrdersDetails 
+GROUP BY order_id
+HAVING MAX(quantity) > ALL(
+  SELECT AVG(quantity) 
+  FROM orders
+  GROUP BY order_id);
