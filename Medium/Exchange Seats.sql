@@ -52,5 +52,25 @@ Note that if the number of students is odd, there is no need to change the last 
 
 # Solution
 
-SELECT CASE WHEN id = (SELECT COUNT(*) FROM seat) AND id%2=1   THEN id WHEN id % 2 = 1 THEN id+1 ELSE
-id-1 END AS id, student FROM seat ORDER BY id
+-- MySQL, MS SQL Server
+
+SELECT 
+CASE WHEN id = (SELECT COUNT(*) FROM seat) AND id % 2 = 1   THEN id 
+     WHEN id % 2 = 1 THEN id+1 
+     ELSE id-1 END AS id,
+student 
+FROM seat 
+ORDER BY id;
+
+-- Oracle
+
+SELECT 
+CASE WHEN id = (SELECT COUNT(*) FROM seat) AND MOD(id,2) = 1  THEN id 
+     WHEN MOD(id,2) = 1  THEN id+1 
+     ELSE id-1 END  AS id,
+student 
+FROM seat 
+ORDER BY id;
+
+
+
