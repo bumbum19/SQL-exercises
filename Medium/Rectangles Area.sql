@@ -60,14 +60,15 @@ WITH cte AS
  ABS(p1.y_value-p2.y_value) AS area
  FROM points p1   
  CROSS JOIN points p2 
- WHERE  p1.id < p2.id)
+ WHERE  p1.id < p2.id
+)
 
- SELECT 
- P1, 
- P2, 
- area 
- FROM cte 
- WHERE area > 0
- ORDER BY area DESC, P1, P2;
+SELECT 
+P1, 
+P2, 
+area 
+FROM cte 
+WHERE area > 0
+ORDER BY area DESC, P1, P2;
 
 
