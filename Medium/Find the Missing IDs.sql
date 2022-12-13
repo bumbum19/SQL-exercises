@@ -48,12 +48,65 @@ The maximum customer_id present in the table is 5, so in the range [1,5], IDs 2 
 
 # Solution
 
-WITH RECURSIVE t (customer_id ) AS
+-- MySQL
+
+WITH RECURSIVE generate_series (ids ) AS
 (
   SELECT 1
   UNION ALL
-  SELECT customer_id + 1 FROM t WHERE customer_id < (SELECT MAX(customer_id) FROM customers )
+  SELECT ids + 1 
+  FROM generate_series 
+  WHERE ids < (
+            SELECT MAX(customer_id) FROM customers )
 )
 
-SELECT customer_id ids  FROM t NATURAL LEFT JOIN customers 
-WHERE customer_name IS NULL ORDER BY 1
+SELECT 
+ids
+FROM generate_series gs  
+LEFT JOIN customers c 
+  ON gs.ids = c.customer_id
+WHERE customer_name IS NULL 
+ORDER BY ids;
+
+
+-- MS SQL Server
+
+WITH generate_series(ids) AS
+(
+  SELECT 1
+  UNION ALL
+  SELECT ids + 1 
+  FROM generate_series 
+  WHERE ids < 100
+)
+
+SELECT 
+ids 
+FROM generate_series 
+WHERE ids <= 
+  (SELECT MAX(customer_id) FROM customers)
+EXCEPT 
+SELECT customer_id 
+FROM customers;
+
+
+-- Oracle
+
+WITH  generate_series (ids ) AS
+(
+  SELECT 1
+  FROM dual
+  UNION ALL
+  SELECT ids + 1 
+  FROM generate_series 
+  WHERE ids < (SELECT MAX(customer_id) FROM customers)
+)
+
+SELECT 
+ids AS "ids"
+FROM generate_series gs  
+LEFT JOIN customers c 
+  ON gs.ids = c.customer_id
+WHERE customer_name IS NULL 
+ORDER BY ids;
+
