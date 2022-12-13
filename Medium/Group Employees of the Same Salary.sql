@@ -65,6 +65,16 @@ Juan's salary of 6100 is not included in the ranking because they are not on a t
 
 # Solution
 
-SELECT employee_id, name, salary, DENSE_RANK() OVER w team_id FROM employees 
-WHERE salary IN (SELECT salary FROM employees GROUP BY 1 HAVING COUNT(*) > 1  )
- WINDOW w AS (ORDER BY salary) ORDER BY 4,1
+SELECT 
+employee_id, 
+name, 
+salary, 
+DENSE_RANK() 
+    OVER (ORDER BY salary) AS team_id 
+FROM employees 
+WHERE salary IN 
+    (SELECT salary 
+     FROM employees 
+     GROUP BY salary 
+     HAVING COUNT(*) > 1)
+ ORDER BY team_id, employee_id;
