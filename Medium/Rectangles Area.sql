@@ -53,8 +53,21 @@ Note that the rectangle formed by p1 = 1 and p2 = 3 is invalid because the area 
 
 # Solution
 
-SELECT p1.id P1, p2.id P2, abs(p1.x_value-p2.x_value) * abs(p1.y_value-p2.y_value) area
-FROM points p1  JOIN points p2 ON  p1.id < p2.id  
-HAVING area > 0 ORDER BY 3 DESC, 1, 2
+WITH cte AS
+(
+ SELECT p1.id AS P1, p2.id AS P2,
+ ABS(p1.x_value-p2.x_value)  * 
+ ABS(p1.y_value-p2.y_value) AS area
+ FROM points p1   
+ CROSS JOIN points p2 
+ WHERE  p1.id < p2.id)
+
+ SELECT 
+ P1, 
+ P2, 
+ area 
+ FROM cte 
+ WHERE area > 0
+ ORDER BY area DESC, P1, P2;
 
 
