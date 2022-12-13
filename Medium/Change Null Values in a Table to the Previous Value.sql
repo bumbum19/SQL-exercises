@@ -56,12 +56,20 @@ Note that the rows in the output are the same as in the input.
 
 # Solution
 
-WITH RECURSIVE t AS 
-(SELECT *, ROW_NUMBER() OVER w ranking FROM CoffeeShop  WINDOW w AS () ),
-t2 AS 
-(SELECT id, drink,ranking FROM t WHERE ranking = 1
+WITH RECURSIVE rnk AS 
+(
+ SELECT id, drink, 
+ ROW_NUMBER() OVER () AS ranking 
+ FROM CoffeeShop 
+),
+cte AS 
+(SELECT id, drink, ranking FROM rnk WHERE ranking = 1
     UNION ALL
-SELECT t.id,  IFNULL(t.drink,t2.drink), t.ranking  FROM t  JOIN t2 ON t.ranking = t2.ranking+1
+SELECT rnk.id,  
+ COALESCE(rnk.drink,cte.drink) AS drink, rnk.ranking  
+ FROM rnk  
+ JOIN cte 
+    ON rnk.ranking = cte.ranking + 1
 )
 
-SELECT id, drink FROM t2
+SELECT id, drink FROM cte
