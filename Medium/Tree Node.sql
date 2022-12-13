@@ -77,6 +77,33 @@ Explanation: If there is only one node on the tree, you only need to output its 
 
 # Solution
 
-SELECT id, CASE WHEN p_id IS NULL THEN 'Root' WHEN id IN  (SELECT p_id FROM tree)THEN 'Inner'
-ELSE 'Leaf' END type
-FROM tree
+# 1.Version
+
+SELECT 
+id, 
+CASE WHEN p_id IS NULL THEN 'Root' 
+     WHEN id IN (SELECT p_id FROM tree) THEN 'Inner'
+     ELSE 'Leaf' END type
+FROM tree;
+
+# 2.Version
+
+-- Oracle
+
+WITH tree_leaf AS
+(SELECT 
+ id,
+ p_id, 
+ CONNECT_BY_ISLEAF AS  leaf_node
+ FROM  tree
+ CONNECT
+ BY PRIOR id = p_id
+ START WITH p_id IS NULL
+)
+
+SELECT 
+id, 
+CASE WHEN p_id IS NULL THEN 'Root' 
+     WHEN leaf_node = 0 THEN 'Inner'
+     ELSE 'Leaf' END AS type
+FROM tree_leaf;
