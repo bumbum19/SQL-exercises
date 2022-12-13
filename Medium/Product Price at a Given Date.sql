@@ -49,7 +49,27 @@ Output:
 
 # Solution
 
-SELECT  DISTINCT product_id, IFNULL(t.new_price,10 )price FROM products p1
-LEFT JOIN LATERAL (SELECT new_price FROM products  
-WHERE p1.product_id = product_id AND  change_date <= '2019-08-16'
-ORDER BY change_date DESC LIMIT 1 ) t ON TRUE
+
+WITH max_date AS 
+(
+ SELECT product_id, 
+ MAX(change_date) AS change_date 
+ FROM products 
+ WHERE change_date <= '2019-08-16' 
+ GROUP BY product_id
+
+
+ )
+
+SELECT p.product_id, 
+new_price AS price 
+FROM products p
+JOIN max_date md
+  ON p.product_id = md.product_id
+  AND p.change_date = md.change_date 
+UNION 
+SELECT DISTINCT product_id, 
+10 AS price 
+FROM products 
+WHERE product_id NOT IN 
+  (SELECT  product_id FROM max_date);
