@@ -56,9 +56,20 @@ Account ID 4 --> The account was active from "2021-02-01 17:00:00" to "2021-02-0
 */
 
 # Solution
+WITH cte AS
+(
+ SELECT account_id, ip_address, logout,
+ LEAD(login) OVER  
+  (PARTITION BY account_id 
+  ORDER BY login) AS lead_ln, 
+ LEAD(ip_address) OVER 
+  (PARTITION BY account_id 
+   ORDER BY login) lead_id 
+ FROM LogInfo  
+) 
 
-WITH t AS
-(SELECT account_id, ip_address, logout, LEAD(login) OVER w lead_ln, LEAD(ip_address) OVER w lead_id FROM LogInfo WINDOW w AS (PARTITION BY
-account_id ORDER BY login) )
-
-SELECT DISTINCT account_id FROM t WHERE lead_ln <= logout AND ip_address <> lead_id
+SELECT 
+DISTINCT account_id 
+FROM cte 
+WHERE lead_ln <= logout 
+AND ip_address <> lead_id;
