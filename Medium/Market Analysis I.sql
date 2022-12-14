@@ -97,9 +97,42 @@ Output:
 
 # Solution
 
-WITH t AS 
-(SELECT buyer_id user_id, COUNT(*) orders_in_2019 FROM orders WHERE order_date BETWEEN '2019-01-01'
-AND '2019-12-31' GROUP BY 1 )
+-- MySQL, MS SQL Server
 
-SELECT user_id buyer_id, join_date, IFNULL(orders_in_2019,0) orders_in_2019  FROM users NATURAL LEFT JOIN
-t
+WITH cnt_ord AS 
+(
+ SELECT buyer_id, 
+ COUNT(*) AS orders_in_2019 
+ FROM orders 
+ WHERE order_date >= '2019-01-01'
+ AND order_date <  '2020-01-01' 
+ GROUP BY buyer_id 
+)
+
+SELECT 
+user_id AS buyer_id, 
+join_date, 
+COALESCE(orders_in_2019,0) AS orders_in_2019  
+FROM users u 
+LEFT JOIN cnt_ord co
+  ON u.user_id = co.buyer_id;
+ 
+-- Oracle
+
+WITH cnt_ord AS 
+(
+ SELECT buyer_id, 
+ COUNT(*) AS orders_in_2019 
+ FROM orders 
+ WHERE order_date >= '2019-01-01'
+ AND order_date <  '2020-01-01' 
+ GROUP BY buyer_id 
+)
+
+SELECT 
+user_id AS buyer_id, 
+TO_CHAR(join_date) AS join_date, 
+COALESCE(orders_in_2019,0) AS orders_in_2019  
+FROM users u 
+LEFT JOIN cnt_ord co
+  ON u.user_id = co.buyer_id;
