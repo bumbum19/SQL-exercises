@@ -72,5 +72,42 @@ The winner is candidate B.
 
 # Solution
 
-SELECT name FROM candidate NATURAL JOIN
-(SELECT candidateId AS id  FROM vote  GROUP BY 1 ORDER BY COUNT(*) DESC LIMIT 1) AS t
+-- MySQL
+
+SELECT 
+name 
+FROM candidate c 
+JOIN LATERAL 
+  (SELECT COUNT(*) AS votes 
+   FROM vote 
+   WHERE candidateid = c.id) AS cnt_votes 
+ORDER BY votes DESC 
+LIMIT 1;
+ 
+-- MS SQL Server
+
+SELECT 
+TOP(1) name 
+FROM candidate c 
+CROSS APPLY 
+  (SELECT COUNT(*) AS votes 
+   FROM vote 
+   WHERE candidateid = c.id) AS cnt_votes 
+ORDER BY votes DESC;
+
+
+-- Oracle
+
+WITH cnt_votes AS
+(SELECT candidateId AS id, 
+ COUNT(*) AS votes 
+ FROM vote  
+ GROUP BY candidateId 
+) 
+
+SELECT * FROM
+(SELECT name 
+FROM candidate 
+NATURAL JOIN cnt_votes 
+ORDER BY votes DESC)
+WHERE ROWNUM = 1;
