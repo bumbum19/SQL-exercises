@@ -57,8 +57,14 @@ Hence, half the customers have immediate first orders.
 
 # Solution
 
-WITH t AS
-(SELECT customer_id, MIN(order_date) first_order, MIN(customer_pref_delivery_date )  first_scheduled  FROM delivery GROUP BY 1
+WITH cte AS
+(SELECT customer_id, 
+ MIN(order_date) AS first_order, 
+ MIN(customer_pref_delivery_date ) AS first_scheduled  
+ FROM delivery 
+ GROUP BY customer_id
 )
-SELECT ROUND(AVG(first_order=first_scheduled)*100,2) immediate_percentage
-FROM t
+SELECT 
+ROUND(AVG(CASE WHEN first_order=first_scheduled THEN 1 
+            ELSE 0 END *100.00), 2) AS immediate_percentage
+FROM cte;
