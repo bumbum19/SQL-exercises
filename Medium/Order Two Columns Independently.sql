@@ -47,9 +47,23 @@ Output:
 
 # Solution
 
-WITH t AS 
-(SELECT first_col, ROW_NUMBER() OVER w ranking FROM data WINDOW w AS (ORDER BY first_col)),
-t2 AS 
-(SELECT second_col, ROW_NUMBER() OVER w ranking FROM data WINDOW w AS (ORDER BY second_col DESC))
+WITH first_rnk AS 
+(SELECT first_col, 
+ ROW_NUMBER() OVER 
+    (ORDER BY first_col) AS ranking 
+ FROM data 
+ ),
 
-SELECT first_col, second_col FROM t  NATURAL JOIN t2 
+second_rnk AS 
+(SELECT second_col, 
+ ROW_NUMBER() OVER 
+    (ORDER BY second_col DESC) AS ranking 
+ FROM data 
+ )
+
+SELECT 
+first_col,
+second_col 
+FROM first_rnk f
+JOIN second_rnk s
+    ON f.ranking = s.ranking;
