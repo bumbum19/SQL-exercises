@@ -83,11 +83,21 @@ Page 88 is not suggested because user 1 already likes it.
 
 # Solution
 
-WITH t AS 
+WITH reorder AS 
 (
-SELECT LEAST(user1_id,user2_id) user1_id, GREATEST(user1_id,user2_id) user_id
-FROM friendship WHERE user1_id = 1 OR user2_id =1
+SELECT CASE WHEN user1_id < user2_id THEN user1_id 
+       ELSE user2_id END AS user1_id, 
+       CASE WHEN user1_id > user2_id THEN user1_id
+       ELSE user2_id END AS user2_id 
+FROM friendship 
+WHERE user1_id = 1 
+OR user2_id =1
 )
 
-SELECT DISTINCT page_id recommended_page FROM t NATURAL JOIN likes WHERE page_id NOT IN 
-(SELECT page_id FROM likes WHERE user_id = 1)
+SELECT 
+DISTINCT page_id AS recommended_page 
+FROM reorder r 
+JOIN likes l 
+  ON r.user2_id = l.user_id
+WHERE page_id NOT IN 
+  (SELECT page_id FROM likes WHERE user_id = 1);
