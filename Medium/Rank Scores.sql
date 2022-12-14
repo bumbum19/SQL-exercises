@@ -55,4 +55,8 @@ Output:
 
 # Solution
 
-SELECT score, DENSE_RANK() OVER w AS 'rank' FROM scores WINDOW w AS (ORDER BY score DESC)
+SELECT 
+score, 
+DENSE_RANK() OVER 
+    (ORDER BY score DESC) AS "rank" 
+FROM scores;
