@@ -58,8 +58,18 @@ The business with id=1 has 7 'reviews' events (more than 5) and 11 'ads' events 
 
 # Solution
 
-WITH t AS
-(SELECT event_type, AVG(occurences) avg_occurencees FROM events GROUP BY 1)
+WITH avg_occ AS
+(SELECT event_type, 
+ AVG(occurences) AS avg_occurencees 
+ FROM events 
+ GROUP BY event_type
+)
 
-SELECT business_id FROM events NATURAL JOIN t WHERE occurences > avg_occurencees 
-GROUP BY 1 HAVING COUNT(*) > 1
+SELECT 
+business_id 
+FROM events e 
+JOIN avg_occ a 
+  ON e.event_type = a.event_type
+WHERE occurences > avg_occurencees 
+GROUP BY business_id
+HAVING COUNT(*) > 1;
