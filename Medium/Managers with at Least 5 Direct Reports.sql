@@ -50,4 +50,9 @@ Output:
 
 # Solution
 
-SELECT name FROM employee WHERE id in (SELECT managerid FROM employee GROUP BY managerid HAVING COUNT(*) >= 5)
+SELECT 
+name 
+FROM employee 
+WHERE id IN 
+  (SELECT managerid FROM employee 
+   GROUP BY managerid HAVING COUNT(*) >= 5);
