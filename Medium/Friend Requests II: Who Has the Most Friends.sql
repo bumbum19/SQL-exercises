@@ -45,11 +45,43 @@ The person with id 3 is a friend of people 1, 2, and 4, so he has three friends 
 
  */
  
- # Solution
+# Solution
  
-WITH t AS
-(SELECT requester_id FROM RequestAccepted 
-UNION ALL 
-SELECT accepter_id FROM RequestAccepted )
+-- MySQL
 
-SELECT requester_id id, COUNT(*) num FROM t GROUP BY 1 ORDER BY 2 DESC LIMIT 1
+WITH cte AS
+(SELECT requester_id AS id FROM RequestAccepted 
+ UNION ALL 
+ SELECT accepter_id FROM RequestAccepted 
+)
+
+SELECT id, COUNT(*) AS num FROM cte
+GROUP BY id 
+ORDER BY num DESC 
+LIMIT 1;
+
+
+-- MS SQL Server
+
+WITH cte AS
+(SELECT requester_id AS id FROM RequestAccepted 
+ UNION ALL 
+ SELECT accepter_id FROM RequestAccepted 
+)
+
+SELECT TOP(1) id, COUNT(*) AS num FROM cte
+GROUP BY id 
+ORDER BY num DESC;
+
+-- Oracle
+WITH cte AS
+(SELECT requester_id AS id FROM RequestAccepted 
+ UNION ALL 
+ SELECT accepter_id FROM RequestAccepted 
+)
+
+SELECT * FROM ( SELECT id, COUNT(*) AS num FROM cte
+GROUP BY id 
+ORDER BY num DESC) 
+WHERE ROWNUM = 1;
+
