@@ -69,6 +69,36 @@ Output:
 
 # Solution
 
-SELECT dept_name, COUNT(student_id) student_number FROM department  
-NATURAL LEFT JOIN student GROUP BY 1
-ORDER BY 2 DESC, 1 
+-- MySQL
+
+SELECT 
+dept_name, 
+student_number 
+FROM department d 
+JOIN LATERAL 
+    (SELECT COUNT(*) AS student_number
+     FROM student 
+     WHERE dept_id = d.dept_id  ) AS dt
+ORDER BY student_number DESC, dept_name;
+
+-- MS SQL Server
+
+SELECT 
+dept_name, 
+student_number 
+FROM department d 
+CROSS APPLY 
+    (SELECT COUNT(*) AS student_number
+     FROM student 
+     WHERE dept_id = d.dept_id  ) AS dt
+ORDER BY student_number DESC, dept_name;
+
+-- Oracle
+
+SELECT 
+dept_name, 
+COUNT(student_id) AS  student_number 
+FROM department  
+NATURAL LEFT JOIN student 
+GROUP BY dept_name
+ORDER BY 2 DESC, 1; 
