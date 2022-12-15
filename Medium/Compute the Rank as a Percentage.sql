@@ -56,5 +56,12 @@ For Department 2:
 
 */
 
-SELECT student_id, department_id,ROUND(PERCENT_RANK() OVER w *100,2) percentage  FROM students
-WINDOW w AS (PARTITION BY  department_id ORDER BY mark DESC)
+# Solution
+
+SELECT 
+student_id, 
+department_id,
+ROUND(PERCENT_RANK() OVER 
+        (PARTITION BY  department_id 
+         ORDER BY mark DESC) *100,2) AS percentage  
+FROM students;
