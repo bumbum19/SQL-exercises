@@ -52,6 +52,9 @@ Output:
 
 # Solution
 
-SELECT DISTINCT viewer_id id FROM views GROUP BY 1,view_date
-HAVING COUNT( DISTINCT article_id) > 1
-
+SELECT 
+DISTINCT viewer_id AS id 
+FROM views 
+GROUP BY viewer_id, view_date
+HAVING COUNT(DISTINCT article_id) > 1
+ORDER BY id;
