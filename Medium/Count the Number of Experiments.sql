@@ -61,11 +61,59 @@ On the platform "Web", we had two "Reading" experiments and one "Programming" ex
 
 # Solution
 
-WITH t1 AS 
-(SELECT 'Android' platform UNION SELECT 'IOS'  UNION SELECT 'Web' ),
-t2 AS 
-(SELECT 'Reading' experiment_name UNION SELECT 'Sports'  UNION SELECT 'Programming' ),
-t3 AS
-(SELECT platform, experiment_name, COUNT(*) num_experiments FROM experiments GROUP BY 1,2)
+-- MySQL, MS SQL Server
 
-SELECT platform, experiment_name, IFNULL(num_experiments,0) num_experiments FROM t1 JOIN t2 NATURAL LEFT JOIN t3
+WITH platforms AS 
+(SELECT 'Android' AS platform 
+ UNION 
+ SELECT 'IOS'  
+ UNION 
+ SELECT 'Web' 
+ ),
+experiment_type AS 
+(SELECT 'Reading' AS experiment_name 
+ UNION 
+ SELECT 'Sports'  
+ UNION 
+ SELECT 'Programming' 
+ )
+ 
+SELECT 
+p.platform, 
+et.experiment_name, 
+COALESCE(COUNT(experiment_id),0) AS num_experiments 
+FROM platforms p 
+CROSS JOIN experiment_type et  
+LEFT JOIN experiments e
+    ON p.platform = e.platform
+    AND et.experiment_name = e.experiment_name
+GROUP BY p.platform, et.experiment_name;
+
+
+-- Oracle
+
+WITH platforms AS 
+(SELECT 'Android' AS platform FROM dual
+ UNION 
+ SELECT 'IOS'  FROM dual
+ UNION 
+ SELECT 'Web' FROM dual
+ ),
+experiment_type AS 
+(SELECT 'Reading' AS experiment_name FROM dual
+ UNION 
+ SELECT 'Sports'  FROM dual
+ UNION 
+ SELECT 'Programming' FROM dual
+ )
+ 
+SELECT 
+p.platform, 
+et.experiment_name, 
+COALESCE(COUNT(experiment_id),0) AS num_experiments 
+FROM platforms p 
+CROSS JOIN experiment_type et  
+LEFT JOIN experiments e
+    ON p.platform = e.platform
+    AND et.experiment_name = e.experiment_name
+GROUP BY p.platform, et.experiment_name;
