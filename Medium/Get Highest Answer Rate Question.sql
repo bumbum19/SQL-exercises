@@ -55,5 +55,33 @@ Question 285 has the highest answer rate.
 
 # Solution
 
-SELECT question_id survey_log  FROM SurveyLog GROUP BY 1 
-ORDER BY COALESCE(SUM(action='answer')/SUM(action='show'),0) DESC, 1 LIMIT 1
+-- MySQL
+
+SELECT 
+question_id AS survey_log  
+FROM SurveyLog 
+GROUP BY question_id 
+ORDER BY COALESCE(SUM(action='answer') /
+    SUM(action='show'),0) DESC, question_id 
+LIMIT 1;
+
+-- MS SQL Server
+
+SELECT 
+TOP(1) question_id AS survey_log  
+FROM SurveyLog 
+GROUP BY question_id 
+ORDER BY COALESCE(SUM(CASE WHEN action='answer' THEN 1 ELSE 0 END)*1.0 /
+    SUM(CASE WHEN action='show' THEN 1 ELSE 0 END),0) DESC, question_id;
+    
+-- Oracle
+
+SELECT * FROM 
+(SELECT question_id AS survey_log  
+FROM SurveyLog 
+GROUP BY question_id 
+ORDER BY COALESCE(SUM(CASE WHEN action='answer' THEN 1 ELSE 0 END) /
+    SUM(CASE WHEN action='show' THEN 1 ELSE 0 END),0) DESC, question_id )
+WHERE ROWNUM = 1;
+
+
