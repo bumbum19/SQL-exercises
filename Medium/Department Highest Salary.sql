@@ -71,8 +71,21 @@ Explanation: Max and Jim both have the highest salary in the IT department and H
 
 # Solution
 
-WITH t AS 
-(SELECT departmentid, MAX(salary) salary FROM employee GROUP BY 1)
+WITH max_sal AS 
+(
+ SELECT departmentid, 
+ MAX(salary) AS salary 
+ FROM employee 
+ GROUP BY departmentid
+ )
 
-SELECT  d.name Department, e.name Employee, salary Salary FROM t 
-NATURAL JOIN employee e JOIN department d ON departmentid = d.id
+SELECT  
+d.name AS  Department, 
+e.name AS Employee, 
+e.salary AS Salary 
+FROM max_sal ms 
+JOIN employee e 
+    ON ms.departmentId = e.departmentId 
+    AND ms.salary = e.salary
+JOIN department d 
+    ON e.departmentid = d.id;
