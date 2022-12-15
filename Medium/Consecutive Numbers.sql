@@ -48,7 +48,18 @@ Explanation: 1 is the only number that appears consecutively for at least three 
 
 # Solution
 
-SELECT  DISTINCT num ConsecutiveNums  FROM
-(SELECT num, LAG(num) OVER w num_lag,LEAD(num) OVER w num_lead FROM logs
- WINDOW w AS (ORDER BY id)) t
- WHERE num=num_lag AND num_lag = num_lead 
+WITH cte AS
+(
+ SELECT num, 
+ LAG(num) OVER (ORDER BY id) AS num_lag,
+ LEAD(num) OVER (ORDER BY id) AS num_lead 
+ FROM logs
+ )
+
+SELECT  
+DISTINCT num AS ConsecutiveNums  
+FROM cte
+WHERE num_lag = num 
+AND num = num_lead;
+
+
