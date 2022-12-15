@@ -81,9 +81,21 @@ Output:
 
 # Solution
 
-SELECT team_id, team_name, IFNULL(SUM(IF(team_id =host_team, CASE WHEN host_goals > guest_goals 
-THEN 3 WHEN host_goals = guest_goals THEN 1 ELSE 0 END,
-CASE WHEN host_goals < guest_goals 
-THEN 3 WHEN host_goals = guest_goals THEN 1 ELSE 0 END )),0) num_points
-FROM teams LEFT JOIN matches ON team_id IN (host_team,guest_team)
-GROUP BY 1 ORDER BY 3 DESC, 1
+SELECT 
+team_id, 
+team_name, 
+COALESCE(SUM(
+    CASE WHEN team_id =host_team THEN 
+        CASE WHEN host_goals > guest_goals THEN 3 
+             WHEN host_goals = guest_goals THEN 1 
+             ELSE 0 END 
+    ELSE 
+        CASE WHEN host_goals < guest_goals THEN 3 
+             WHEN host_goals = guest_goals THEN 1 
+             ELSE 0 END 
+    END),0) AS num_points
+FROM teams  
+LEFT JOIN matches 
+    ON team_id IN (host_team,guest_team)
+GROUP BY team_id, team_name 
+ORDER BY num_points DESC, team_id;
