@@ -71,8 +71,17 @@ Output:
 
 # Solution
 
-WITH t AS
-(SELECT  product_id, year, quantity, price, RANK() OVER (PARTITION BY product_id
-ORDER BY year) ranking FROM sales )
+WITH cte AS
+(SELECT product_id, year, quantity, price, 
+ RANK() OVER 
+    (PARTITION BY product_id 
+     ORDER BY year) AS ranking 
+ FROM sales )
 
-SELECT product_id, year first_year , quantity, price FROM t WHERE ranking = 1
+SELECT 
+product_id, 
+year AS  first_year, 
+quantity, 
+price 
+FROM cte 
+WHERE ranking = 1;
