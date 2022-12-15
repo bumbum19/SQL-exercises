@@ -80,8 +80,66 @@ Explanation:
 
 # Solution
 
-WITH b AS 
-(SELECT *, LAG(arrival_time) OVER (ORDER BY arrival_time)  last_arrival FROM buses)
+-- MySQL
 
-SELECT bus_id, COUNT(passenger_id) passengers_cnt FROM  b  LEFT JOIN LATERAL (SELECT passenger_id FROM passengers 
-WHERE arrival_time <= b.arrival_time AND arrival_time > IFNULL(last_arrival,0) ) p ON TRUE GROUP BY 1 ORDER BY 1
+WITH buses2 AS 
+(
+ SELECT bus_id,arrival_time, 
+ LAG(arrival_time) OVER 
+    (ORDER BY arrival_time) AS  last_arrival 
+ FROM buses
+ )
+
+SELECT 
+bus_id, 
+COUNT(passenger_id) AS passengers_cnt 
+FROM  buses2 b  
+LEFT JOIN LATERAL 
+    (SELECT passenger_id FROM passengers 
+     WHERE arrival_time <= b.arrival_time
+     AND arrival_time > COALESCE(last_arrival,0) ) AS dt ON TRUE 
+GROUP BY bus_id 
+ORDER BY bus_id;
+
+-- MS SQL Server
+
+WITH buses2 AS 
+(
+ SELECT bus_id,arrival_time, 
+ LAG(arrival_time) OVER 
+    (ORDER BY arrival_time) AS  last_arrival 
+ FROM buses
+ )
+
+SELECT 
+bus_id, 
+COUNT(passenger_id) AS passengers_cnt 
+FROM  buses2 b  
+OUTER APPLY 
+    (SELECT passenger_id FROM passengers 
+     WHERE arrival_time <= b.arrival_time
+     AND arrival_time > COALESCE(last_arrival,0) ) AS dt
+GROUP BY bus_id 
+ORDER BY bus_id;
+
+-- Oracle
+
+WITH cte AS 
+(
+  SELECT passenger_id, 
+ MIN(b.arrival_time) AS  arrival_time 
+ FROM buses b 
+ JOIN passengers p 
+    ON  p.arrival_time <= b.arrival_time 
+ GROUP BY passenger_id
+)
+
+SELECT 
+bus_id, 
+COUNT(c.arrival_time) AS passengers_cnt 
+FROM buses b 
+LEFT JOIN cte c
+    ON b.arrival_time = c.arrival_time
+GROUP BY bus_id 
+ORDER BY bus_id;
+
