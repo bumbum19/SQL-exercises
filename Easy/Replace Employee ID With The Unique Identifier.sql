@@ -76,6 +76,7 @@ The unique ID of Jonathan is 1.
 
   
 # Solution 
+
 SELECT 
 unique_id, 
 name 
