@@ -100,7 +100,6 @@ WITH tree_leaf AS
  BY PRIOR id = p_id
  START WITH p_id IS NULL
 )
-
 SELECT 
 id, 
 CASE WHEN p_id IS NULL THEN 'Root' 
