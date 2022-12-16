@@ -96,16 +96,34 @@ Explanation: The chart drawn for this example is shown above.
 
 # Solution
 
-WITH t1 AS
-(SELECT v.user_id, visit_date, transaction_date FROM visits v LEFT JOIN transactions t 
-ON v.user_id = t.user_id AND v.visit_date = t.transaction_date
+WITH cte AS
+(SELECT v.user_id, visit_date, transaction_date 
+ FROM visits v 
+ LEFT JOIN transactions t 
+    ON v.user_id = t.user_id 
+    AND v.visit_date = t.transaction_date
 ),
-t2 AS 
-(SELECT ROW_NUMBER() OVER () transactions_count FROM t1
-UNION SELECT 0 transactions_count),
-t3 AS
-(SELECT user_id, visit_date, COUNT(transaction_date) transactions_count FROM t1
-GROUP BY 1,2)
 
-SELECT transactions_count, COUNT(user_id) visits_count FROM t2 NATURAL LEFT JOIN t3 
-WHERE transactions_count <= (SELECT MAX(transactions_count) FROM t3) GROUP BY 1 ORDER BY 1
+cte2 AS 
+(SELECT ROW_NUMBER() OVER () AS transactions_count 
+ FROM cte
+UNION SELECT 0 ),
+
+cte3 AS
+(SELECT user_id, visit_date, 
+ COUNT(transaction_date) AS transactions_count 
+ FROM cte
+ GROUP BY user_id, visit_date
+ )
+
+SELECT 
+transactions_count, 
+COUNT(user_id) AS visits_count 
+FROM cte2 
+LEFT JOIN cte3 
+    USING (transactions_count)
+WHERE transactions_count <= 
+    (SELECT MAX(transactions_count) FROM cte3) 
+GROUP BY transactions_count 
+ORDER BY transactions_count;
+
