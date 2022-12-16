@@ -142,26 +142,53 @@ By the end of December --> six active drivers (10, 8, 5, 7, 4, 1) and one accept
  
  # Solution 
  
-WITH RECURSIVE t AS (
+WITH RECURSIVE months AS (
 SELECT 1 AS month
 UNION ALL
 SELECT month + 1 AS month
-FROM t
+FROM months
 WHERE month < 12
 ),
-t2 AS
-(SELECT driver_id, CASE WHEN YEAR(join_date)=2019 THEN 1 WHEN YEAR(join_date)=2021 THEN NULL
-ELSE MONTH(join_date) END month FROM drivers),
-t3 AS
-(SELECT month, COUNT(driver_id) count_driver  FROM t NATURAL LEFT JOIN t2 GROUP BY 1),
-t4 AS 
-(SELECT month, SUM(count_driver) OVER (ORDER BY month) active_drivers  FROM t3),
-t5 AS
-(SELECT  MONTH(requested_at) month, COUNT(*) accepted_rides FROM rides NATURAL JOIN AcceptedRides
-WHERE YEAR(requested_at) = 2020 GROUP BY MONTH(requested_at))
 
-SELECT month, active_drivers, IFNULL(accepted_rides,0) accepted_rides FROM t4 NATURAL LEFT JOIN t5
-ORDER BY 1
+cte AS
+(SELECT driver_id, 
+CASE WHEN YEAR(join_date)=2019 THEN 1 
+     WHEN YEAR(join_date)=2021 THEN NULL
+     ELSE MONTH(join_date) END AS month 
+FROM drivers),
+
+cte2 AS
+(SELECT month, COUNT(driver_id) AS count_driver  
+ FROM months 
+ LEFT JOIN cte
+    USING(month) 
+ GROUP BY month),
+
+cte3 AS 
+(SELECT month, 
+ SUM(count_driver) OVER 
+    (ORDER BY month) AS active_drivers  FROM cte2
+),
+
+cte4 AS
+(SELECT MONTH(requested_at) AS month, 
+ COUNT(*) AS accepted_rides 
+ FROM rides 
+ JOIN AcceptedRides
+    USING(ride_id)
+ WHERE requested_at >=  '2020-01-01'
+ AND requested_at <  '2021-01-01'
+ GROUP BY month
+) 
+
+SELECT
+month, 
+active_drivers, 
+COALESCE(accepted_rides,0) AS accepted_rides 
+FROM cte3  
+LEFT JOIN cte4
+    USING (month)
+ORDER BY month;
 
 
 
