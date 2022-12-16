@@ -85,25 +85,52 @@ Explanation:
  
  # Solution
  
-WITH RECURSIVE  t AS 
-(SELECT passenger_id, MIN(b.arrival_time)  arrival_time FROM buses b, passengers p 
-WHERE p.arrival_time <= b.arrival_time GROUP BY 1),
-t2 AS 
-(SELECT bus_id, b.arrival_time bus_arrival , COUNT(t.arrival_time) max_passengers_cnt,  capacity
-FROM buses b NATURAL LEFT JOIN t GROUP BY 1,2,4 ORDER BY 1),
-t3 AS 
-(SELECT *, LAG(max_passengers_cnt-capacity) OVER (ORDER BY bus_arrival) cnt, LAG(bus_id) OVER (ORDER BY bus_arrival) last_bus
-FROM t2 ),
-t4(bus_id, cnt2)
+WITH RECURSIVE  cte AS 
+(SELECT passenger_id, 
+ MIN(b.arrival_time) AS  arrival_time 
+ FROM buses b
+ JOIN passengers p 
+ ON  p.arrival_time <= b.arrival_time 
+ GROUP BY passenger_id
+ ),
+
+cte2 AS 
+(SELECT bus_id, buses.arrival_time AS bus_arrival, 
+ COUNT(cte.arrival_time) AS max_passengers_cnt, capacity
+FROM buses  
+LEFT JOIN cte
+    USING (arrival_time)
+GROUP BY bus_id, bus_arrival, capacity 
+ORDER BY bus_id
+),
+
+cte3 AS 
+(SELECT bus_id, bus_arrival, max_passengers_cnt, capacity, 
+ LAG(max_passengers_cnt-capacity) OVER 
+    (ORDER BY bus_arrival) AS cnt, 
+ LAG(bus_id) OVER 
+    (ORDER BY bus_arrival) AS last_bus
+FROM cte2 ),
+
+cte4(bus_id, cnt2)
 AS
-(SELECT bus_id, 0  FROM t3 WHERE cnt IS NULL
-UNION ALL
-SELECT t3.bus_id,  IF(cnt2+t3.cnt<0,0,cnt2+t3.cnt)
-FROM t4   JOIN t3 ON t3.last_bus = t4.bus_id 
+(SELECT bus_id, 0  FROM cte3 WHERE cnt IS NULL
+ UNION ALL
+ SELECT cte3.bus_id,  CASE WHEN  cnt2 + cte3.cnt < 0 THEN 0
+                      ELSE cnt2+cte3.cnt END 
+ FROM cte4   
+ JOIN cte3 
+    ON cte3.last_bus = cte4.bus_id 
 
 )
 
-SELECT bus_id, LEAST(cnt2+max_passengers_cnt,capacity) passengers_cnt  FROM t4 NATURAL JOIN t3 ORDER BY 1
+SELECT bus_id, 
+LEAST(cnt2+max_passengers_cnt,capacity) AS passengers_cnt  
+FROM cte4 
+JOIN cte3 
+    USING(bus_id)
+ORDER BY bus_id;
+
 
 
 
