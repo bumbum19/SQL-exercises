@@ -73,10 +73,26 @@ Customer 3: The first year is 2017, and the last year is 2018
 
 # Solution
 
-WITH t AS 
-(SELECT customer_id, YEAR(order_date) year, SUM(price) total, LEAD(SUM(price)) OVER w next_total, 
-LEAD(YEAR(order_date)) OVER w next_year  FROM orders  GROUP BY 1,2 WINDOW w AS (
-    PARTITION BY customer_id ORDER BY YEAR(order_date) 
-))
+-- MySQL, MS SQL Server
 
-SELECT DISTINCT customer_id FROM orders WHERE  customer_id NOT IN (SELECT  customer_id FROM t WHERE next_year > year + 1 OR next_total <= total)
+WITH cte AS 
+(
+ SELECT customer_id, YEAR(order_date) AS year, 
+ SUM(price) AS total, 
+ LEAD(SUM(price)) OVER (
+    PARTITION BY customer_id 
+    ORDER BY YEAR(order_date)) AS next_total, 
+ LEAD(YEAR(order_date)) OVER 
+    (PARTITION BY customer_id 
+    ORDER BY YEAR(order_date)) AS next_year  
+ FROM orders  
+ GROUP BY customer_id, YEAR(order_date) 
+)
+
+SELECT 
+DISTINCT customer_id 
+FROM orders 
+WHERE  customer_id NOT IN 
+    (SELECT  customer_id FROM cte 
+    WHERE next_year > year + 1 
+    OR next_total <= total);
