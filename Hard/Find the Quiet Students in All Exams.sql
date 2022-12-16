@@ -83,10 +83,22 @@ So, we only return the information of Student 2.
 
 # Solution
 
-WITH t AS 
-(SELECT student_id, score, MAX(score) OVER w max_score, MIN(score) OVER w min_score FROM exam 
-WINDOW w AS (PARTITION BY exam_id) )
+WITH cte AS 
+(SELECT student_id, score, 
+ MAX(score) OVER 
+    (PARTITION BY exam_id) AS max_score, 
+ MIN(score) 
+    OVER (PARTITION BY exam_id) AS min_score 
+ FROM exam 
+)
 
-SELECT student_id, student_name FROM t NATURAL JOIN student GROUP BY 1,2
-HAVING SUM(IF(score < max_score AND score > min_score ,1,0))= COUNT(*)
-ORDER BY 1
+SELECT 
+s.student_id,
+s.student_name 
+FROM cte 
+JOIN student s
+    ON cte.student_id = s.student_id
+GROUP BY s.student_id, s.student_name
+HAVING SUM(CASE WHEN score < max_score AND score > min_score THEN 1 
+                ELSE 0 END ) = COUNT(*)
+ORDER BY student_id;
