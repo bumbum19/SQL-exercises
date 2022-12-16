@@ -53,10 +53,46 @@ Bob only has one record, we just take that one.
 
 # Solution
 
-WITH t AS 
-(SELECT *, DENSE_RANK() OVER (w ORDER BY enddate DESC ) ranking,
-COUNT(*) OVER w  count_user
-FROM UserActivity  WINDOW w AS ( PARTITION BY username) )
+-- MySQL, MS SQL Server
 
-SELECT username, activity, startDate, endDate FROM t WHERE count_user=1 OR 
-ranking = 2  
+WITH cte AS 
+(
+ SELECT username, activity, startDate, endDate, 
+ DENSE_RANK() OVER 
+    (PARTITION BY username 
+     ORDER BY enddate DESC ) AS ranking,
+ COUNT(*) OVER 
+    ( PARTITION BY username) AS count_user
+FROM UserActivity
+)
+
+SELECT 
+username, 
+activity, 
+startDate, 
+endDate 
+FROM cte 
+WHERE count_user = 1 
+OR ranking = 2;
+
+-- Oracle
+
+WITH cte AS 
+(
+ SELECT username, activity, startDate, endDate, 
+ DENSE_RANK() OVER 
+    (PARTITION BY username 
+     ORDER BY enddate DESC ) AS ranking,
+ COUNT(*) OVER 
+    ( PARTITION BY username) AS count_user
+FROM UserActivity
+)
+
+SELECT 
+username, 
+activity, 
+TO_CHAR(startDate) AS startDate, 
+TO_CHAR(endDate ) AS endDate  
+FROM cte 
+WHERE count_user = 1 
+OR ranking = 2;
