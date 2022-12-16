@@ -56,12 +56,19 @@ Player 2 installed the game on 2017-06-25 but didn't log back in on 2017-06-26 s
 
 # Solution
 
-WITH t AS 
+WITH cte AS 
 (SELECT event_date, 
-MIN(event_date) OVER w login_date,
-LEAD(event_date) OVER w login_date2
+MIN(event_date) OVER w AS login_date,
+LEAD(event_date) OVER w AS login_date2
 FROM activity 
-WINDOW w AS (PARTITION BY player_id ORDER BY event_date ))
+WINDOW w AS (PARTITION BY player_id 
+             ORDER BY event_date )
+)
 
-SELECT login_date install_dt, COUNT(*) installs, ROUND(AVG(IF(DATEDIFF(login_date2,login_date)=1,1,0)),2) Day1_retention
-FROM t WHERE event_date = login_date GROUP BY 1
+SELECT 
+login_date AS install_dt, 
+COUNT(*) AS installs, ROUND(AVG(CASE WHEN DATEDIFF(login_date2,login_date) = 1 THEN 1 ELSE 
+                                0 END),2) AS Day1_retention
+FROM cte
+WHERE event_date = login_date 
+GROUP BY install_dt;
