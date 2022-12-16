@@ -1,5 +1,5 @@
 /* 
-Qustion: 1767
+Question: 1767
 Table: Tasks
 
 +----------------+---------+
@@ -75,17 +75,67 @@ Task 3 was divided into 4 subtasks (1, 2, 3, 4). All of the subtasks were execut
  
  
 # Solution
+
+-- MySQL
  
 WITH RECURSIVE cte  AS
 (
-SELECT 1 subtask_id
+SELECT 1 AS subtask_id
 UNION ALL
-SELECT subtask_id + 1 FROM cte LIMIT 20
+SELECT subtask_id + 1 FROM cte WHERE subtask_id < 
+        (SELECT MAX(subtasks_count) 
+        FROM tasks)
 )
 
-SELECT t.task_id, cte.subtask_id FROM tasks t JOIN cte ON subtask_id <= subtasks_count
-LEFT JOIN executed e ON t.task_id = e.task_id AND cte.subtask_id= e.subtask_id 
-WHERE e.task_id IS NULL
+SELECT 
+t.task_id, 
+cte.subtask_id FROM tasks t 
+JOIN cte 
+    ON subtask_id <= subtasks_count
+LEFT JOIN executed e 
+    ON t.task_id = e.task_id 
+    AND cte.subtask_id= e.subtask_id 
+WHERE e.task_id IS NULL;
 
+-- MS SQL Server
+
+
+WITH cte(subtask_id)  AS
+(
+SELECT 1 
+UNION ALL
+SELECT subtask_id + 1 FROM cte WHERE subtask_id < 
+        20
+)
+
+SELECT 
+t.task_id, 
+cte.subtask_id FROM tasks t 
+JOIN cte 
+    ON subtask_id <= subtasks_count
+EXCEPT 
+SELECT task_id, subtask_id 
+FROM executed;
+
+-- Oracle 
+
+WITH  cte (subtask_id) AS
+(
+SELECT 1 FROM dual
+UNION ALL
+SELECT subtask_id + 1 FROM cte WHERE subtask_id < 
+        (SELECT MAX(subtasks_count) 
+        FROM tasks)
+)
+
+SELECT 
+t.task_id, 
+cte.subtask_id FROM tasks t 
+JOIN cte 
+ ON subtask_id <= subtasks_count
+LEFT JOIN executed e 
+ ON t.task_id = e.task_id 
+ AND cte.subtask_id= e.subtask_id 
+WHERE e.task_id IS NULL;
  
  
