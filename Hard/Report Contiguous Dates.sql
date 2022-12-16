@@ -77,14 +77,75 @@ From 2019-01-06 to 2019-01-06 all tasks succeeded and the system state was "succ
 
 # Solution
 
-WITH t1 AS
-(SELECT fail_date date, 'failed' period_state FROM failed 
-UNION ALL SELECT success_date date, 'succeeded' period_state FROM succeeded ),
-t2 AS
-(SELECT *, RANK() OVER (PARTITION BY period_state ORDER BY date) ranking FROM t1 WHERE 
-date BETWEEN  '2019-01-01'  AND '2019-12-31' ),
-t3 AS 
-(SELECT s1.period_state period_state ,s1.date start_date, MAX(s2.date) end_date FROM t2 s1, t2 s2 WHERE s1.ranking <= s2.ranking AND s2.ranking -s1.ranking = DATEDIFF(s2.date,s1.date) AND s1.period_state  = s2.period_state 
-GROUP BY 1,2)
+-- MySQL
 
-SELECT period_state, MIN(start_date) start_date, end_date FROM t3 GROUP BY 1,3 ORDER BY 3
+WITH states AS
+(SELECT fail_date AS date, 'failed' AS  period_state FROM failed 
+ UNION ALL 
+ SELECT success_date, 'succeeded' FROM succeeded ),
+
+ranking AS
+(SELECT date, period_state, 
+ RANK() OVER 
+    (PARTITION BY period_state 
+     ORDER BY date) AS rnk FROM states 
+ WHERE date >=  '2019-01-01'  
+ AND date < '2020-01-01' 
+ ),
+
+cte AS 
+(
+ SELECT r1.period_state AS  period_state, 
+ r1.date AS  start_date, 
+ MAX(r2.date) AS end_date 
+ FROM ranking r1 
+ CROSS JOIN ranking r2 
+ WHERE r1.rnk <= r2.rnk 
+ AND r2.rnk - r1.rnk = DATEDIFF(r2.date,r1.date) 
+ AND r1.period_state  = r2.period_state 
+ GROUP BY r1.period_state, r1.date
+ )
+
+SELECT 
+period_state, 
+MIN(start_date) AS start_date, 
+end_date FROM cte 
+GROUP BY period_state, end_date 
+ORDER BY end_date;
+
+
+-- MS SQL Server
+
+WITH states AS
+(SELECT fail_date AS date, 'failed' AS  period_state FROM failed 
+ UNION ALL 
+ SELECT success_date, 'succeeded' FROM succeeded ),
+
+ranking AS
+(SELECT date, period_state, 
+ RANK() OVER 
+    (PARTITION BY period_state 
+     ORDER BY date) AS rnk FROM states 
+ WHERE date >=  '2019-01-01'  
+ AND date < '2020-01-01' 
+ ),
+
+cte AS 
+(
+ SELECT r1.period_state AS  period_state, 
+ r1.date AS  start_date, 
+ MAX(r2.date) AS end_date 
+ FROM ranking r1 
+ CROSS JOIN ranking r2 
+ WHERE r1.rnk <= r2.rnk 
+ AND r2.rnk - r1.rnk = DATEDIFF(DAY,r1.date,r2.date) 
+ AND r1.period_state  = r2.period_state 
+ GROUP BY r1.period_state, r1.date
+ )
+
+SELECT 
+period_state, 
+MIN(start_date) AS start_date, 
+end_date FROM cte 
+GROUP BY period_state, end_date 
+ORDER BY end_date;
