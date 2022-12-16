@@ -83,7 +83,7 @@ WITH cte AS
 (SELECT group_id, player_id, 
  RANK() OVER 
     (PARTITION BY group_id 
-     ORDER BY COALESCE(SUM(CASE WHEN player_id=first_player THEN first_score
+     ORDER BY COALESCE(SUM(CASE WHEN player_id = first_player THEN first_score
                             ELSE second_score END ),0) DESC, player_id ) AS ranking
  FROM players 
  LEFT JOIN matches 
