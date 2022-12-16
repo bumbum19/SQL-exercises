@@ -54,10 +54,21 @@ On 2021-08-11, user 1 and 5 had a call. This call was the only call for both of 
 
 # Solution
 
-WITH t AS
-(SELECT * FROM calls UNION SELECT recipient_id caller_id ,caller_id recipient_id, call_time FROM calls),
- t2 AS
-(SELECT caller_id user_id, FIRST_VALUE(recipient_id) OVER w first_call, LAST_VALUE(recipient_id) OVER w last_call  
-FROM t WINDOW w AS (PARTITION BY caller_id, DATE_FORMAT(call_time, '%d %M %Y')))
+WITH calls2 AS
+(TABLE calls 
+ UNION 
+ SELECT recipient_id AS caller_id , caller_id AS recipient_id, 
+ call_time FROM calls),
+ 
+ cte AS
+(SELECT caller_id AS user_id, 
+ FIRST_VALUE(recipient_id) OVER w  AS first_call, 
+ LAST_VALUE(recipient_id) OVER w AS last_call  
+ FROM calls2 
+ WINDOW w AS (PARTITION BY caller_id, 
+              DATE_FORMAT(call_time, '%d %M %Y')))
 
-SELECT DISTINCT user_id FROM t2 WHERE first_call = last_call
+SELECT 
+DISTINCT user_id 
+FROM cte 
+WHERE first_call = last_call;
