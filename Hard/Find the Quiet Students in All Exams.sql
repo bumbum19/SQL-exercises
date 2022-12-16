@@ -87,8 +87,8 @@ WITH cte AS
 (SELECT student_id, score, 
  MAX(score) OVER 
     (PARTITION BY exam_id) AS max_score, 
- MIN(score) 
-    OVER (PARTITION BY exam_id) AS min_score 
+ MIN(score) OVER 
+    (PARTITION BY exam_id) AS min_score 
  FROM exam 
 )
 
