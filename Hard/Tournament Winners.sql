@@ -79,10 +79,19 @@ Output:
 
 # Solution 
 
-WITH t AS
+WITH cte AS
 (SELECT group_id, player_id, 
-RANK() OVER (PARTITION BY group_id ORDER BY IFNULL(SUM(IF(player_id=first_player,first_score,second_score)),0) DESC, player_id ) ranking
-FROM players LEFT JOIN matches ON first_player = player_id OR second_player = player_id
-GROUP BY 2)
+ RANK() OVER 
+    (PARTITION BY group_id 
+     ORDER BY COALESCE(SUM(CASE WHEN player_id=first_player THEN first_score
+                            ELSE second_score END ),0) DESC, player_id ) AS ranking
+ FROM players 
+ LEFT JOIN matches 
+    ON player_id IN (first_player, second_player)
+ GROUP BY player_id)
 
-SELECT group_id, player_id FROM t WHERE ranking=1
+SELECT 
+group_id, 
+player_id 
+FROM cte 
+WHERE ranking = 1;
