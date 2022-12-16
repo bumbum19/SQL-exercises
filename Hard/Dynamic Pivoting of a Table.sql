@@ -62,7 +62,7 @@ For product 3, the price is 1000 in Shop and 1900 in Souq. It is not sold in the
 
 CREATE PROCEDURE PivotProducts()
 BEGIN
-	# Write your MySQL query statement below.
+	
     SET group_concat_max_len = 3096;
     SET @sql = NULL;
     SELECT
