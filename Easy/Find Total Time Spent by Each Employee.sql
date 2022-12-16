@@ -54,7 +54,7 @@ Employee 2 has two events: one on day 2020-11-28 with a total of (33 - 3) = 30, 
 
  */
  
-# Solution(MySQL, MS SQL Server)
+# Solution
  
 SELECT 
 event_day AS day,
@@ -64,13 +64,6 @@ FROM employees
 GROUP BY event_day, emp_id;
  
  
-# Solution2(Oracle)
 
-SELECT 
-TO_CHAR(event_day, 'YYYY-MM-DD') AS day,
-emp_id, 
-SUM(out_time-in_time) AS total_time 
-FROM employees 
-GROUP BY event_day, emp_id;
 
 
