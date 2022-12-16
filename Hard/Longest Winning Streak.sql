@@ -67,6 +67,8 @@ The longest winning streak was 1 match.
 
 # Solution
 
+-- MySQL
+
 WITH blocks AS
 (SELECT player_id, match_day, result, 
  ROW_NUMBER()  OVER 
