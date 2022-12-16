@@ -79,13 +79,27 @@ With he same formula for the average salary comparison in February, the result i
 
 # Solution 
 
-WITH t1 AS
-(SELECT DATE_FORMAT(pay_date, '%Y-%m') pay_month, department_id, AVG(amount) avg_salary_dep, COUNT(*) AS emp_count FROM salary NATURAL JOIN 
-employee GROUP BY 1,2 ),
- t2 AS 
-(SELECT pay_month, SUM(avg_salary_dep*emp_count)/SUM(emp_count) avg_salary FROM t1 GROUP BY 1)
+WITH cte AS
+(SELECT DATE_FORMAT(pay_date, '%Y-%m') AS pay_month, 
+ department_id, AVG(amount) AS avg_salary_dep,
+ COUNT(*) AS emp_count 
+ FROM salary 
+ JOIN employee 
+    USING (employee_id)
+ GROUP BY pay_month, department_id ),
+ 
+ avg_sal AS 
+(SELECT pay_month, 
+ SUM(avg_salary_dep*emp_count) / SUM(emp_count) AS avg_salary 
+ FROM cte 
+ GROUP BY pay_month)
 
-SELECT pay_month, department_id, 
+SELECT 
+pay_month, 
+department_id, 
 CASE WHEN avg_salary_dep>avg_salary THEN 'higher' 
-WHEN avg_salary_dep<avg_salary THEN 'lower'
-ELSE 'same' END comparison FROM t1 NATURAL JOIN t2
+    WHEN avg_salary_dep<avg_salary THEN 'lower'
+    ELSE 'same' END comparison 
+FROM cte 
+JOIN avg_sal
+    USING(pay_month);
