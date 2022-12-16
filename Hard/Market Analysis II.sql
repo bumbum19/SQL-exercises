@@ -101,10 +101,27 @@ The answer for the user with id 4 is no because the brand of their second sold i
 
 # Solution
 
-WITH t AS 
-(SELECT seller_id,   RANK( )OVER (w ORDER BY order_date) second_item, COUNT(*) OVER w item_count, 
-item_id FROM orders WINDOW w AS (PARTITION BY seller_id  ) )
+WITH cte AS 
+(SELECT seller_id,   
+ RANK( ) OVER (w ORDER BY order_date) AS second_item, 
+ COUNT(*) OVER w item_count, 
+ item_id FROM orders 
+ WINDOW w AS (PARTITION BY seller_id  ) 
+)
 
-SELECT user_id seller_id, IF(favorite_brand=item_brand AND second_item=2 ,'yes','no') 2nd_item_fav_brand  
-FROM users u LEFT JOIN t ON u.user_id = t.seller_id  NATURAL LEFT JOIN items 
-WHERE  second_item = 2 OR item_count=1 OR   item_count IS NULL
+
+SELECT 
+user_id AS seller_id, 
+CASE WHEN favorite_brand = item_brand 
+        AND second_item = 2  THEN 'yes' 
+     ELSE 'no' END AS 2nd_item_fav_brand  
+FROM users u 
+LEFT JOIN cte 
+    ON u.user_id = cte.seller_id  
+LEFT JOIN items 
+    USING (item_id)
+WHERE  second_item = 2 
+OR item_count = 1 
+OR item_count IS NULL;
+
+
