@@ -75,8 +75,10 @@ Output:
 # Solution
 
 
-WITH t AS
-(SELECT GROUP_CONCAT(CONCAT(factor, 'X^' ,power) ORDER BY power DESC SEPARATOR '+') equation FROM terms)
+WITH cte AS
+(SELECT GROUP_CONCAT(CONCAT(factor, 'X^' ,power) ORDER BY power DESC SEPARATOR '+') AS equation 
+ FROM terms)
 
-SELECT REPLACE(REPLACE(REPLACE(REPLACE(CONCAT('+',equation,'=0'), '^1+', '+'),'X^0', ''),'+-','-'), '^1=', '=')
-equation FROM t
+SELECT 
+REPLACE(REPLACE(REPLACE(REPLACE(CONCAT('+',equation,'=0'), '^1+', '+'),'X^0', ''),'+-','-'), '^1=', '=') AS equation 
+FROM cte;
