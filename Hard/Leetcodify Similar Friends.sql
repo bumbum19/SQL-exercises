@@ -87,16 +87,25 @@ Users 2 and 5 are friends and listened to songs 10, 11, and 12, but they did not
  
 # Solution
 
-WITH t AS 
-( SELECT DISTINCT * FROM listens 
-),
-t2 AS
-(SELECT DISTINCT l1.user_id user1_id, l2.user_id user2_id 
-FROM t l1  JOIN t l2 USING (song_id,day) 
-WHERE l1.user_id <  l2.user_id 
-GROUP BY l1.user_id, l2.user_id, day HAVING COUNT(*) >= 3 )
 
-SELECT * FROM t2 NATURAL JOIN friendship
+WITH cte AS
+(SELECT DISTINCT l1.user_id AS user1_id, 
+ l2.user_id AS  user2_id 
+ FROM listens l1  
+ JOIN listens l2 
+  USING (song_id,day) 
+ WHERE l1.user_id <  l2.user_id 
+ GROUP BY l1.user_id, l2.user_id, day 
+ HAVING COUNT(DISTINCT song_id) >= 3 
+ )
+
+SELECT 
+user1_id,  
+user2_id 
+FROM cte 
+JOIN friendship f
+ USING (user1_id, user2_id);
+
 
 
 
