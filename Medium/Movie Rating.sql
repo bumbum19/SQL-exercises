@@ -99,8 +99,19 @@ Frozen 2 and Joker have a rating average of 3.5 in February but Frozen 2 is smal
 
 # Solution
 
-(SELECT name results FROM users NATURAL JOIN MovieRating GROUP BY 1 ORDER BY COUNT(*) DESC,1 LIMIT 1
+(SELECT name AS results 
+ FROM users JOIN MovieRating 
+    USING (user_id)
+ GROUP BY name 
+ ORDER BY COUNT(*) DESC, name 
+ LIMIT 1
 )
 UNION
-(SELECT title  FROM movies NATURAL JOIN MovieRating WHERE created_at BETWEEN '2020-02-01'  AND 
-'2020-02-29' GROUP BY 1 ORDER BY AVG(rating) DESC,1 LIMIT 1)
+(SELECT title 
+ FROM movies JOIN MovieRating  
+    USING (movie_id)
+ WHERE created_at >= '2020-02-01' 
+ AND created_at < '2020-03-01'
+ GROUP BY title 
+ ORDER BY AVG(rating) DESC, title 
+ LIMIT 1);
