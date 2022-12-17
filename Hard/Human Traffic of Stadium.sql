@@ -56,12 +56,21 @@ The rows with ids 2 and 3 are not included because we need at least three consec
 
 # Solution
 
-WITH t AS
-(SELECT id, visit_date, LAG(people,2) OVER w AS p_lag2, 
-LAG(people) OVER w AS p_lag, people, LEAD(people) OVER w AS p_lead,
-LEAD(people,2) OVER w AS p_lead2 FROM stadium  WINDOW w AS (ORDER BY id) )
+WITH cte AS
+(SELECT id, visit_date, people, 
+ LAG(people,2) OVER w AS p_lag2, 
+ LAG(people) OVER w AS p_lag,  
+ LEAD(people) OVER w AS p_lead,
+ LEAD(people,2) OVER w AS p_lead2 
+ FROM stadium  
+ WINDOW w AS (ORDER BY id) 
+)
 
-SELECT id, visit_date, people FROM t WHERE people >= 100 AND (
-    (p_lag2 >= 100 AND p_lag >= 100) OR
-    (p_lag >= 100 AND p_lead >= 100) OR
-    (p_lead >= 100 AND p_lead2 >= 100)  ) 
+SELECT 
+id, 
+visit_date, 
+people FROM cte 
+WHERE people >= 100 
+AND( (p_lag2 >= 100 AND p_lag >= 100) 
+OR (p_lag >= 100 AND p_lead >= 100) 
+OR(p_lead >= 100 AND p_lead2 >= 100) );
