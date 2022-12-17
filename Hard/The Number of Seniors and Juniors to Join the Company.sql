@@ -82,14 +82,33 @@ We can hire all three juniors with the remaining budget.
 
 # Solution
 
-WITH t AS 
-(SELECT experience , SUM(salary) OVER w total, COUNT(*) OVER w accepted_candidates  FROM candidates 
-WINDOW w AS ( PARTITION BY experience ORDER BY salary, employee_id) 
-UNION SELECT 'Senior' experience, 0 total, 0 accepted_candidates
-UNION SELECT 'Junior' experience, 0 total, 0 accepted_candidates
+WITH cte AS 
+(SELECT experience, 
+ SUM(salary) OVER w AS total, 
+ COUNT(*) OVER w AS accepted_candidates  
+ FROM candidates 
+ WINDOW w AS (PARTITION BY experience 
+              ORDER BY salary, employee_id) 
+ UNION ALL
+ SELECT 'Senior', 0, 0
+ UNION ALL 
+ SELECT 'Junior', 0, 0 
 ),
-t2 AS 
-(SELECT * FROM t WHERE total <= 70000 AND experience = 'Senior' ORDER BY total DESC LIMIT 1)
+cte2 AS 
+(SELECT experience,  total, accepted_candidates
+ FROM cte 
+ WHERE total <= 70000 
+ AND experience = 'Senior' 
+ ORDER BY total DESC LIMIT 1
+ )
 
-(SELECT experience, accepted_candidates  FROM t WHERE total <= 70000 - (SELECT total FROM t2) AND experience = 'Junior' ORDER BY total DESC LIMIT 1)
-UNION SELECT  experience, accepted_candidates FROM t2
+(SELECT experience, accepted_candidates  
+ FROM cte 
+ WHERE total <= 70000 - 
+    (SELECT total FROM cte2) 
+ AND experience = 'Junior' 
+ ORDER BY total 
+ DESC LIMIT 1)
+UNION ALL
+SELECT experience, accepted_candidates 
+FROM cte2;
