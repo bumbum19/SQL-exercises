@@ -94,9 +94,20 @@ For company C, the rows sorted are as follows:
 
 # Solution
 
-WITH t  AS
-(SELECT *, PERCENT_RANK() OVER (w ORDER BY salary,id ) ranking,
-COUNT(*) OVER  w size
-FROM employee WINDOW w AS (PARTITION BY company) )
+WITH cte  AS
+(SELECT id, company, salary, 
+ PERCENT_RANK() OVER 
+    (PARTITION BY company 
+    ORDER BY salary, id ) AS ranking,
+ COUNT(*) OVER  
+    (PARTITION BY company) AS size
+ FROM employee 
+ )
 
-SELECT id, company, salary FROM t WHERE ABS(ranking-0.5) < IF(size=1,1,1/(size-1))
+SELECT 
+id, 
+company, 
+salary FROM cte 
+WHERE ABS(ranking-0.5) < 
+  CASE WHEN size=1 THEN 1 
+       ELSE 1/(size-1) END;
