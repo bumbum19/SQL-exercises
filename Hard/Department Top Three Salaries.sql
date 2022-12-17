@@ -87,10 +87,22 @@ In the Sales department:
 
 # Solution
 
-WITH t AS
-(SELECT e.name  Employee, salary  Salary, d.name AS Department, DENSE_RANK() OVER w  ranking
-FROM employee e JOIN department d ON e.departmentid = d.id
-WINDOW w AS (PARTITION BY d.name ORDER BY salary DESC) )
+WITH cte AS
+(
+ SELECT e.name AS Employee, salary AS Salary, 
+ d.name AS Department, 
+ DENSE_RANK() OVER 
+    (PARTITION BY d.name 
+    ORDER BY salary DESC) AS rnk
+ FROM employee e 
+ JOIN department d 
+    ON e.departmentid = d.id
+)
 
-SELECT Department, Employee, Salary FROM t
-WHERE ranking <= 3
+SELECT 
+Department, 
+Employee, 
+Salary 
+FROM cte
+WHERE rnk <= 3;
+
