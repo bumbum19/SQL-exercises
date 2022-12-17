@@ -85,18 +85,33 @@ Dortmund is the first team in the table. Ajax and Arsenal have the same points, 
 */
 
 # Solution
-
-WITH t AS 
-
-(SELECT team_name, IFNULL(COUNT(*),0) matches_played,
-IFNULL(SUM(IF(team_id =home_team_id,CASE WHEN home_team_goals  > away_team_goals  
-THEN 3 WHEN home_team_goals  = away_team_goals  THEN 1 ELSE 0 END,
-CASE WHEN home_team_goals  < away_team_goals  
-THEN 3 WHEN home_team_goals  = away_team_goals  THEN 1 ELSE 0 END )),0) points,
- IFNULL(SUM(IF(team_id =home_team_id,home_team_goals,away_team_goals)),0)  goal_for,
-  IFNULL(SUM(IF(team_id !=home_team_id,home_team_goals,away_team_goals)),0) goal_against
-FROM teams  JOIN matches ON team_id IN (home_team_id ,away_team_id )
-GROUP BY 1 
+WITH cte AS 
+(
+ SELECT team_name, 
+ COALESCE(COUNT(*),0) AS matches_played,
+ COALESCE(SUM(CASE WHEN team_id =home_team_id THEN 
+                CASE WHEN home_team_goals  > away_team_goals  THEN 3 
+                WHEN home_team_goals  = away_team_goals  THEN 1 ELSE 0 END 
+              ELSE 
+                CASE WHEN home_team_goals  < away_team_goals  THEN 3 
+                WHEN home_team_goals  = away_team_goals  THEN 1 ELSE 0 END 
+            END ),0)  AS points,
+ COALESCE(SUM(CASE WHEN team_id = home_team_id THEN home_team_goals 
+    ELSE away_team_goals END),0)  AS goal_for,
+ COALESCE(SUM(CASE WHEN team_id !=home_team_id THEN home_team_goals 
+    ELSE away_team_goals END ),0) AS goal_against
+ FROM teams 
+ JOIN matches 
+    ON team_id IN (home_team_id ,away_team_id )
+ GROUP BY team_name 
 )
 
-SELECT *, goal_for-goal_against goal_diff FROM t ORDER BY points DESC, goal_diff DESC, team_name
+SELECT 
+team_name, 
+matches_played,
+points,
+goal_for,
+goal_against,
+goal_for - goal_against  AS goal_diff 
+FROM cte 
+ORDER BY points DESC, goal_diff DESC, team_name;
