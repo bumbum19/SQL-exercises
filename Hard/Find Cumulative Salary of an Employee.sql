@@ -101,9 +101,26 @@ So the cumulative salary summary for this employee is:
 
 # Solution
 
-WITH t AS 
-(SELECT *, LAG(month) OVER w last_month, LAG(salary) OVER w last_salary, LAG(month,2) OVER w last_month2, LAG(salary,2) OVER w last_salary2,
-MAX(month) OVER (PARTITION BY id ) max_month FROM employee WINDOW w AS (PARTITION BY id ORDER BY month))
+WITH cte AS 
+(
+ SELECT id, month, salary, 
+ LAG(month) OVER w AS last_month, 
+ LAG(salary) OVER w AS last_salary, 
+ LAG(month,2) OVER w AS last_month2, 
+ LAG(salary,2) OVER w AS last_salary2,
+ MAX(month) OVER (PARTITION BY id ) max_month 
+ FROM employee 
+ WINDOW w AS (PARTITION BY id ORDER BY month)
+ )
 
-SELECT id, month, salary + IF(month-last_month=1,last_salary,0) + IF(month-last_month2=2,last_salary2,0) Salary
-FROM t WHERE month <> max_month ORDER BY 1,2 DESC
+SELECT 
+id, 
+month, 
+salary + 
+CASE WHEN month-last_month = 1 THEN last_salary 
+    ELSE 0 END + 
+CASE WHEN month-last_month2 = 2 THEN last_salary2 
+    ELSE 0 END AS Salary
+FROM cte 
+WHERE month != max_month 
+ORDER BY id, month DESC;
