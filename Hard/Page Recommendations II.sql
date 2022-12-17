@@ -105,12 +105,26 @@ You can recommend pages for users 2, 3, 4, and 5 using a similar process.
 */
 
 # Solution 
-WITH t AS 
-(SELECT user1_id, user2_id user_id  FROM friendship UNION SELECT user2_id user1_id, user1_id user_id FROM friendship),
-t2 AS 
-(SELECT user1_id user_id, user_id friend_id, page_id FROM t NATURAL JOIN likes
+
+WITH friendship AS 
+(SELECT user1_id, user2_id  FROM friendship 
+ UNION ALL
+ SELECT user2_id, user1_id FROM friendship),
+
+cte AS 
+(SELECT user1_id  AS user_id, 
+ user_id AS friend_id, page_id 
+ FROM friendship f  
+ JOIN likes l
+    ON f.user2_id = l.user_id
 )
 
-SELECT t2.user_id, t2.page_id, COUNT(*) friends_likes  FROM t2  LEFT JOIN likes l 
-ON t2.page_id = l.page_id AND t2.user_id = l.user_id WHERE l.user_id IS NULL
-GROUP BY 1,2
+SELECT 
+cte.user_id,
+cte.page_id, 
+COUNT(*) AS friends_likes  
+FROM cte  LEFT JOIN likes l 
+    ON cte.page_id = l.page_id 
+    AND cte.user_id = l.user_id 
+WHERE l.user_id IS NULL
+GROUP BY user_id, page_id;
