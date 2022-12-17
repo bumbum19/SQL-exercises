@@ -69,20 +69,30 @@ Output:
 | 2019-09 | US      | 0              | 0               | 1                | 5000              |
 +---------+---------+----------------+-----------------+------------------+-------------------+
 
+*/
 
 # Solution
 
-WITH t AS
-(SELECT  country,'chargeback' state, amount, c.trans_date FROM transactions t 
- JOIN chargebacks c ON t.id = c.trans_id
+WITH cte AS
+(SELECT  country,'chargeback' AS state, amount, c.trans_date 
+ FROM transactions t JOIN chargebacks c 
+ ON t.id = c.trans_id
  UNION
- SELECT country, state, amount, trans_date FROM transactions)
+ SELECT country, state, amount, trans_date 
+ FROM transactions)
 
-SELECT DATE_FORMAT(trans_date, '%Y-%m') AS month, country,  
-SUM(state='approved') approved_count, 
-SUM(IF(state='approved',amount,0)) approved_amount,
-SUM(state='chargeback') chargeback_count, 
-SUM(IF(state='chargeback',amount,0)) chargeback_amount
-FROM t GROUP BY 1,2 
-HAVING (approved_count,approved_amount,chargeback_count,chargeback_amount) != (0,0,0,0)
+SELECT 
+DATE_FORMAT(trans_date, '%Y-%m') AS month, 
+country,  
+SUM(state='approved') AS approved_count, 
+SUM(CASE WHEN state='approved'THEN amount 
+    ELSE 0 END ) AS approved_amount,
+SUM(CASE WHEN state='chargeback' THEN 1 
+    ELSE 0 END) AS chargeback_count, 
+SUM(CASE WHEN state='chargeback'THEn amount 
+ELSE 0 END )  AS chargeback_amount
+FROM cte 
+GROUP BY month, country 
+HAVING GREATEST(approved_count,approved_amount,
+    chargeback_count,chargeback_amount) > 0;
 
