@@ -136,21 +136,34 @@ By the end of October --> average_ride_distance = (0+163+6)/3=56.33, average_rid
 
 # Solution
 
-WITH RECURSIVE t AS (
-SELECT 1 AS month
+WITH RECURSIVE months(month) AS (
+SELECT 1 
 UNION ALL
 SELECT month + 1 AS month
-FROM t
+FROM months
 WHERE month < 12
 ),
-t2 AS
-(SELECT MONTH(requested_at) month, SUM(ride_distance) ride_distance, SUM(ride_duration) ride_duration 
-FROM rides NATURAL JOIN AcceptedRides 
-WHERE YEAR(requested_at) = 2020 GROUP BY MONTH(requested_at) )
 
-SELECT month, ROUND(AVG(IFNULL(ride_distance,0)) OVER w,2) average_ride_distance, 
-ROUND(AVG(IFNULL(ride_duration,0)) OVER w,2)  average_ride_duration 
-FROM t NATURAL LEFT JOIN t2 
-WINDOW w AS (ORDER BY month RANGE BETWEEN CURRENT ROW AND 2 FOLLOWING) 
-ORDER BY 1
-LIMIT 10
+cte AS
+(
+ SELECT MONTH(requested_at) AS month, 
+ SUM(ride_distance) AS ride_distance, 
+ SUM(ride_duration) AS ride_duration 
+ FROM rides  
+ JOIN AcceptedRides 
+    USING (ride_id)
+ WHERE requested_at >= '2020-01-01'
+ AND requested_at < '2021-01-01'
+ GROUP BY month )
+
+SELECT 
+month, 
+ROUND(AVG(COALESCE(ride_distance,0)) OVER w,2) AS average_ride_distance, 
+ROUND(AVG(COALESCE(ride_duration,0)) OVER w,2) AS  average_ride_duration 
+FROM months 
+LEFT JOIN cte 
+ USING (month)
+WINDOW w AS (ORDER BY month 
+        RANGE BETWEEN CURRENT ROW AND 2 FOLLOWING) 
+ORDER BY month
+LIMIT 10;
