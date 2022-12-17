@@ -50,21 +50,32 @@ Follow up: If it is unknown which continent has the most students, could you wri
 
 # Solution
 
-# Write your MySQL query statement below
 
-WITH t1 AS
-(SELECT IF(continent='America',name,NULL) America, 
-ROW_NUMBER() OVER (ORDER BY  IF(continent='America',name,'zzz')   ) ranking FROM student),
-t2 AS
-(SELECT IF(continent='Asia',name,NULL) Asia, 
-ROW_NUMBER() OVER (ORDER BY  IF(continent='Asia',name,'zzz')   ) ranking FROM student),
-t3 AS
-(SELECT IF(continent='Europe',name,NULL) Europe, 
-ROW_NUMBER() OVER (ORDER BY  IF(continent='Europe',name,'zzz')   ) ranking FROM student)
+WITH cte_America AS
+(SELECT CASE WHEN continent='America'THEN name ELSE NULL END AS  America, 
+ ROW_NUMBER() OVER 
+  (ORDER BY  CASE WHEN continent='America'THEN name ELSE 'zzz' END  ) AS ranking FROM student),
+cte_Asia AS
+(SELECT CASE WHEN continent='Asia' THEN name ELSE NULL END AS  Asia, 
+ ROW_NUMBER() OVER 
+  (ORDER BY   CASE WHEN continent='Asia 'THEN name ELSE 'zzz' END   ) AS  ranking FROM student),
+ cte_Europe AS
+(SELECT CASE WHEN continent='Europe'THEN name ELSE NULL END AS  Europe, 
+ ROW_NUMBER() OVER 
+    (ORDER BY    CASE WHEN continent='Europe'THEN name ELSE 'zzz' END  ) AS  ranking FROM student)
 
 
-SELECT America,Asia, Europe FROM t1 NATURAL JOIN t2 NATURAL JOIN t3 WHERE America IS NOT NULL OR Asia IS NOT NULL OR 
-Europe IS NOT NULL 
-
+SELECT 
+America, 
+Asia, 
+Europe 
+FROM cte_America
+JOIN cte_Asia 
+    USING (ranking)
+JOIN cte_Europe
+    USING (ranking)
+WHERE America IS NOT NULL 
+OR Asia IS NOT NULL
+OR Europe IS NOT NULL;
 
 
