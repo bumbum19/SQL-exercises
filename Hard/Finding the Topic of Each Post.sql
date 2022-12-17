@@ -93,9 +93,21 @@ Note that it is okay to have one word that expresses more than one topic.
 
 # Solution
 
-WITH t AS 
-(SELECT post_id, GROUP_CONCAT(DISTINCT topic_id ORDER BY topic_id) topic
-FROM keywords, posts WHERE INSTR(CONCAT(' ',content, ' '), CONCAT(' ',word, ' ')) > 0
-GROUP BY 1)
+WITH cte AS 
+(
+ SELECT post_id, 
+ GROUP_CONCAT(DISTINCT topic_id 
+    ORDER BY topic_id) AS topic
+ FROM keywords
+ CROSS JOIN posts 
+ WHERE INSTR(CONCAT(' ',content, ' '), 
+    CONCAT(' ',word, ' ')) > 0
+ GROUP BY post_id
+ )
 
-SELECT post_id, IFNULL(topic,'Ambiguous!') topic FROM posts NATURAL LEFT JOIN t
+SELECT 
+post_id, 
+COALESCE(topic,'Ambiguous!') AS topic 
+FROM posts 
+LEFT JOIN cte
+    USING (post_id);
