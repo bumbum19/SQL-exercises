@@ -62,9 +62,16 @@ Output:
 CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
 BEGIN
   RETURN (
-      WITH t AS 
-      (SELECT  salary, DENSE_RANK() OVER (ORDER BY salary DESC) ranking FROM employee) 
-      SELECT DISTINCT salary FROM t WHERE ranking = N
+      WITH cte AS 
+      (SELECT salary, 
+       DENSE_RANK() OVER 
+        (ORDER BY salary DESC) AS rnk 
+       FROM employee) 
+      
+    SELECT 
+    DISTINCT salary 
+    FROM cte 
+    WHERE rnk = N
   );
 END
 
