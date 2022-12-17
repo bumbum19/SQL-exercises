@@ -73,7 +73,7 @@ The highest price is $1000, and the invoices with the highest prices are 2 and 4
  */
  
  
-# Solution:
+# Solution
 
 WITH cte AS 
 (SELECT invoice_id, 
@@ -81,7 +81,7 @@ WITH cte AS
     (ORDER BY SUM(quantity * price) DESC, 
               invoice_id) AS rnk
  FROM purchases  
- JOIN  products
+ JOIN products
     USING (product_id)
  GROUP BY invoice_id
 )
