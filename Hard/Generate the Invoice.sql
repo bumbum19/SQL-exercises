@@ -75,9 +75,25 @@ The highest price is $1000, and the invoices with the highest prices are 2 and 4
  
 # Solution:
 
-SELECT  product_id, quantity, quantity*price price FROM purchases NATURAL JOIN  products WHERE invoice_id =
-(SELECT invoice_id FROM purchases NATURAL JOIN  products
-GROUP BY 1 ORDER  BY SUM(quantity*price) DESC, 1 LIMIT 1
+WITH cte AS 
+(SELECT invoice_id, 
+ RANK() OVER 
+    (ORDER BY SUM(quantity * price) DESC, 
+              invoice_id) AS rnk
+ FROM purchases  
+ JOIN  products
+    USING (product_id)
+ GROUP BY invoice_id
 )
+
+SELECT 
+product_id, 
+quantity, 
+quantity * price AS price 
+FROM purchases  
+JOIN  products
+    USING (product_id)
+WHERE invoice_id 
+    IN (SELECT invoice_id FROM cte WHERE rnk = 1 );
 
  
