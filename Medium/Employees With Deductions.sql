@@ -86,13 +86,20 @@ Employee 3:
 
 # Solution
 
-WITH t AS
+WITH cte AS
+(
+ SELECT employee_id, 
+ SUM(CEIL(TIMESTAMPDIFF(SECOND,in_time,out_time) /60)) AS min_worked 
+ FROM logs
+ GROUP BY employee_id
+)
 
-(SELECT employee_id, SUM(CEIL(TIMESTAMPDIFF(SECOND,in_time,out_time) /60)) min_worked FROM logs
-GROUP BY 1)
-
-SELECT employee_id FROM employees NATURAL LEFT JOIN  t WHERE IFNULL(min_worked,0)/60 < needed_hours 
-
+SELECT 
+e.employee_id 
+FROM employees e 
+LEFT JOIN  cte 
+    ON e.employee_id = cte.employee_id
+WHERE COALESCE(min_worked,0)/60 < needed_hours;
 
 
 
