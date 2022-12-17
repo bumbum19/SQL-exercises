@@ -91,18 +91,30 @@ Similarly, we can see that users 2 and 3 listened to songs 10, 11, and 12 on the
 
 # Solution
 
-WITH t AS 
-( SELECT DISTINCT * FROM listens 
-),
- t2 AS
-(SELECT * FROM friendship UNION SELECT user2_id user1_id, user1_id user2_id
-FROM friendship),
-t3 AS 
-(SELECT DISTINCT l1.user_id user_id, l2.user_id recommended_id 
-FROM t l1  JOIN t l2 USING (song_id,day) 
-WHERE l1.user_id <>  l2.user_id 
-GROUP BY l1.user_id, l2.user_id, day HAVING COUNT(*) >= 3 )
+WITH friendship AS
+(SELECT user1_id, user2_id FROM friendship 
+ UNION ALL 
+ SELECT user2_id AS user1_id, user1_id AS user2_id
+ FROM friendship
+ ),
 
-SELECT user_id, recommended_id FROM t3 LEFT JOIN t2 ON
-t3.user_id = t2.user1_id AND t3.recommended_id = t2.user2_id WHERE t2.user1_id IS NULL
+cte AS 
+(SELECT DISTINCT l1.user_id AS user_id, 
+ l2.user_id AS recommended_id 
+ FROM listens l1  
+ JOIN listens l2 
+    USING (song_id,day) 
+ WHERE l1.user_id !=  l2.user_id 
+ GROUP BY l1.user_id, l2.user_id, day 
+ HAVING COUNT(DISTINCT song_id) >= 3 
+ )
+
+SELECT 
+user_id, 
+recommended_id 
+FROM cte 
+LEFT JOIN friendship f 
+    ON cte.user_id = f.user1_id 
+    AND cte.recommended_id = f.user2_id 
+WHERE f.user1_id IS NULL;
 
