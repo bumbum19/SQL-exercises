@@ -64,16 +64,18 @@ Product 3 is sold in Shop and Souq with prices of 1000 and 1900.
 
 CREATE PROCEDURE UnpivotProducts()
 BEGIN
-	# Write your MySQL query statement below.
     SET group_concat_max_len = 4000;
-	SET @sql = NULL;
+    SET @sql = NULL;
     WITH stores AS	
 	(SELECT column_name store
 	FROM INFORMATION_SCHEMA.COLUMNS 
-	WHERE TABLE_SCHEMA = Database() AND TABLE_NAME = 'products' AND column_name <> 'product_id')
+	WHERE TABLE_SCHEMA = Database() 
+	AND TABLE_NAME = 'products' 
+	AND column_name <> 'product_id')
 	SELECT
 	GROUP_CONCAT(  CONCAT(
-	'UNION SELECT product_id, "', store, '" store, ',store, ' price FROM products WHERE ', store, ' IS NOT NULL')
+	'UNION SELECT product_id, "', store, '" store, ',store, ' price 
+	FROM products WHERE ', store, ' IS NOT NULL')
 	SEPARATOR ' ' )
 	INTO @sql
 	FROM stores;
