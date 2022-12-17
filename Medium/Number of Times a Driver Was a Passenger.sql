@@ -53,7 +53,15 @@ The driver with ID = 11 was never a passenger.
 
 # Solution
 
-WITH t AS
-(SELECT  passenger_id driver_id, COUNT(*) cnt FROM rides GROUP BY 1)
+WITH cte AS
+(SELECT passenger_id AS driver_id, 
+ COUNT(*) AS cnt 
+ FROM rides 
+ GROUP BY passenger_id)
 
-SELECT DISTINCT driver_id, IFNULL(cnt,0) cnt  FROM rides NATURAL LEFT JOIN  t
+SELECT 
+DISTINCT driver_id, 
+COALESCE(cnt,0) AS cnt  
+FROM rides 
+LEFT JOIN cte
+    USING (driver_id);
