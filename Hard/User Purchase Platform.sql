@@ -57,22 +57,32 @@ On 2019-07-02, user 2 purchased using mobile only, user 3 purchased using deskto
 
 # Solution
 
-
-WITH t1 AS 
+WITH sp_date AS 
 (SELECT DISTINCT spend_date FROM spending),
-t2 AS 
-(SELECT 'desktop,mobile' platforms UNION SELECT 
-'desktop' platforms UNION SELECT 'mobile' platforms),
-t3 AS
-(SELECT user_id, spend_date, GROUP_CONCAT(platform ORDER BY platform) platforms FROM spending 
-GROUP BY 1,2)
+platform AS 
+(SELECT 'desktop,mobile' AS platforms UNION ALL SELECT 
+'desktop'  UNION SELECT 'mobile'),
 
-SELECT spend_date, IF(platforms='desktop,mobile','both',platforms) platform,
-IFNULL(SUM(amount),0) total_amount,
-COUNT(DISTINCT user_id) total_users 
-FROM spending NATURAL RIGHT JOIN (t3 NATURAL RIGHT JOIN (t1,t2))
-GROUP BY 1,2
+cte AS
+(SELECT user_id, spend_date, 
+ GROUP_CONCAT(platform ORDER BY platform) AS platforms 
+ FROM spending 
+ GROUP BY user_id, spend_date
+ )
 
+SELECT 
+spend_date, 
+CASE WHEN platforms='desktop,mobile' THEN 'both' 
+    ELSE platforms END  AS platform,
+COALESCE(SUM(amount),0) AS total_amount,
+COUNT(DISTINCT user_id) AS total_users 
+FROM sp_date
+CROSS JOIN platform
+LEFT JOIN cte
+    USING (spend_date,platforms)
+LEFT JOIN spending
+    USING (user_id,spend_date)
+GROUP BY spend_date, platforms;
 
 
 
