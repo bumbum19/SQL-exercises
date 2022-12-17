@@ -48,8 +48,17 @@ Only the player with id 1 logged back in after the first day he had logged in so
 
 # Solution
 
-WITH t AS
-(SELECT player_id, MIN(event_date)  log_date FROM activity GROUP BY 1)
+WITH cte AS
+(
+ SELECT player_id, 
+ MIN(event_date) AS log_date 
+ FROM activity 
+ GROUP BY player_id
+)
 
-SELECT ROUND(COUNT(event_date)/COUNT(*),2) fraction FROM t  LEFT JOIN (SELECT player_id, event_date FROM activity ) t2 
-ON DATEDIFF(log_date,event_date)= -1 AND t.player_id = t2.player_id
+SELECT 
+ROUND(COUNT(event_date)/COUNT(*),2) AS fraction 
+FROM cte  
+LEFT JOIN activity a
+    ON DATEDIFF(log_date,event_date)= -1 
+    AND cte.player_id = a.player_id;
