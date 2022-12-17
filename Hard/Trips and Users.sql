@@ -103,14 +103,23 @@ On 2013-10-03:
  
  # Solution
  
-WITH t AS
+WITH cte AS
 (
-SELECT request_at Day, status FROM trips t JOIN users u ON t.client_id = u.users_id JOIN users u2 ON 
-t.driver_id = u2.users_id WHERE u.banned = 'No' AND u2.banned = 'No' AND
-request_at BETWEEN '2013-10-01' AND '2013-10-03'
+ SELECT request_at AS Day, status 
+ FROM trips t 
+ JOIN users u 
+     ON t.client_id = u.users_id 
+ JOIN users u2 
+     ON t.driver_id = u2.users_id 
+ WHERE u.banned = 'No' 
+ AND u2.banned = 'No' 
+ AND request_at >= '2013-10-01' 
+ AND request_at <= '2013-10-03'
 )
 
-SELECT Day, 
-ROUND(AVG(CASE WHEN status='completed' THEN 0 ELSE 1 END),2)
-AS 'Cancellation Rate'
-FROM t GROUP BY 1
+SELECT 
+Day, 
+ROUND(AVG(CASE WHEN status='completed' THEN 0 
+    ELSE 1 END),2) AS 'Cancellation Rate'
+FROM cte 
+GROUP BY 1;
