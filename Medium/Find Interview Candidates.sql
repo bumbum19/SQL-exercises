@@ -85,16 +85,26 @@ Quarz won a medal in 5 consecutive contests (190, 191, 192, 193, and 194), so we
 
 # Solution 
 
-WITH t AS 
-(SELECT contest_id, gold_medal g0, silver_medal s0, bronze_medal b0,
-LEAD(gold_medal) OVER w g1,LEAD(silver_medal) OVER w s1, LEAD(bronze_medal) OVER w b1,
-LEAD(gold_medal,2) OVER w g2,LEAD(silver_medal,2) OVER w s2, LEAD(bronze_medal,2) OVER w b2
-FROM  contests
-WINDOW w AS (ORDER BY contest_id) )
+WITH cte AS 
+(SELECT  user_id, contest_id 
+ FROM users 
+ JOIN LATERAL 
+    (SELECT contest_id FROM contests
+     WHERE user_id IN 
+        (gold_medal,silver_medal,bronze_medal)) AS dt 
+),
+cte2 AS
+(SELECT  t1.user_id 
+FROM cte t1 
+JOIN cte t2 
+JOIN cte t3 
+    ON t1.user_id = t2.user_id 
+    AND t2.user_id = t3.user_id
+WHERE t1.contest_id = t2.contest_id + 1 
+AND t2.contest_id = t3.contest_id + 1  )
 
-SELECT DISTINCT name, mail FROM users JOIN t ON (g0=user_id OR s0=user_id OR b0=user_id) AND
-(g1=user_id OR s1=user_id OR b1=user_id) AND (g2=user_id OR s2=user_id OR b2=user_id)
-
+SELECT name, mail 
+FROM users  JOIN cte2 USING (user_id)
 UNION 
-
-SELECT name, mail FROM users, contests GROUP BY 1,2 HAVING SUM(gold_medal=user_id) >= 3
+SELECT name, mail FROM users JOIN contests
+ON user_id = gold_medal GROUP BY 1,2 HAVING COUNT(*) >= 3;
