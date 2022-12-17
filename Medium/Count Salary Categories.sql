@@ -56,15 +56,27 @@ High Salary: Accounts 3, 6, and 8.
 
 # Solution
 
-WITH t1 AS 
-(SELECT "Low Salary"  AS category 
-UNION SELECT "Average Salary" category
-UNION SELECT "High Salary" category) ,
-t2 AS 
-(
-SELECT CASE WHEN income < 20000 THEN 'Low Salary' 
-WHEN income <= 50000 THEN 'Average Salary'
-ELSE 'High Salary' END category, COUNT(*) accounts_count FROM accounts GROUP BY 1)
+WITH cat(category) AS 
+(SELECT "Low Salary"  
+ UNION ALL 
+ SELECT "Average Salary" 
+ UNION ALL 
+ SELECT "High Salary" ) ,
 
-SELECT category, IFNULL(accounts_count,0) accounts_count  FROM t1 NATURAL LEFT JOIN t2
+cte AS 
+(
+ SELECT CASE WHEN income < 20000 THEN 'Low Salary' 
+    WHEN income <= 50000 THEN 'Average Salary'
+    ELSE 'High Salary' END AS category, 
+ COUNT(*) AS accounts_count 
+ FROM accounts 
+ GROUP BY category
+)
+
+SELECT category, 
+COALESCE(accounts_count,0) AS accounts_count  
+FROM cat 
+LEFT JOIN cte
+    USING (category);
+
 
