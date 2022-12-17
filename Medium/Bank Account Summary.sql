@@ -88,24 +88,20 @@ Luis did not received any transfer, credit = $800
 
 
 
-SELECT *, IF(credit<0, 'Yes','No') credit_limit_breached FROM  
-(SELECT user_id, user_name, credit + IFNULL(SUM(IF(user_id = paid_to,amount,-amount)),0) credit 
-FROM users LEFT JOIN transactions ON user_id IN (paid_by,paid_to) GROUP BY 1)  t
+WITH cte AS 
+(SELECT user_id, user_name, 
+ credit + COALESCE(SUM(CASE WHEN user_id = paid_to THEN amount 
+    ELSE -amount END), 0) AS credit 
+ FROM users 
+ LEFT JOIN transactions 
+    ON user_id IN (paid_by,paid_to) 
+ GROUP BY 1
+ )
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+SELECT 
+user_id, 
+user_name, 
+credit,
+CASE WHEN credit < 0 THEN  'Yes'
+    ELSE 'No' END credit_limit_breached 
+FROM cte;
