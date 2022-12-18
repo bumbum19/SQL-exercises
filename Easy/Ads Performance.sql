@@ -68,7 +68,7 @@ Note that we do not care about Ignored Ads.
 
 SELECT 
 ad_id, 
-COALESCE(ROUND(SUM(CASE WHEN action='Clicked ' THEN 1 ELSE 0 END) * 100.00 /
+COALESCE(ROUND(SUM(CASE WHEN action='Clicked ' THEN 1 ELSE 0 END) * 100 /
     (NULLIF(SUM(CASE WHEN action='Clicked ' THEN 1 ELSE 0 END)+
     SUM(CASE WHEN action='Viewed ' THEN 1 ELSE 0 END),0) ) ,2),0) AS ctr 
 FROM ads
