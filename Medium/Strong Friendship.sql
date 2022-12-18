@@ -62,12 +62,30 @@ We did not include the friendship of users 2 and 3 because they only have two co
 
 # Solution
 
-SELECT user1_id, user2_id,  COUNT(neighbor) common_friend   FROM friendship f JOIN LATERAL(SELECT neighbor 
-FROM (SELECT user1_id neighbor FROM friendship
-WHERE user2_id IN (f.user1_id, f.user2_id) AND user1_id NOT IN (f.user1_id, f.user2_id) 
-UNION ALL SELECT user2_id FROM friendship
-WHERE user1_id IN (f.user1_id, f.user2_id) AND user2_id NOT IN (f.user1_id, f.user2_id)) t
-GROUP BY 1 HAVING COUNT(*) = 2 ) t2
-GROUP BY 1,2 HAVING  common_friend >= 3
+WITH friendship2 AS 
+
+(SELECT user1_id, user2_id FROM friendship 
+ UNION ALL  
+ SELECT user2_id, user1_id FROM friendship),
+
+cte AS
+(SELECT t1.user1_id AS user1_id , t2.user2_id AS user2_id, 
+ COUNT(*) AS common_neighbor 
+ FROM friendship2 t1 
+ JOIN friendship2 t2
+    ON t1.user2_id = t2.user1_id 
+ GROUP BY t1.user1_id, t2.user2_id  
+ HAVING user1_id < user2_id )
+
+SELECT 
+user1_id, 
+user2_id, 
+common_neighbor AS common_friend 
+FROM friendship 
+JOIN cte
+    USING (user1_id, user2_id)
+WHERE user1_id < user2_id
+AND  common_neighbor>=3;
+
 
 
