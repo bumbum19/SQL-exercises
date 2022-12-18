@@ -65,22 +65,32 @@ WITH cte AS
  MAX(end_day) OVER  
   (PARTITION BY hall_id ORDER BY 
    start_day) AS end_day
- FROM hallevents  ),
+ FROM HallEvents  ),
 
-cte2 as 
+cte2 AS 
 (SELECT hall_id, start_day, 
- LEAD(start_day) over (PARTITION BY hall_id order by start_day) AS next,
-end_day FROM t
-  order by hall_id, start_day ),
-  t3 AS
-  
- (SELECT hall_id,start_day,end_day,
- CASE WHEN next <= end_day THEN 1 ELSE 0 END AS ind FROM t2),
- t4 AS 
- (SELECT hall_id, end_day, COALESCE(lag(end_day) over (partition by hall_id order by end_day),'1900-01-01') as prev
- from t3 where ind = 0)
+ LEAD(start_day) OVER 
+  (PARTITION BY hall_id 
+   ORDER BY start_day) AS next,
+ end_day FROM cte
+  ),
+ 
+ cte3 AS 
+ (SELECT hall_id, end_day, 
+  COALESCE(lag(end_day) OVER 
+  (PARTITION BY hall_id ORDER BY 
+   end_day),'1900-01-01') AS prev
+  FROM cte2 
+  WHERE next > end_day OR next IS NULL)
 
-SELECT hall_id, dt.start_day, end_day FROM t4 JOIN LATERAL
+SELECT 
+hall_id, 
+dt.start_day, 
+end_day 
+FROM cte3 
+JOIN LATERAL
+ (SELECT start_day FROM HallEvents 
+  WHERE cte3.hall_id = hall_id AND start_day > prev AND 
+  start_day <= cte3.end_day 
+  ORDER BY start_day LIMIT 1) AS dt;
 
-(select start_day from hallevents where t4.hall_id = hall_id AND start_day > prev AND 
-start_day <= t4.end_day order by start_day LIMIT 1) AS dt;
