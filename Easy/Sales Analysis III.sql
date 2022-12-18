@@ -74,5 +74,12 @@ We return only product 1 as it is the product that was only sold in the spring o
 
 # Solution
 
-SELECT product_id, product_name FROM sales NATURAL JOIN product p  
-GROUP BY 1, 2 HAVING MIN(sale_date) >= '2019-01-01' AND MAX(sale_date) <= '2019-03-31'
+SELECT
+product_id, 
+product_name 
+FROM sales 
+JOIN product  
+  USING (product_id)
+GROUP BY product_id, product_name
+HAVING MIN(sale_date) >= '2019-01-01' 
+AND MAX(sale_date) <= '2019-03-31';
