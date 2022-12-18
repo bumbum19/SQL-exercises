@@ -32,11 +32,11 @@ Each row of this table indicates the date, units, and product_id of each product
  # Solution
  
 SELECT 
-p.product_id,  
-ROUND(SUM(units*price)*1.0/ SUM(units), 2)  AS average_price 
-FROM unitssold u 
-JOIN prices p 
- ON p.product_id = u.product_id
+product_id,  
+ROUND(SUM(units*price)/ SUM(units), 2) AS average_price 
+FROM unitssold  
+JOIN prices  
+ USING (product_id)
 WHERE purchase_date >= start_date
 AND purchase_date <= end_date 
-GROUP BY p.product_id;
+GROUP BY product_id;
