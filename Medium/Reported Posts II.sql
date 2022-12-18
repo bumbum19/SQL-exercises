@@ -80,9 +80,21 @@ Note that the output is only one number and that we do not care about the remove
 
 # Solution
 
-WITH t AS 
-(SELECT  action_date, COUNT( remove_date) /COUNT post_id) average_spam FROM (SELECT DISTINCT
-post_id, action_date FROM actions WHERE extra='spam' ) t2
-NATURAL LEFT JOIN removals  GROUP BY 1)
+WITH cte AS 
+(SELECT DISTINCT post_id, action_date 
+ FROM actions 
+ WHERE extra='spam' 
+ ),
+ 
+ cte2 AS
+(SELECT action_date, 
+ COUNT(remove_date) /COUNT(post_id)  AS average_spam 
+ FROM cte
+ LEFT JOIN removals  
+    USING (post_id)   
+ GROUP BY action_date
+ )
 
-SELECT ROUND(AVG(average_spam)*100,2) average_daily_percent FROM t
+SELECT 
+ROUND(AVG(average_spam)*100,2) AS average_daily_percent 
+FROM cte2;
