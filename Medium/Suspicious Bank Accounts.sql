@@ -88,14 +88,28 @@ We can see that the income exceeded the max income in May and July, but not in J
 
 # Solution
 
-WITH t1 AS 
-(SELECT account_id, DATE_FORMAT(day,'%Y-%m-01') month, SUM(amount) amount
-FROM transactions WHERE type='Creditor'
-GROUP BY 1,2),
-t2 AS 
-(SELECT *, LEAD(month) OVER w lead_month, LEAD(amount) OVER w lead_amount FROM t1
-WINDOW w AS (PARTITION BY account_id ORDER BY month ))
+WITH cte AS 
+(SELECT account_id, 
+ DATE_FORMAT(day,'%Y-%m-01') AS month, 
+ SUM(amount) AS amount
+ FROM transactions 
+ WHERE type='Creditor'
+ GROUP BY account_id, DATE_FORMAT(day,'%Y-%m-01') ),
 
-SELECT DISTINCT account_id FROM t2 NATURAL JOIN accounts
-WHERE DATEDIFF(lead_month,month) <= 31 AND amount > max_income AND lead_amount > max_income
+cte2 AS 
+(SELECT account_id, month, amount,
+ LEAD(month) OVER w AS lead_month, 
+ LEAD(amount) OVER w AS  lead_amount
+ FROM cte
+ WINDOW w AS (PARTITION BY account_id 
+              ORDER BY month ))
+
+SELECT 
+DISTINCT account_id 
+FROM cte2 
+JOIN accounts
+    USING (account_id)
+WHERE DATEDIFF(lead_month,month) <= 31 
+AND amount > max_income 
+AND lead_amount > max_income;
 
