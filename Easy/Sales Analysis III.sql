@@ -80,6 +80,6 @@ product_name
 FROM sales 
 JOIN product  
   USING (product_id)
-GROUP BY product_id, product_name
+GROUP BY product_id
 HAVING MIN(sale_date) >= '2019-01-01' 
 AND MAX(sale_date) <= '2019-03-31';
