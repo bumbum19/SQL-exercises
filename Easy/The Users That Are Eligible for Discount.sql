@@ -54,8 +54,10 @@ Out of the three users, only User 3 is eligible for a discount.
 
 CREATE PROCEDURE getUserIDs(startDate DATE, endDate DATE, minAmount INT)
 BEGIN
-	# Write your MySQL query statement below.
-	SELECT DISTINCT user_id FROM purchases  WHERE amount >= minAmount AND 
-    time_stamp >= startDate AND time_stamp <= endDate
+    SELECT DISTINCT user_id 
+    FROM purchases  
+    WHERE amount >= minAmount 
+    AND time_stamp >= startDate 
+    AND time_stamp <= endDate
     ORDER BY 1;
 END
