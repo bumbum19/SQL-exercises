@@ -74,8 +74,14 @@ Output:
 
 # Solution
 
-SELECT book_id, name  FROM books NATURAL LEFT JOIN (SELECT book_id, quantity FROM orders 
-WHERE dispatch_date > '2018-06-23'  ) t
-WHERE available_from < '2019-05-23' 
-GROUP BY 1 
-HAVING IFNULL(SUM(quantity),0) < 10
+SELECT 
+book_id, 
+name 
+FROM books 
+LEFT JOIN orders
+    USING (book_id)
+WHERE available_from < '2019-05-23'
+GROUP BY book_id 
+HAVING SUM(COALESCE(quantity,0) * 
+           CASE WHEN dispatch_date > '2018-06-23' THEN 1
+                ELSE 0 END ) < 10;
