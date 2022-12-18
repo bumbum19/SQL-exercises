@@ -55,5 +55,12 @@ User Alice has 1 follower. Alice is not a second-degree follower because she doe
 
 # Solution
 
-SELECT followee AS follower, COUNT(*) num FROM follow  GROUP BY 1 HAVING follower IN (SELECT
-follower FROM follow )  ORDER BY 1
+SELECT 
+followee AS follower, 
+COUNT(*) AS num 
+FROM follow f
+JOIN LATERAL 
+    (SELECT follower from follow 
+     WHERE f.followee = follower LIMIT 1) AS dt  
+GROUP BY followee  
+ORDER BY follower;
