@@ -104,9 +104,9 @@ country_name,
 CASE WHEN AVG(weather_state * 1.0) <= 15 THEN 'Cold'
     WHEN AVG(weather_state * 1.0) < 25 THEN 'Warm'
     ELSE 'Hot' END AS weather_type 
-FROM countries c  
-JOIN weather w
-    ON c.country_id = w.country_id
+FROM countries   
+JOIN weather 
+    USING (country_id)
 WHERE day >= '2019-11-01' 
 AND day <= '2019-11-30'
 GROUP BY country_name;
