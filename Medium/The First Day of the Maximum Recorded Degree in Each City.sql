@@ -55,8 +55,6 @@ For city 3, the maximum degree was recorded on 2022-12-07 with -6 degrees.
 
 # Solution
 
--- MySQL, MS SQL Server
-
 WITH max_degree AS
 (SELECT city_id, 
  MAX(degree) AS degree 
@@ -66,25 +64,6 @@ WITH max_degree AS
 SELECT 
 w.city_id, 
 MIN(day) AS day, 
-w.degree 
-FROM weather w
-JOIN max_degree md
-  ON w.city_id = md.city_id
-  AND w.degree = md.degree
-GROUP BY w.city_id, w.degree
-ORDER BY city_id;
-
--- Oracle
-
-WITH max_degree AS
-(SELECT city_id, 
- MAX(degree) AS degree 
- FROM weather 
- GROUP BY city_id)
-
-SELECT 
-w.city_id, 
-TO_CHAR(MIN(day)) AS day, 
 w.degree 
 FROM weather w
 JOIN max_degree md
