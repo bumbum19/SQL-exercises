@@ -72,7 +72,7 @@ Output:
 SELECT 
 name, 
 bonus 
-FROM employee e 
-LEFT JOIN bonus b
- ON e.empid = b.empid
+FROM employee 
+LEFT JOIN bonus 
+ USING (empid)
 WHERE COALESCE(bonus,0) < 1000 ;
