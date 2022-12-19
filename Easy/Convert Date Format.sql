@@ -42,20 +42,9 @@ Explanation: Please note that the output is case-sensitive.
 
 */
 
-# Solution(MySQL)
+# Solution
 
 SELECT
 DATE_FORMAT(day, '%W, %M %e, %Y') AS day 
 FROM days;
 
-# Solution2(MS SQL Server)
-
-SELECT
-FORMAT( day, 'D', 'en-US' ) AS day 
-FROM days;
-
-# Solution3(Oracle)
-
-SELECT 
-TO_CHAR(day, 'FMDay, Month DD, YYYY') AS day
-FROM Days;
