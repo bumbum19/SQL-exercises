@@ -51,8 +51,6 @@ We have three movies with odd-numbered IDs: 1, 3, and 5. The movie with ID = 3 i
 
 # Solution
 
--- MySQL, MS SQL Server
-
 SELECT 
 id,
 movie,
@@ -62,17 +60,4 @@ FROM cinema
 WHERE NOT description = 'boring' 
 AND id % 2 = 1
 ORDER BY rating DESC;
-
--- Oracle
-
-SELECT 
-id,
-movie,
-description,
-rating
-FROM cinema 
-WHERE NOT description = 'boring' 
-AND MOD(id,2) = 1
-ORDER BY rating DESC;
-
 
