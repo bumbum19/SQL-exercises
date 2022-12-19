@@ -59,10 +59,6 @@ The mail of user 7 starts with a period.
 
 # Solution
 
-# Write your MySQL query statement below
-
--- MySQL, Oracle
-
 SELECT 
 user_id, 
 name,
@@ -70,14 +66,6 @@ mail
 FROM users
 WHERE REGEXP_LIKE(mail, '^[a-zA-Z]{1}[0-9a-zA-Z_.-]*@leetcode[\.]com$');
 
--- MS SQL Server
 
-SELECT 
-user_id, 
-name,
-mail
-FROM users
-WHERE mail LIKE '[a-z]%@leetcode.com' 
-AND LEFT(mail, LEN(mail) - 13) NOT  LIKE '%[^0-9a-z_.-]%';
 
 
