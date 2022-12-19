@@ -84,9 +84,9 @@ As we can see, users with IDs 30 and 96 visited the mall one time without making
 SELECT 
 customer_id, 
 COUNT(*) AS count_no_trans
-FROM visits v  
-LEFT JOIN transactions t
- ON v.visit_id = t.visit_id
+FROM visits   
+LEFT JOIN transactions 
+ USING (visit_id)
 WHERE transaction_id IS NULL
 GROUP BY customer_id;
 
