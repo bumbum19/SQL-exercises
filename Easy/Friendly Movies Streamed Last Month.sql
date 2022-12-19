@@ -83,9 +83,9 @@ Explanation:
 
 SELECT 
 DISTINCT title 
-FROM content c
-JOIN tvprogram t
-    ON c.content_id = t.content_id
+FROM content 
+JOIN tvprogram 
+    USING (content_id)
 WHERE program_date >=  '2020-06-01'
 AND program_date < '2020-07-01'
 AND content_type = 'Movies' 
