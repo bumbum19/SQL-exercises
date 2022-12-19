@@ -35,5 +35,5 @@ project_id,
 ROUND(AVG(experience_years*1.0),2) AS average_years  
 FROM project p
 JOIN employee e 
- ON p.employee_id = e.employee_id
+ USING (employee_id)
 GROUP BY project_id;
