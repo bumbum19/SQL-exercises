@@ -87,4 +87,4 @@ SUM(b.apple_count) + COALESCE(SUM(c.apple_count),0) AS apple_count,
 SUM(b.orange_count) + COALESCE(SUM(c.orange_count ),0) AS orange_count
 FROM boxes b  
 LEFT JOIN chests c 
-  ON b.chest_id = c.chest_id;
+  USING (chest_id);
