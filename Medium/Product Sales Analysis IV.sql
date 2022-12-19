@@ -78,11 +78,6 @@ User 102 spent the most money on products 1, 2, and 3.
 */
 
 
-
-
-
-
-
 # Solution
 
 WITH rank_prod AS 
