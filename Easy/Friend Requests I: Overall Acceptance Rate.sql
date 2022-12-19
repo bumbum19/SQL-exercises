@@ -75,7 +75,6 @@ There are 4 unique accepted requests, and there are 5 requests in total. So the 
 
 # Solution
 
--- MySQL, MS SQL Server
 
 WITH 
 dst_requested AS 
@@ -90,25 +89,7 @@ dst_accepted AS
 )
 SELECT 
 COALESCE(ROUND(
-        (SELECT COUNT(*) * 1.0 FROM dst_accepted)/ 
-        (SELECT NULLIF(COUNT(*),0 )FROM dst_requested),2), 0) AS accept_rate;
+        (SELECT COUNT(*)  FROM dst_accepted)/ 
+        (SELECT NULLIF(COUNT(*),0 ) FROM dst_requested),2), 0) AS accept_rate;
 
 
--- Oracle
-
-WITH 
-dst_requested AS 
-(
- SELECT DISTINCT sender_id, send_to_id 
- FROM FriendRequest 
-)
-,
-dst_accepted AS 
-(SELECT DISTINCT requester_id, accepter_id 
- FROM RequestAccepted
-)
-SELECT 
-COALESCE(ROUND(
-        (SELECT COUNT(*) * 1.0 FROM dst_accepted)/ 
-        (SELECT NULLIF(COUNT(*),0 )FROM dst_requested),2), 0) AS accept_rate
-FROM dual;
