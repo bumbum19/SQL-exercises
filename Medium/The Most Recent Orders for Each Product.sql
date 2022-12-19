@@ -107,8 +107,6 @@ The hard disk was never ordered and we do not include it in the result table.
 
 # Solution
 
--- MySQL, MS SQL Server
-
 WITH rnk AS 
 (
  SELECT product_id, order_id, order_date, 
@@ -128,23 +126,3 @@ JOIN products p
 WHERE order_rank = 1 
 ORDER BY product_name, product_id, order_id;
 
--- Oracle
-
-WITH rnk AS 
-(
- SELECT product_id, order_id, order_date, 
- RANK() OVER (PARTITION BY product_id 
-    ORDER BY order_date DESC) AS order_rank 
- FROM orders   
-)
-
-SELECT 
-product_name, 
-p.product_id, 
-order_id, 
-TO_CHAR(order_date) AS order_date 
-FROM rnk r 
-JOIN products p 
-  ON r.product_id = p.product_id
-WHERE order_rank = 1 
-ORDER BY product_name, product_id, order_id;
