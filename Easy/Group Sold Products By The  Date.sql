@@ -55,43 +55,12 @@ For 2020-06-02, the Sold item is (Mask), we just return it.
  
 # Solution
 
--- MySQL 
-
 SELECT 
 sell_date, 
 COUNT(DISTINCT product) AS num_sold, 
 GROUP_CONCAT(DISTINCT product ORDER BY product) AS products
 FROM activities 
 GROUP BY sell_date; 
-
-
---MS SQL Server
-
-WITH dist_act AS 
-(SELECT DISTINCT sell_date, product 
- FROM activities
-)
-SELECT  
-sell_date,
-COUNT(product) num_sold, 
-STRING_AGG(product,',')
- WITHIN GROUP (ORDER BY product) AS products 
-FROM dist_act 
-GROUP BY sell_date;
-
--- Oracle
-
-WITH dist_act AS 
-(SELECT DISTINCT sell_date, product 
- FROM activities
-)
-SELECT  
-TO_CHAR(sell_date) AS sell_date,
-COUNT(product) num_sold, 
-LISTAGG(product,',')
- WITHIN GROUP (ORDER BY product) AS products 
-FROM dist_act 
-GROUP BY sell_date;
 
 
 
