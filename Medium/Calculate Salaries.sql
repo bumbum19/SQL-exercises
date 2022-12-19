@@ -84,4 +84,4 @@ CASE WHEN  MAX(salary) OVER
      (PARTITION BY company_id) 
         BETWEEN 1000 AND 10000 THEN ROUND(0.76*salary,0)
      ELSE ROUND(0.51*salary,0) END  AS salary 
- FROM salaries;
+FROM salaries;
