@@ -45,7 +45,7 @@ Explanation: john@example.com is repeated two times. We keep the row with the sm
 
 # Solution
 
---MySQL, MS SQL Server
+--MySQL
 
 DELETE 
 p1 
@@ -53,13 +53,3 @@ FROM person p1
 JOIN person p2 
   ON p1.email  =p2.email;
   
--- MS Server, Oracle
-
-
-DELETE FROM person
-WHERE EXISTS
-  ( SELECT *
-    FROM person  person2
-    WHERE person.email = person2.email
-    AND person.id > person2.id );
-WHERE p1.id > p2.id;
