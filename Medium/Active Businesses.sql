@@ -67,9 +67,9 @@ WITH avg_occ AS
 
 SELECT 
 business_id 
-FROM events e 
-JOIN avg_occ a 
-  ON e.event_type = a.event_type
+FROM events  
+JOIN avg_occ  
+ USING (event_type)
 WHERE occurences > avg_occurencees 
 GROUP BY business_id
 HAVING COUNT(*) > 1;
