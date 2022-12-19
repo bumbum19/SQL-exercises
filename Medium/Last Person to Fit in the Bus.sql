@@ -62,8 +62,6 @@ Explanation: The folowing table is ordered by the turn for simplicity.
 
 # Solution
 
--- MySQL
-
 WITH sum_wght AS
 (
  SELECT  
@@ -80,40 +78,3 @@ WHERE total_weight<= 1000
 ORDER BY total_weight DESC 
 LIMIT 1;
 
--- MS SQL Server
-
-WITH sum_wght AS
-(
- SELECT  
- person_name, 
- SUM(weight) OVER 
-  (ORDER BY turn) AS total_weight 
- FROM queue 
-)
-
-SELECT 
-TOP(1) person_name 
-FROM sum_wght 
-WHERE total_weight<= 1000 
-ORDER BY total_weight DESC;
-
--- Oracle
-
-WITH sum_wght AS
-(
- SELECT  
- person_name, 
- SUM(weight) OVER 
-  (ORDER BY turn) AS total_weight 
- FROM queue 
-)
-
-
-SELECT person_name
-FROM
-(SELECT 
- person_name 
- FROM sum_wght 
- WHERE total_weight <= 1000 
- ORDER BY total_weight DESC) 
-WHERE ROWNUM <= 1;
