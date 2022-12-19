@@ -69,9 +69,9 @@ UNION ALL SELECT '[10-15>'
 UNION ALL SELECT '15 or more'
 )
 SELECT 
-c.bin, 
+bin, 
 COUNT(session_id) AS total
-FROM category c 
-LEFT JOIN label l 
-    ON c.bin = l.bin
-GROUP BY c.bin;
+FROM category  
+LEFT JOIN label 
+     USING (bin)
+GROUP BY bin;
