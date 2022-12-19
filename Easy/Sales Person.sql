@@ -104,13 +104,13 @@ According to orders 3 and 4 in the Orders table, it is easy to tell that only sa
 
 WITH SalesRed AS
 (SELECT  sales_id, name AS company  
- FROM orders o JOIN company c
-  ON o.com_id = c.com_id
+ FROM orders  JOIN company 
+  USING (com_id)
  WHERE name = 'RED')
 
 SELECT 
 name  
-FROM SalesPerson sp  
-LEFT JOIN SalesRed sr
-  ON sp.sales_id = sr.sales_id 
+FROM SalesPerson   
+LEFT JOIN SalesRed 
+ USING (sales_id)
 WHERE company IS NULL;
