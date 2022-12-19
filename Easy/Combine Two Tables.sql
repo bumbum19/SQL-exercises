@@ -74,7 +74,7 @@ firstName,
 lastName, 
 city, 
 state 
-FROM person p 
-LEFT JOIN address a
- ON p.personId = a.personId;
+FROM person  
+LEFT JOIN address 
+ USING (personId);
  
