@@ -103,8 +103,6 @@ Moustafa spent $110 (10 * 2 + 45 * 2) in June and $0 in July 2020.
  
 # Solution
 
--- MySQL, MS SQL Server
-
 WITH cust_total 
 AS
 (SELECT customer_id, 
@@ -116,32 +114,13 @@ AS
  HAVING SUM(quantity*price) >= 100 
 )
 SELECT 
-cu.customer_id, 
+customer_id, 
 name 
-FROM cust_total ct  
-JOIN customers cu
- ON ct.customer_id = cu.customer_id
-GROUP BY cu.customer_id, name 
+FROM cust_total  
+JOIN customers 
+ USING (customer_id)
+GROUP BY customer_id, name 
 HAVING COUNT(*) = 2;
 
--- MySQL, Oracle
 
-WITH cust_total 
-AS
-(SELECT customer_id, 
- EXTRACT(MONTH FROM order_date) AS month, 
- SUM(quantity*price) AS total 
- FROM orders o JOIN product p ON o.product_id = p.product_id
- WHERE order_date >= '2020-06-01' AND order_date <= '2020-07-31' 
- GROUP BY customer_id, EXTRACT(MONTH FROM order_date) 
- HAVING SUM(quantity*price) >= 100 
-)
-SELECT 
-cu.customer_id, 
-name 
-FROM cust_total ct  
-JOIN customers cu
- ON ct.customer_id = cu.customer_id
-GROUP BY cu.customer_id, name 
-HAVING COUNT(*) = 2;
 
