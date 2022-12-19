@@ -74,7 +74,6 @@ User Jonathan with id = 7 logged in 7 times in 6 different days, five of them we
 
 # Solution
 
--- MySQL
 
 WITH cte AS 
 (
@@ -87,55 +86,11 @@ WITH cte AS
 )
 
 SELECT
-DISTINCT a.id, 
+DISTINCT id, 
 name 
-FROM accounts a
+FROM accounts 
 JOIN cte 
-  ON a.id = cte.id
+ USING (id)
 WHERE DATEDIFF(login_date,prev) = 4 
 ORDER BY id;
-
--- MS SQL Server
-
-WITH cte AS 
-(
- SELECT id, login_date, 
- LAG(login_date,4) OVER 
-    (PARTITION BY id 
-     ORDER BY login_date) AS prev 
- FROM logins 
- GROUP BY id, login_date
-)
-
-SELECT
-DISTINCT a.id, 
-name 
-FROM accounts a
-JOIN cte 
-  ON a.id = cte.id
-WHERE DATEDIFF(DAY, prev, login_date) = 4 
-ORDER BY id;
-
--- Oracle
-
-WITH cte AS 
-(
- SELECT id, login_date, 
- LAG(login_date,4) OVER 
-    (PARTITION BY id 
-     ORDER BY login_date) AS prev 
- FROM logins 
- GROUP BY id, login_date
-)
-
-SELECT
-DISTINCT a.id, 
-name 
-FROM accounts a
-JOIN cte 
-  ON a.id = cte.id
-WHERE login_date - prev = 4 
-ORDER BY id;
-
-
 
