@@ -108,7 +108,6 @@ Since Peru is the only country where the average call duration is greater than t
 
 # Solution
 
--- MySQL, MS SQL Server
 
 WITH person2 AS 
 (SELECT id, name AS person_name, 
@@ -132,30 +131,4 @@ GROUP BY name
 HAVING AVG(1.0*duration) > 
     (SELECT AVG(1.0*duration) FROM calls);
     
-
--- Oracle
-
-
-WITH person2 AS 
-(SELECT id, name AS person_name, 
-SUBSTR(phone_number,1,3)  AS country_code  
- FROM person 
- ),
-calls2 AS 
-(
-SELECT caller_id AS id, duration FROM calls 
-UNION ALL
-SELECT callee_id AS id, duration FROM calls
-)
-
-SELECT name AS country
-FROM calls2 ca   
-JOIN person2 p
-    ON ca.id = p.id   
-JOIN country co 
-    ON p.country_code = co.country_code
-GROUP BY name 
-HAVING AVG(1.0*duration) > 
-    (SELECT AVG(1.0*duration) FROM calls);
-
 
