@@ -52,8 +52,6 @@ Product 1 is available in store1 with price 70 and store3 with price 80. The pro
 
 # Solution
 
--- MySQL 
-
 SELECT 
 product_id, 
 store, 
@@ -67,34 +65,6 @@ FROM(
   SELECT product_id AS product_id, 'store3' AS store, store3 AS price FROM products) AS dt
 WHERE price > 0;
 
--- MS SQL Server
 
-SELECT 
-product_id, 
-store, 
-price   
-FROM   
-   (SELECT product_id, store1, store2, store3  
-   FROM products) p  
-UNPIVOT  
-   (price FOR store IN   
-      (store1, store2, store3)  
-) AS unpvt; 
-
-
--- Oracle
-
-SELECT 
-product_id,
-store, 
-price 
-FROM products
-UNPIVOT(
-  price
-  FOR store
-  IN (store1 AS 'store1, 
-      store2 AS 'store2', 
-      store3 AS 'store3')
-);
 
 
