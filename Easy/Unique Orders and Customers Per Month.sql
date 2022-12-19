@@ -59,7 +59,7 @@ In January 2021 we have two orders from 2 different customers, but only one of t
 
 */
 
-# Solution(MySQL)
+# Solution
 
 SELECT
 DATE_FORMAT(order_date, '%Y-%m') AS month, 
@@ -69,21 +69,6 @@ FROM orders
 WHERE invoice > 20
 GROUP BY  month; 
 
-
-# Solution2(MS SQL Server)
-
-SELECT 
-FORMAT(order_date, 'yyyy-MM', 'en-US') AS month,
-COUNT(order_id) order_count, COUNT(DISTINCT customer_id) customer_count 
-FROM orders
-WHERE invoice > 20
-GROUP BY  FORMAT(order_date, 'yyyy-MM', 'en-US');
-
-SELECT TO_CHAR(order_date, 'YYYY-MM') AS month, 
-COUNT(order_id) order_count, COUNT(DISTINCT customer_id) customer_count
-FROM orders 
-WHERE invoice > 20
-GROUP BY TO_CHAR(order_date, 'YYYY-MM');
 
 
 
