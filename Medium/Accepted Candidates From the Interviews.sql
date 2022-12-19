@@ -84,9 +84,9 @@ Explanation:
 
 SELECT 
 candidate_id 
-FROM candidates c
-JOIN rounds r
-  ON c.interview_id = r.interview_id
+FROM candidates 
+JOIN rounds 
+  USING (interview_id)
 WHERE years_of_exp >= 2
 GROUP BY candidate_id 
 HAVING SUM(score) > 15;
