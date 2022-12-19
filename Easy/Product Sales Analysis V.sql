@@ -79,8 +79,8 @@ Users 102 and 103 spent the same amount and we break the tie by their ID while u
 SELECT 
 user_id, 
 SUM(quantity*price) AS spending
-FROM product p 
-JOIN sales s
-  ON p.product_id = s.product_id
+FROM product 
+JOIN sales 
+  USING (product_id)
 GROUP BY user_id
 ORDER BY spending DESC, user_id;
