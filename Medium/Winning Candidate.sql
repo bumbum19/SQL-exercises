@@ -72,8 +72,6 @@ The winner is candidate B.
 
 # Solution
 
--- MySQL
-
 SELECT 
 name 
 FROM candidate c 
@@ -84,30 +82,3 @@ JOIN LATERAL
 ORDER BY votes DESC 
 LIMIT 1;
  
--- MS SQL Server
-
-SELECT 
-TOP(1) name 
-FROM candidate c 
-CROSS APPLY 
-  (SELECT COUNT(*) AS votes 
-   FROM vote 
-   WHERE candidateid = c.id) AS cnt_votes 
-ORDER BY votes DESC;
-
-
--- Oracle
-
-WITH cnt_votes AS
-(SELECT candidateId AS id, 
- COUNT(*) AS votes 
- FROM vote  
- GROUP BY candidateId 
-) 
-
-SELECT * FROM
-(SELECT name 
-FROM candidate 
-NATURAL JOIN cnt_votes 
-ORDER BY votes DESC)
-WHERE ROWNUM = 1;
