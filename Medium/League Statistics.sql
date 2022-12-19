@@ -85,6 +85,7 @@ Dortmund is the first team in the table. Ajax and Arsenal have the same points, 
 */
 
 # Solution
+
 WITH cte AS 
 (
  SELECT team_name, 
