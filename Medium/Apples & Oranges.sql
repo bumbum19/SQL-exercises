@@ -57,8 +57,6 @@ Day 2020-05-04, 15 apples and 16 oranges were sold (Difference 15 - 16 = -1).
 
 # Solution
 
--- MySQL, MS SQL Server
-
 SELECT 
 sale_date, 
 SUM(CASE WHEN fruit='apples' THEN sold_num 
@@ -67,12 +65,4 @@ FROM sales
 GROUP BY sale_date 
 ORDER BY sale_date;
 
--- Oracle
 
-SELECT 
-TO_CHAR(sale_date) AS sale_date, 
-SUM(CASE WHEN fruit='apples' THEN sold_num 
-    ELSE -sold_num END) AS diff 
-FROM sales 
-GROUP BY sale_date 
-ORDER BY sale_date;
