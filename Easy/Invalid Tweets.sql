@@ -43,18 +43,7 @@ Tweet 2 has length = 32. It is an invalid tweet.
 
 */
 
-# Solution(MySQL,Oracle)
-
 SELECT 
 tweet_id 
 FROM tweets 
 WHERE LENGTH(content) > 15;
-
-# Solution2(MS SQL Server)  
-
-SELECT 
-tweet_id 
-FROM tweets 
-WHERE LEN(content) > 15;
-  
-  
