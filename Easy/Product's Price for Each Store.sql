@@ -51,8 +51,6 @@ Product 1 price's are 70 for store1, 80 for store3 and, it's not sold in store2.
 
 # Solution
 
--- MySQL
-
 SELECT
 product_id, 
 SUM(IF(store='store1', price, NULL)) AS store1, 
@@ -60,26 +58,3 @@ SUM(IF(store='store2', price, NULL)) AS store2,
 SUM(IF(store='store3', price, NULL)) AS store3 
 FROM products 
 GROUP BY product_id;
-
--- MS SQL Server
-
-SELECT product_id, store1, store2, store3
-FROM (
-  SELECT product_id, store, price
-  FROM products) AS SourceTable  
-PIVOT ( SUM(price) FOR store IN (store1, store2, store3)  ) AS pvt;
-
--- Oracle
-
-SELECT *
-FROM products
-PIVOT (
-  SUM(price)
-  FOR store 
-  IN ('store1' AS store1, 
-      'store2' AS store2, 
-      'store3'  AS store3)
-);
-
-
-
