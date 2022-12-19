@@ -57,8 +57,6 @@ Explanation: Note that we do not care about days with zero active users.
 
 # Solution
 
--- MySQL, MS SQL Server
-
 SELECT 
 activity_date AS day, 
 COUNT(DISTINCT user_id) AS active_users 
@@ -66,15 +64,4 @@ FROM activity
 WHERE activity_date >= '2019-06-28' 
 AND activity_date <= '2019-07-27' 
 GROUP BY activity_date;
-
--- Oracle
-
-SELECT 
-TO_CHAR(activity_date) AS day, 
-COUNT(DISTINCT user_id) AS active_users 
-FROM activity 
-WHERE activity_date >= '2019-06-28' 
-AND activity_date <= '2019-07-27' 
-GROUP BY activity_date;
-
 
