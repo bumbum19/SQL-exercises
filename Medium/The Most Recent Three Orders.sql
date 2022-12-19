@@ -90,8 +90,6 @@ We sort the result table by customer_name in ascending order, by customer_id in 
 
 # Solution 
 
--- MySQL
-
 SELECT
 c.name AS customer_name,
 c.customer_id, 
@@ -105,48 +103,5 @@ JOIN LATERAL
     ORDER BY order_date DESC 
     LIMIT 3) AS recent_ord 
 ORDER BY customer_name, customer_id, order_date DESC;
-
-
--- MS SQL Server
-
-SELECT
-c.name AS customer_name,
-c.customer_id, 
-recent_ord.order_id, 
-recent_ord.order_date
-FROM customers c 
-CROSS APPLY
-  (SELECT TOP(3) order_id, order_date
-    FROM orders o
-    WHERE c.customer_id = o.customer_id
-    ORDER BY order_date DESC 
-    ) AS recent_ord 
-ORDER BY customer_name, customer_id, order_date DESC;
-
-
--- Oracle
-
-/* Oracle Sql 11.2. has no LATERAL or CROSS APPLY */
-
-
-WITH cte AS 
-(SELECT name ,customer_id, order_id, order_date,
- RANK() OVER (PARTITION BY customer_id ORDER BY order_date DESC)  AS order_rank 
- FROM customers 
- JOIN orders
-    USING (customer_id)
-
-)
-
-SELECT 
-name AS customer_name, 
-customer_id, 
-order_id, 
-TO_CHAR(order_date) AS order_date
-FROM cte 
-WHERE order_rank <= 3 
-ORDER BY customer_name, customer_id, order_date DESC;
-
-
 
 
