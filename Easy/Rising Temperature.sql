@@ -48,8 +48,6 @@ In 2015-01-04, the temperature was higher than the previous day (20 -> 30).
 
 # Solution
 
--- MySQL
-
 WITH lag_weather AS
 (
  SELECT id, recordDate, temperature, 
@@ -64,32 +62,3 @@ WHERE temperature > temp_lag
 AND DATEDIFF(recordDate,date_lag) = 1;
 
 
--- MS SQL Server
-
-WITH lag_weather AS
-(
- SELECT id, recordDate, temperature, 
- LAG(temperature) OVER (ORDER BY recordDate) AS temp_lag, 
- LAG(recordDate) OVER (ORDER BY recordDate) AS date_lag
-FROM weather 
-)
-SELECT 
-id
-FROM lag_weather 
-WHERE temperature > temp_lag 
-AND DATEDIFF(DAY,recordDate,date_lag) = -1;
-
--- Oracle
-
-WITH lag_weather AS
-(
- SELECT id, recordDate, temperature, 
- LAG(temperature) OVER (ORDER BY recordDate) AS temp_lag, 
- LAG(recordDate) OVER (ORDER BY recordDate) AS date_lag
-FROM weather 
-)
-SELECT 
-id 
-FROM lag_weather 
-WHERE temperature > temp_lag 
-AND recordDate-date_lag = 1;
