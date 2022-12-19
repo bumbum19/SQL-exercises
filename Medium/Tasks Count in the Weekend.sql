@@ -59,8 +59,6 @@ Task 6 was submitted on Sunday.
 
 # Solution
 
--- MySQL
-
 SELECT 
 SUM(CASE WHEN DAYOFWEEK(submit_date) IN (1,7) THEN 1 
     ELSE 0 END) AS weekend_cnt, 
@@ -68,22 +66,5 @@ SUM(CASE WHEN DAYOFWEEK(submit_date) NOT IN (1,7) THEN 1
     ELSE 0 END) AS working_cnt 
 FROM tasks;
 
--- MS SQL Server
-
-SELECT 
-SUM(CASE WHEN DATEPART(WEEKDAY, submit_date) IN (1,7) THEN 1 
-    ELSE 0 END) AS weekend_cnt, 
-SUM(CASE WHEN DATEPART(WEEKDAY, submit_date) NOT IN (1,7) THEN 1 
-    ELSE 0 END) AS working_cnt 
-FROM tasks;
-
--- Oracle
-
-SELECT 
-SUM(CASE WHEN TO_CHAR(submit_date, 'D') IN (1,7) THEN 1 
-    ELSE 0 END) AS weekend_cnt, 
-SUM(CASE WHEN  TO_CHAR(submit_date, 'D') NOT IN (1,7) THEN 1 
-    ELSE 0 END) AS working_cnt 
-FROM tasks;
 
 
