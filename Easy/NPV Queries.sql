@@ -84,10 +84,9 @@ The npv values of all other queries can be found in the NPV table.
  # Solution
  
  SELECT 
- q.id, 
- q.year, 
+ id, 
+ year, 
  COALESCE(npv,0) AS npv 
-FROM queries q
-LEFT JOIN npv n
- ON q.id = n.id
- AND q.year = n.year;
+FROM queries 
+LEFT JOIN npv 
+ USING (id, year)
