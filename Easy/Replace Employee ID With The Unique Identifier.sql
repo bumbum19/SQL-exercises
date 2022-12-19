@@ -81,9 +81,9 @@ SELECT
 unique_id, 
 name 
 FROM 
-employees e 
-LEFT JOIN EmployeeUNI eu 
-  ON e.id = eu.id;
+employees 
+LEFT JOIN EmployeeUNI 
+  USING (id);
   
 
   
