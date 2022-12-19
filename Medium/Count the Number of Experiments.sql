@@ -61,8 +61,6 @@ On the platform "Web", we had two "Reading" experiments and one "Programming" ex
 
 # Solution
 
--- MySQL, MS SQL Server
-
 WITH platforms AS 
 (SELECT 'Android' AS platform 
  UNION 
@@ -90,30 +88,3 @@ LEFT JOIN experiments e
 GROUP BY p.platform, et.experiment_name;
 
 
--- Oracle
-
-WITH platforms AS 
-(SELECT 'Android' AS platform FROM dual
- UNION 
- SELECT 'IOS'  FROM dual
- UNION 
- SELECT 'Web' FROM dual
- ),
-experiment_type AS 
-(SELECT 'Reading' AS experiment_name FROM dual
- UNION 
- SELECT 'Sports'  FROM dual
- UNION 
- SELECT 'Programming' FROM dual
- )
- 
-SELECT 
-p.platform, 
-et.experiment_name, 
-COALESCE(COUNT(experiment_id),0) AS num_experiments 
-FROM platforms p 
-CROSS JOIN experiment_type et  
-LEFT JOIN experiments e
-    ON p.platform = e.platform
-    AND et.experiment_name = e.experiment_name
-GROUP BY p.platform, et.experiment_name;
