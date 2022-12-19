@@ -56,6 +56,7 @@ Account ID 4 --> The account was active from "2021-02-01 17:00:00" to "2021-02-0
 */
 
 # Solution
+
 WITH cte AS
 (
  SELECT account_id, ip_address, logout,
