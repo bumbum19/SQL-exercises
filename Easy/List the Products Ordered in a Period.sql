@@ -88,9 +88,9 @@ Products with product_id = 5 is ordered in February a total of (50 + 50) = 100.
 SELECT 
 product_name, 
 SUM(unit) AS unit
-FROM orders o 
-JOIN products p
-  ON o.product_id = p.product_id
+FROM orders  
+JOIN products 
+  USING (product_id)
 WHERE  order_date >= '2020-02-01'
 AND    order_date <= '2020-02-29'
 GROUP BY product_name
