@@ -57,7 +57,7 @@ For 2020-12-7, toyota gets leads = [0] and partners = [1, 2] while honda gets le
 
 */
 
-# Solution(MySQL, MS SQL Server)
+# Solution
 
 SELECT 
 date_id, 
