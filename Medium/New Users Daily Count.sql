@@ -60,9 +60,6 @@ The user with id 5 first logged in on 2019-03-01 so he's not counted on 2019-06-
 
 # Solution
 
-
--- MySQL, MS SQL Server
-
 WITH cte AS 
 (SELECT DISTINCT user_id, activity_date, 
  RANK() OVER 
@@ -74,27 +71,6 @@ WITH cte AS
 
 SELECT 
 activity_date AS login_date, 
-COUNT(*) AS user_count  
-FROM cte 
-WHERE ranking = 1 
-AND  activity_date >= '2019-04-01' 
-AND activity_date < '2019-07-01'  
-GROUP BY activity_date;
-
-
--- Oracle
-
-WITH cte AS 
-(SELECT DISTINCT user_id, activity_date, 
- RANK() OVER 
-    (PARTITION BY user_id 
-    ORDER BY activity_date) AS ranking
- FROM traffic 
- WHERE activity = 'login' 
-)
-
-SELECT 
-TO_CHAR(activity_date )AS login_date, 
 COUNT(*) AS user_count  
 FROM cte 
 WHERE ranking = 1 
