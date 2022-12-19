@@ -72,29 +72,18 @@ The salary of employee 2 is missing.
 
 # Solution
 
--- MySQL
-
-SELECT e.employee_id 
-FROM employees e
-LEFT JOIN salaries s  
-    ON e.employee_id = s.employee_id
+SELECT employee_id 
+FROM employees 
+LEFT JOIN salaries   
+    USING (employee_id)
 WHERE salary IS NULL
 UNION ALL
-SELECT s.employee_id 
-FROM employees e
-RIGHT JOIN salaries s  
-    ON e.employee_id = s.employee_id
+SELECT employee_id 
+FROM employees 
+RIGHT JOIN salaries   
+    USING (employee_id)
 WHERE name IS NULL
 ORDER BY employee_id;
 
 
 
--- MS SQL Server, Oracle
-
-SELECT COALESCE(e.employee_id,s.employee_id) AS employee_id
-FROM employees e
-FULL JOIN salaries s  
-    ON e.employee_id = s.employee_id
-WHERE salary IS NULL 
-OR name IS NULL
-ORDER BY employee_id;
