@@ -50,8 +50,6 @@ User 7 had two purchases on the same day so we add their ID.
 
 # Solution
 
--- MySQL 
-
 WITH cte AS 
 (
  SELECT purchase_id, user_id, purchase_date, 
@@ -65,39 +63,5 @@ SELECT
 DISTINCT user_id
 FROM cte
 WHERE DATEDIFF(next_date,purchase_date) <= 7 
-ORDER BY user_id;
-
--- MS SQL Server
-
-WITH cte AS 
-(
- SELECT purchase_id, user_id, purchase_date, 
- LEAD(purchase_date) OVER 
-    (PARTITION BY user_id 
-     ORDER BY purchase_date ) AS next_date 
- FROM purchases 
-)
-
-SELECT 
-DISTINCT user_id
-FROM cte
-WHERE DATEDIFF(DAY,purchase_date,next_date) <= 7 
-ORDER BY user_id;
-
--- Oracle
-
-WITH cte AS 
-(
- SELECT purchase_id, user_id, purchase_date, 
- LEAD(purchase_date) OVER 
-    (PARTITION BY user_id 
-     ORDER BY purchase_date ) AS next_date 
- FROM purchases 
-)
-
-SELECT 
-DISTINCT user_id
-FROM cte
-WHERE next_date - purchase_date <= 7 
 ORDER BY user_id;
 
