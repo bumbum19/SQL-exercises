@@ -103,12 +103,13 @@ The total for Jerry is 0.
 # Solution
 
 SELECT 
-sp.salesperson_id, 
+salesperson_id, 
 name, 
 COALESCE(SUM(price),0) AS total
-FROM salesperson sp 
-LEFT JOIN customer c
-JOIN sales sl
-  ON c.customer_id = sl.customer_id 
-  ON sp.salesperson_id = c.salesperson_id
-GROUP BY sp.salesperson_id, name;
+FROM salesperson  
+LEFT JOIN customer 
+JOIN sales 
+  USING (customer_id)
+  USING (salesperson_id)
+ GROUP BY salesperson_id, name;
+
