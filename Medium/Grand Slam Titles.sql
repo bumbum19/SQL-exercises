@@ -72,8 +72,6 @@ Player 3 (Novak) did not win anything, we did not include them in the result tab
 
 # Solution
 
--- MySQL
-
 SELECT 
 player_id, 
 player_name, 
@@ -83,50 +81,4 @@ FROM players
 CROSS JOIN championships 
 GROUP BY player_id, player_name 
 HAVING grand_slams_count > 0;
-
--- MS SQL Server
-
-WITH championships_unpvt AS
-(
-  SELECT year, tournament, winner 
-FROM   
-   (SELECT year, Wimbledon , Fr_open, US_open, Au_open 
-    FROM championships) p  
-UNPIVOT  
-  (winner FOR tournament IN   
-    (Wimbledon , Fr_open, US_open, Au_open)  
-) AS unpvt  
-)
-
-SELECT 
-player_id,
-player_name,
-COUNT(*) AS grand_slams_count 
-FROM players p
-JOIN championships_unpvt c
-    ON p.player_id = c.winner
-GROUP BY player_id, player_name;
-
-
--- Oracle 
-
-WITH championships_unpvt AS
-(
-    SELECT *
-    FROM championships 
-    UNPIVOT(
-    winner 
-    FOR tournament
-    IN (Wimbledon, Fr_open, US_open, Au_open)
-    )
-)
-
-SELECT 
-player_id,
-player_name,
-COUNT(*) AS grand_slams_count 
-FROM players p
-JOIN championships_unpvt c
-    ON p.player_id = c.winner
-GROUP BY player_id, player_name;
 
