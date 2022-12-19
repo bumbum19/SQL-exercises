@@ -54,8 +54,6 @@ The rest of the employees get a 100% bonus.
 
 # Solution
 
--- MySQL, MS SQL Server
-
 SELECT 
 employee_id, 
 CASE WHEN employee_id % 2 = 1 
@@ -65,13 +63,5 @@ CASE WHEN employee_id % 2 = 1
 ORDER BY employee_id;
 
 
--- Oracle
 
-SELECT 
-employee_id, 
-CASE WHEN MOD(employee_id,2) = 1 
-     AND SUBSTR(name,1,1) != 'M' THEN  salary
-     ELSE 0 END AS bonus
-     FROM employees
-ORDER BY employee_id;
 
