@@ -106,4 +106,4 @@ JOIN product
     USING (product_id)
 GROUP BY product_id, product_name, CAST(report_year AS CHAR )
 HAVING total_amount > 0 
-ORDER BY product_id, report_year
+ORDER BY product_id, report_year;
