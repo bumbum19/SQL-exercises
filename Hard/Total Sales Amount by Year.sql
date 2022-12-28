@@ -77,16 +77,33 @@ LC Keychain was sold for the period of 2019-12-01 to 2020-01-31, and there are 3
 
 # Solution
 
-WITH t AS 
-(SELECT 2018 report_year UNION SELECT 2019 report_year UNION SELECT 2020 report_year
+WITH cte (report_year) AS 
+(
+SELECT 2018  
+UNION 
+SELECT 2019  
+UNION 
+SELECT 2020 
 )
-SELECT product_id, product_name, CAST(report_year AS char) report_year ,SUM(CASE WHEN YEAR(period_start) = report_year AND  YEAR(period_end) = report_year
-THEN DATEDIFF(period_end,period_start)+1
-WHEN YEAR(period_start) = report_year THEN 365-DAYOFYEAR(period_start)+1
-WHEN YEAR(period_end) = report_year THEN DAYOFYEAR(period_end)
-ELSE IF(report_year=2019 AND YEAR(period_start)=2018
-AND YEAR(period_end)=2020,365,0) END *average_daily_sales ) total_amount
-FROM t JOIN sales
-NATURAL JOIN product
-GROUP BY 1,2,3
-HAVING total_amount > 0 ORDER BY 1,3
+
+SELECT 
+product_id, 
+product_name, 
+CAST(report_year AS CHAR ) AS report_year , 
+SUM(CASE WHEN YEAR(period_start) = report_year AND  YEAR(period_end) = report_year
+        THEN DATEDIFF(period_end,period_start) + 1
+    WHEN YEAR(period_start) = report_year 
+        THEN 365-DAYOFYEAR(period_start) + 1
+    WHEN YEAR(period_end) = report_year 
+        THEN DAYOFYEAR(period_end)
+
+    ELSE CASE WHEN report_year=2019 AND YEAR(period_start)=2018
+    AND YEAR(period_end)=2020 THEN 365 ELSE 0 END 
+    END * average_daily_sales ) AS  total_amount
+FROM cte 
+CROSS JOIN sales
+JOIN product
+    USING (product_id)
+GROUP BY product_id, product_name, CAST(report_year AS CHAR )
+HAVING total_amount > 0 
+ORDER BY product_id, report_year
